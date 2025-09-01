@@ -1,0 +1,7 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+# To enable the example, uncomment this the lines below. NOTE: You need to edit the `ingress-patch.yaml` to avoid DNS-naming collisions and match the domain name of the cluster you deploy to.
+#resources:
+#- ../../base/example-from-docs
+#patches:
+#- path: ingress-patch.yaml

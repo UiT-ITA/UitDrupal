@@ -1,0 +1,23 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: xyzzy
+  annotations:
+    cert-manager.io/cluster-issuer: sectigo-clusterwide
+    spec.ingressClassName: nginx
+spec:
+  rules:
+  - host: some-url-available-from-the-cluster.change.me.example.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: xyzzy
+            port:
+              name: http
+  tls:
+  - hosts:
+    - some-url-available-from-the-cluster.change.me.example.com
+    secretName: some-url-available-from-the-cluster.change.me.example.com-tls
