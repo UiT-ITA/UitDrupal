@@ -1,0 +1,25 @@
+---
+apiVersion: hnc.x-k8s.io/v1alpha2
+kind: SubnamespaceAnchor
+metadata:
+  name: uit-it-webadm-example
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: uit-it-webadm-example
+spec:
+  sourceRef:
+    kind: GitRepository
+    name: uit-it-webadm
+  path: bgo1-test/example-from-docs
+  targetNamespace: uit-it-webadm-example
+  prune: true
+  wait: true
+  interval: 30m0s
+  retryInterval: 2m0s
+  timeout: 3m0s
+  decryption:
+    provider: sops
+    secretRef:
+      name: sops-gpg
