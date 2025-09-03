@@ -3,7 +3,7 @@ kind: Ingress
 metadata:
   name: xyzzy
   annotations:
-    cert-manager.io/cluster-issuer: sectigo-clusterwide
+    cert-manager.io/cluster-issuer: harica
     spec.ingressClassName: nginx
 spec:
   rules:
