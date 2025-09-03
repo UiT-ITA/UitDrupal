@@ -1,0 +1,10 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ${app_name}-drupal
+spec:
+  template:
+    spec:
+      containers:
+        - name: ${app_name}-drupal
+          image: git.app.uib.no:4567/robin.grundvag1/drupal-rail-test:v0.0.26 # {"$imagepolicy": "adm-it-pub-drupal-test:drupal-test"}

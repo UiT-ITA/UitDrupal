@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ${app_name}-nginx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ${app_name}-nginx
+      app.kubernetes.io/name: ${app_name}-nginx
+      app.kubernetes.io/instance: ${app_name}-nginx
+  template:
+    metadata:
+      labels:
+        app: ${app_name}-nginx
+        app.kubernetes.io/name: ${app_name}-nginx
+        app.kubernetes.io/instance: ${app_name}-nginx
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 100
+        runAsGroup: 101
+        fsGroup: 101
+      imagePullSecrets:
+      - name: ${image_pull_secret_name}
+      initContainers:
+      - name: static-file-extractor
+        image: PATCH_ME
+        command: ['sh', '-c', 'cp -r /var/www/html/* /shared/']
+        volumeMounts:
+        - name: drupal-files
+          mountPath: /shared
+      containers:
+      - name: ${app_name}-nginx
+        image: git.app.uib.no:4567/itpublic/dockerimages/nginx-unprivileged/nginxinc/nginx-unprivileged:uib-v1.0.3
+        ports:
+        - name: http
+          containerPort: 8080
+        volumeMounts:
+        - name: drupal-files
+          mountPath: /var/www/html
+        - name: nginx-config
+          mountPath: /etc/nginx/conf.d
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "50m"
+          limits:
+            memory: "64Mi"
+      volumes:
+      - name: drupal-files
+        emptyDir: {}
+      - name: nginx-config
+        configMap:
+          name: nginx-config

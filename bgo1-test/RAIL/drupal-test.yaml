@@ -1,0 +1,30 @@
+apiVersion: hnc.x-k8s.io/v1alpha2
+kind: SubnamespaceAnchor
+metadata:
+  name: uit-it-webadm-drupal-test
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: uit-it-webadm-drupal-test
+spec:
+  sourceRef:
+    kind: GitRepository
+    name: uit-it-webadm
+  path: bgo1-test/drupal-test
+  targetNamespace: uit-it-webadm-drupal-test
+  prune: true
+  wait: true
+  interval: 30m0s
+  retryInterval: 2m0s
+  timeout: 3m0s
+  decryption:
+    provider: sops
+    secretRef:
+      name: sops-gpg
+  postBuild:
+    substitute:
+      app_name: drupal-test-uit
+      rail_cluster: bgo1-test
+      rail_env: test
+      rail_region: bgo1

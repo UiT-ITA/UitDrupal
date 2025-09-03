@@ -1,0 +1,86 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ${app_name}-drupal
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ${app_name}-drupal
+      app.kubernetes.io/name: ${app_name}-drupal
+      app.kubernetes.io/instance: ${app_name}-drupal
+  template:
+    metadata:
+      labels:
+        app: ${app_name}-drupal
+        app.kubernetes.io/name: ${app_name}-drupal
+        app.kubernetes.io/instance: ${app_name}-drupal
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 100
+        runAsGroup: 100
+        fsGroup: 100
+      containers:
+      - name: ${app_name}-drupal
+        image: PATCH_ME
+        ports:
+        - name: fastcgi
+          containerPort: 9000
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "200m"
+          limits:
+            memory: "256Mi"
+        env:
+        - name: DRUPAL_DATABASE_HOST
+          value: ${app_name}-db-rw
+        - name: DRUPAL_DATABASE_PREFIX
+          value: ""
+        - name: DRUPAL_DATABASE_NAME
+          value: ${app_name}
+        - name: DRUPAL_DATABASE_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: ${app_name}-db-secret
+              key: username
+        - name: DRUPAL_DATABASE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: ${app_name}-db-secret
+              key: password
+        # Prevent escalation attacks
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          seccompProfile:
+            type: RuntimeDefault
+      - name: ${app_name}-php-fpm-exporter
+        image: 'git.app.uib.no:4567/robin.grundvag1/php-fpm-exporter/hipages/php-fpm_exporter:uib-v0.1.0'
+        env:
+          - name: PHP_FPM_WEB_LISTEN_ADDRESS
+            value: ":9253"
+          - name: PHP_FPM_SCRAPE_URI
+            value: "tcp://localhost:9000/status"
+          - name: PHP_FPM_FIX_PROCESS_COUNT
+            value: "true"
+        ports:
+          - name: metrics
+            containerPort: 9253
+            protocol: TCP
+        resources:
+          requests:
+            memory: '64M'
+            cpu: '100m'
+          limits:
+            memory: '64M'
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          seccompProfile:
+            type: RuntimeDefault

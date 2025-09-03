@@ -1,0 +1,12 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: ${app_name}-drupal
+  labels:
+    app: ${app_name}-drupal
+spec:
+  selector:
+    matchLabels:
+      app: ${app_name}-drupal
+  endpoints:
+    - port: metrics
