@@ -1,0 +1,43 @@
+apiVersion: v1
+data:
+    .dockerconfigjson: ENC[AES256_GCM,data:YGlQnMZSsLBVyIEXl8KBTxkJ7D8l2J0L+qpok1WEo217htfbuj4VR7/3kVqYd+5rQL5TyePBihDrO81wPfdneSt6TLwqHbD+B4NOKpMqSyN8uKyL//m+1dnPdUCDDUR+DIehuTOAeRLbduG0iF4tlC7Dmkay+/H3R11T5Dwf4kCq/fb1EfemE5iXnZlGoWv7MoLtUKlJ0Bnj9S8H0Ow751a8hlqWp55iEyEin5rNUKfBO9vluwPHRhvNq9kRxNp0JFDYc19fl+v846rIlQU6edkhemlmF//bCwgJQ9JdBb28praHL/SEDTdTf3pyfbDhRDp3G/EsRv8wfZAKenw3stuqo0TuvZT7yE6C+an6XREZPE5fY+u8ndA822pLPKxcZVSynbgbLbOwPk2gpZ94wD8tEx7WFZPHuIf3+9rldJa9uv30BfbrdTcG+XvYURk/,iv:v09a6OOdpW8Uljmv/IwV/zsvjfeOO4yJBGsNUCdhRXY=,tag:Sby3p/NNELcKuZDYi0hdvw==,type:str]
+kind: Secret
+metadata:
+    creationTimestamp: null
+    name: uitcontainerregistry
+type: kubernetes.io/dockerconfigjson
+sops:
+    lastmodified: "2025-09-05T07:36:38Z"
+    mac: ENC[AES256_GCM,data:E11p+pmP6Sj3MTxpT12VTxvsdjJtUaqNt/Cfs93rgrCMeP3uu7uzuQgK2hLLaC2NJb0OR40tNmP6g8SyGXMP10FwqZbnBQK3czPTd5hI8fq0LuX2vcMAUVjazVThtHK+5GourrZDZV8ygJbF9IUtXLkbthBvps24GS0LZeHn8Go=,iv:xeS243HG2OWbre5rq6t7QfItOwG6aZ3j8l9JxGlXVHQ=,tag:j0VmzU442Ev6RdulImPK0Q==,type:str]
+    pgp:
+        - created_at: "2025-09-05T07:36:38Z"
+          enc: |-
+            -----BEGIN PGP MESSAGE-----
+
+            hF4DNV2Bp8jlH8sSAQdA/kdlFH/JJppH4D9lHOZOrZ9JY40gz7QZTlIupWg5VUIw
+            RHWXMwWG8JAQBmAKK7sIfUqUIQVaWlFFnvhmfqFhtk4SxKwsRBb0GyZvQtlkzidL
+            0l4B5cWV+/w/5gHT52WdnRa2j0Uy6EgubJBCRt6xPNBjVRrrU3vcxE53oPD/cbgW
+            b8xdJEiiZHaifjIyF6i/+tdSA0CnshpX/sCbPADpU06Xzj+U+pUEhVtdfVcIKV68
+            =DlGX
+            -----END PGP MESSAGE-----
+          fp: AFDB50935E640B5E952678DCBEE7F92A551628F5
+        - created_at: "2025-09-05T07:36:38Z"
+          enc: |-
+            -----BEGIN PGP MESSAGE-----
+
+            hQGMA9fLhrMZqDwNAQwArJtV78tHP4jQoBqTVWVqx4Efiq23ICyC5OcIiFk01kbq
+            gMm4db0b4wnidQJe9q/myRJMDqHxlSuE5DX4ZwSdtXB2tfPPNiaBDTrBGorEm/q1
+            OC7SNru4zRvA57xGg8HEESbLg7J3fegiFPZz9H1cKoxgC3aX00MGPHFQ6BzUhYvJ
+            xDF7jPXlI3QS4P4UaV46aUa1k8gAmnZJNkjytpKxOMjg/3Xj+P9Z1F5C7oyBy/Ge
+            rGFqga0Si0aQ3Jdb8TOowUrn6/r4f4e1M8OdmqNHDcJ+Oq0jHtZxHxx6U4Gzx3A2
+            LGXVfgAmBgvo/swA7QwcBkR8LyF/zBojIaj4h7hRVlIZzCUdvyr+7rd/m55G22ao
+            c49AX7fzC9STxnI1cfWWJiTYLNJ0QJKTa5ZQ2rcM+J1lPmx6gZedXmJ51SZqOdV9
+            AF6dcz2yYCp5zG2RzkN8oj1vEgKUnu+sDBZt1TogtH792j9PnxQcewuITxQ7MiZu
+            VnKS9gybEDCTTSdW1Oj+0l4B+K6T4/w3pP07kO49QYPMjpDlMaBUjSl15HwNR2y5
+            hXzRIWgOLzJj26yfIyDc8cQy9OCln6AQ/aWOzTKI3Hx9TFswrEs41WrOz+2oTrUm
+            1u9x55s80BYJlTHKd1T2
+            =DXXz
+            -----END PGP MESSAGE-----
+          fp: F03963B26E1D0D0307B5D54EF9CBD250501BDF40
+    encrypted_regex: ^(data|stringData)$
+    version: 3.10.2
