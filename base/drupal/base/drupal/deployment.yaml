@@ -16,6 +16,8 @@ spec:
         app.kubernetes.io/name: ${app_name}-drupal
         app.kubernetes.io/instance: ${app_name}-drupal
     spec:
+      imagePullSecrets:
+      - name: uitcontainerregistry
       securityContext:
         runAsNonRoot: true
         runAsUser: 100
