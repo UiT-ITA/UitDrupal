@@ -7,4 +7,4 @@ spec:
     spec:
       containers:
         - name: ${app_name}-drupal
-          image: uitcontainerregistry.azurecr.io/uit/www-drupal:1.31.62
+          image: uitcontainerregistry.azurecr.io/uit/www-drupal:drupal-uib-rails
