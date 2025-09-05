@@ -26,6 +26,7 @@ spec:
       containers:
       - name: ${app_name}-drupal
         image: PATCH_ME
+        imagePullPolicy: Always
         ports:
         - name: fastcgi
           containerPort: 9000
