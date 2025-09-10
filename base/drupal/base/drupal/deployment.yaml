@@ -20,9 +20,9 @@ spec:
       - name: uitcontainerregistry
       securityContext:
         runAsNonRoot: true
-        runAsUser: 100
-        runAsGroup: 100
-        fsGroup: 100
+        runAsUser: 82
+        runAsGroup: 82
+        fsGroup: 82
       containers:
       - name: ${app_name}-drupal
         image: PATCH_ME
