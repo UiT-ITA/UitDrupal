@@ -4,3 +4,4 @@ resources:
 #  - ../../base/drupal11
   - ../../base/uitcontainerregistry-pull-secret
   - ../../components/postgres
+  - secret-db.yaml
