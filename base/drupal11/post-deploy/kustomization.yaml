@@ -1,0 +1,13 @@
+# TODO: Not sure if this is where we want to place this or not...
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - run-deploy-job.yaml
+# TODO: Can we reuse the configmaps from the real deployment, this feels iffy
+configMapGenerator:
+  - name: phpfpm-config-post-deploy
+    files:
+      - zz-docker.conf=../www.conf
+  - name: php-config-post-deploy
+    files:
+      - 99-drupal.ini=../php.ini

@@ -1,0 +1,58 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: ${app_name}-drupal-run-cron
+spec:
+  schedule: "*/15 * * * *"
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 1
+  concurrencyPolicy: Replace
+  jobTemplate:
+    spec:
+      backoffLimit: 0
+      template:
+        spec:
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 100
+            runAsGroup: 101
+            fsGroup: 101
+          containers:
+            - name: ${app_name}-drupal
+              image: PATCH_ME
+              command:
+                - /bin/sh
+                - -c
+                - "drush maint:status && drush cron"
+              ports:
+                - name: fastcgi
+                  containerPort: 9000
+              volumeMounts:
+                - name: phpfpm-config
+                  mountPath: /usr/local/etc/php-fpm.d/zz-docker.conf
+                  subPath: zz-docker.conf
+                - name: php-config
+                  mountPath: /usr/local/etc/php/conf.d/99-php-fpm.ini
+                  subPath: 99-php-fpm.ini
+              resources:
+                requests:
+                  memory: "1Gi"
+                  cpu: "500m"
+                limits:
+                  memory: "1Gi"
+              # Prevent escalation attacks
+              securityContext:
+                allowPrivilegeEscalation: false
+                capabilities:
+                  drop:
+                    - ALL
+                seccompProfile:
+                  type: RuntimeDefault
+          volumes:
+            - name: phpfpm-config
+              configMap:
+                name: phpfpm-config
+            - name: php-config
+              configMap:
+                name: php-config
+          restartPolicy: Never

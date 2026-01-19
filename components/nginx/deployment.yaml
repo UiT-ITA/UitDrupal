@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ${app_name}-nginx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ${app_name}-nginx
+      app.kubernetes.io/name: ${app_name}-nginx
+      app.kubernetes.io/instance: ${app_name}-nginx
+  template:
+    metadata:
+      labels:
+        app: ${app_name}-nginx
+        app.kubernetes.io/name: ${app_name}-nginx
+        app.kubernetes.io/instance: ${app_name}-nginx
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 100
+        runAsGroup: 101
+        fsGroup: 101
+      imagePullSecrets:
+      - name: ${image_pull_secret_name}
+      containers:
+      - name: ${app_name}-nginx
+        image: git.app.uib.no:4567/itpublic/dockerimages/nginx-unprivileged/nginxinc/nginx-unprivileged:uib-v1.0.3
+        ports:
+        - name: http
+          containerPort: 8080
+        volumeMounts:
+        - name: nginx-config
+          mountPath: /etc/nginx/conf.d
+        - name: nginx-cache
+          mountPath: /var/cache/nginx
+          readOnly: false
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "500m"
+          limits:
+            memory: "256Mi"
+      volumes:
+      - name: nginx-config
+        configMap:
+          name: nginx-config
+      - name: nginx-cache
+        emptyDir: {}

@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: ${app_name}-mariadb
+spec:
+  storageClassName: rook-ceph-block
+  accessModes:
+   - ReadWriteOncePod
+  resources:
+    requests:
+      storage: 2Gi

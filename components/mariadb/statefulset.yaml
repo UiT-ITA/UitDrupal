@@ -1,0 +1,77 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: ${app_name}-mariadb
+spec:
+  serviceName: ${app_name}-mariadb
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ${app_name}-mariadb
+  template:
+    metadata:
+      labels:
+        app: ${app_name}-mariadb
+    spec:
+      volumes:
+        - name: storage
+          persistentVolumeClaim:
+            claimName: ${app_name}-mariadb
+      securityContext:
+        runAsUser: 999  # User ID
+        runAsGroup: 999  # Group ID
+        #fsGroup: 2000  # File system group ID
+      containers:
+        - name: mariadb
+          image: git.app.uib.no:4567/itpublic/dockerimages/mariadb-unprivileged/mariadb:uib-11
+          resources:
+            requests:
+              memory: "1Gi"
+              cpu: "1"
+            limits:
+              memory: "1Gi"
+          env:
+            - name:  MARIADB_DATABASE
+              valueFrom:
+                secretKeyRef:
+                  name: ${app_name}-db-secret
+                  key: database
+            - name: MARIADB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: ${app_name}-db-secret
+                  key: username
+            - name: MARIADB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: ${app_name}-db-secret
+                  key: password
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: ${app_name}-db-secret
+                  key: root-password
+          ports:
+            - containerPort: 3306
+          volumeMounts:
+            - mountPath: /var/lib/mysql
+              name: storage
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: ${app_name}-mariadb
+spec:
+  podSelector:
+    matchLabels:
+      app: ${app_name}-mariadb
+  policyTypes:
+  - Ingress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app: ${app_name}-mariadb
+    - ports:
+        - port: 3306
+          protocol: TCP

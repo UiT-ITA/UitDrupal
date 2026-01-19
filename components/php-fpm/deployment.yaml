@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ${app_name}-php-fpm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ${app_name}-php-fpm
+      app.kubernetes.io/name: ${app_name}-php-fpm
+      app.kubernetes.io/instance: ${app_name}-php-fpm
+  template:
+    metadata:
+      labels:
+        app: ${app_name}-php-fpm
+        app.kubernetes.io/name: ${app_name}-php-fpm
+        app.kubernetes.io/instance: ${app_name}-php-fpm
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 100
+        runAsGroup: 101
+        fsGroup: 101
+      containers:
+        - name: ${app_name}-php-fpm
+          image: PATCH_ME
+          ports:
+            - name: fastcgi
+              containerPort: 9000
+          volumeMounts:
+            - name: phpfpm-config
+              mountPath: /usr/local/etc/php-fpm.d/zz-docker.conf
+              subPath: zz-docker.conf
+            - name: php-config
+              mountPath: /usr/local/etc/php/conf.d/99-php-fpm.ini
+              subPath: 99-php-fpm.ini
+          resources:
+            requests:
+              memory: "1Gi"
+              cpu: "500m"
+            limits:
+              memory: "1Gi"
+          # Prevent escalation attacks
+          securityContext:
+            readOnlyRootFilesystem: true
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            seccompProfile:
+              type: RuntimeDefault
+      volumes:
+        - name: phpfpm-config
+          configMap:
+            name: phpfpm-config
+        - name: php-config
+          configMap:
+            name: php-config
