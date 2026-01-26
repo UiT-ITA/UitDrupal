@@ -19,7 +19,7 @@ spec:
         fsGroup: 101
       containers:
       - name: httpd
-        image: uitcontainerregistry.azurecr.io/uit/httpd:1.1
+        image: uitcontainerregistry.azurecr.io/uit/httpd:1.2
         ports:
         - containerPort: 8080
         securityContext:
