@@ -63,6 +63,7 @@ SOPS is a tool used to encrypt, decrypt, and manage secrets—most commonly in D
 
 To encrypt a file:
 
+gpg --import sops-pgp-key.asc
 sops --encrypt --in-place secret-db.yaml
 
 This is the mechanism used to encrypt secrets files  in the source tree. 
