@@ -16,7 +16,7 @@ spec:
       - name: httpd
         image: uitcontainerregistry.azurecr.io/uit/httpd:1.1
         ports:
-        - containerPort: 80
+        - containerPort: 8080
         securityContext:
           allowPrivilegeEscalation: false
           capabilities:
