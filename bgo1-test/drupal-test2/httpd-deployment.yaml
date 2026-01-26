@@ -14,6 +14,6 @@ spec:
     spec:
       containers:
       - name: httpd
-        image: httpd:2.4
+        image: uitcontainerregistry.azurecr.io/uit/httpd
         ports:
         - containerPort: 80
