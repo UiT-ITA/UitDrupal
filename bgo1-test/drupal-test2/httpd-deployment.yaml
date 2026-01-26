@@ -17,3 +17,5 @@ spec:
         image: uitcontainerregistry.azurecr.io/uit/httpd:1.0
         ports:
         - containerPort: 80
+      imagePullSecrets:
+      - name: ${image_pull_secret_name}
