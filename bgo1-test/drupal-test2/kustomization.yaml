@@ -5,3 +5,4 @@ resources:
   - ../../base/uitcontainerregistry-pull-secret
   - ../../components/postgres
   - secret-db.yaml
+  - httpd-deployment.yaml
