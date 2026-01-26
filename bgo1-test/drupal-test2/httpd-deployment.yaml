@@ -17,5 +17,14 @@ spec:
         image: uitcontainerregistry.azurecr.io/uit/httpd:1.1
         ports:
         - containerPort: 80
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          runAsNonRoot: true
+          seccompProfile:
+            type:
+              RuntimeDefault
       imagePullSecrets:
-      - name: ${image_pull_secret_name}
+      - name: ${image_pull_secret_name}      
