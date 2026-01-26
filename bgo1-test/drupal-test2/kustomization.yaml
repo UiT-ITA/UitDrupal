@@ -6,3 +6,6 @@ resources:
   - ../../components/postgres
   - secret-db.yaml
   - httpd-deployment.yaml
+  - service.yaml
+  - ingress.yaml
+  - network-policy.yaml
