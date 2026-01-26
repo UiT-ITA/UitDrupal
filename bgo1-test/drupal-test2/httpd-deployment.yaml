@@ -12,6 +12,11 @@ spec:
       labels:
         app: httpd
     spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 100
+        runAsGroup: 101
+        fsGroup: 101
       containers:
       - name: httpd
         image: uitcontainerregistry.azurecr.io/uit/httpd:1.1
