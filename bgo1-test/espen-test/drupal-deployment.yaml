@@ -22,7 +22,7 @@ spec:
         image: uitcontainerregistry.azurecr.io/uit/drupal:1.21
         volumeMounts: 
           - name: drupal-code
-            mountPath: /var/www/html
+            mountPath: /opt/drupal
         ports:
         - containerPort: 9000
         securityContext:
