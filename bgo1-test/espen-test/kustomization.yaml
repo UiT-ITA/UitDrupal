@@ -5,3 +5,4 @@ resources:
   - drupal-deployment.yaml
   - nginx-deployment.yaml
   - drupal-service.yaml
+  - drupal-pvc.yaml
