@@ -35,13 +35,13 @@ spec:
               secretKeyRef:
                 name: ${app_name}-db-secret
                 key: password
-        image: uitcontainerregistry.azurecr.io/uit/drupal:1.21
+        image: uitcontainerregistry.azurecr.io/uit/drupal:1.22
         volumeMounts: 
           - name: drupal-code
             mountPath: /opt/drupal/web/sites/default/files
-          - name: settings-php
-            mountPath: /opt/drupal/web/sites/default/settings.php
-            subPath: settings.php
+          #- name: settings-php
+          #  mountPath: /opt/drupal/web/sites/default/settings.php
+          #  subPath: settings.php
         ports:
           - containerPort: 9000        
         securityContext:
@@ -57,9 +57,9 @@ spec:
         - name: drupal-code
           persistentVolumeClaim: 
             claimName: drupal-code
-        - name: settings-php
-          configMap:
-            name: settings-php
+        #- name: settings-php
+        #  configMap:
+        #    name: settings-php
       imagePullSecrets:
       - name: ${image_pull_secret_name}      
 
