@@ -41,6 +41,7 @@ spec:
             mountPath: /opt/drupal/web/sites/default/files
           - name: settings-php
             mountPath: /opt/drupal/web/sites/default/settings.php
+            subpath: settings.php
         ports:
           - containerPort: 9000        
         securityContext:
