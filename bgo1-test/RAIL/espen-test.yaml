@@ -28,3 +28,5 @@ spec:
       rail_cluster: bgo1-test
       rail_env: test
       rail_region: bgo1
+      image_pull_secret_name: uitcontainerregistry
+
