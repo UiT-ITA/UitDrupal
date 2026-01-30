@@ -20,6 +20,9 @@ spec:
       containers:
       - name: nginx
         image: uitcontainerregistry.azurecr.io/uit/nginx-drupal:1.21
+        volumeMounts: 
+          - name: drupal-code
+            mountPath: /var/www/html
         ports:
         - containerPort: 8080
         securityContext:
@@ -31,6 +34,10 @@ spec:
           seccompProfile:
             type:
               RuntimeDefault
+      volumes: 
+        - name: drupal-code
+          persistentVolumeClaim: 
+            claimName: drupal-code
       imagePullSecrets:
       - name: ${image_pull_secret_name}      
 
