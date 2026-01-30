@@ -19,12 +19,26 @@ spec:
         fsGroup: 33
       containers:
       - name: drupal
+        env:
+          # Application configuration
+          - name: POSTGRES_DB
+            value: ${app_name}-db-rw
+          - name: POSTGRES_USER
+            valueFrom:
+              secretKeyRef:
+                name: ${app_name}-db-secret
+                key: username
+          - name: POSTGRES_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: ${app_name}-db-secret
+                key: password
         image: uitcontainerregistry.azurecr.io/uit/drupal:1.21
         volumeMounts: 
           - name: drupal-code
-            mountPath: /opt/drupal_share
+            mountPath: /opt/drupal/web/sites/default/files
         ports:
-        - containerPort: 9000
+          - containerPort: 9000        
         securityContext:
           allowPrivilegeEscalation: false
           capabilities:

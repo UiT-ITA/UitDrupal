@@ -22,7 +22,7 @@ spec:
         image: uitcontainerregistry.azurecr.io/uit/nginx-drupal:1.22
         volumeMounts: 
           - name: drupal-code
-            mountPath: /var/www/html
+            mountPath: /var/www/html/web/sites/default/files
         ports:
         - containerPort: 8080
         securityContext:
