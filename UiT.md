@@ -109,3 +109,19 @@ spec:
 ## Questions
 
 Brukerprovisjonering i drupal. Fra RI? Hva hentes over? Opprettes brukere i drupal?
+
+## Testing fcgi
+
+```bash
+apt-get update
+apt-get install libfcgi-bin
+
+# Test connection
+cgi-fcgi -bind -connect 127.0.0.1:9000
+
+# Test exec of php file
+SCRIPT_FILENAME=/opt/drupal/web/my.php \
+REQUEST_METHOD=GET \
+cgi-fcgi -bind -connect 127.0.0.1:9000
+
+```

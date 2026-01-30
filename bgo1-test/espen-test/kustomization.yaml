@@ -6,3 +6,4 @@ resources:
   - nginx-deployment.yaml
   - drupal-service.yaml
   - drupal-pvc.yaml
+  - ingress.yaml
