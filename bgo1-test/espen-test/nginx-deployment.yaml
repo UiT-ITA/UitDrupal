@@ -19,7 +19,7 @@ spec:
         fsGroup: 82
       containers:
       - name: nginx
-        image: uitcontainerregistry.azurecr.io/uit/nginx-drupal:1.2
+        image: uitcontainerregistry.azurecr.io/uit/nginx-drupal:1.21
         ports:
         - containerPort: 8080
         securityContext:

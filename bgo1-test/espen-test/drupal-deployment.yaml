@@ -19,7 +19,7 @@ spec:
         fsGroup: 82
       containers:
       - name: drupal
-        image: uitcontainerregistry.azurecr.io/uit/drupal:1.2
+        image: uitcontainerregistry.azurecr.io/uit/drupal:1.21
         ports:
         - containerPort: 9000
         securityContext:
