@@ -7,3 +7,4 @@ resources:
   - drupal-service.yaml
   - drupal-pvc.yaml
   - ingress.yaml
+  - nginx-service.yaml
