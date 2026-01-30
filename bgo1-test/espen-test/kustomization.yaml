@@ -4,3 +4,4 @@ resources:
   - ../../base/uitcontainerregistry-pull-secret
   - drupal-deployment.yaml
   - nginx-deployment.yaml
+  - drupal-service.yaml
