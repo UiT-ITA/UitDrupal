@@ -10,3 +10,7 @@ resources:
   - nginx-deployment.yaml
   - nginx-service.yaml
   - secret-db.yaml
+configMapGenerator:
+  - name: settings-php
+    files:
+      - settings.php=settings.php
