@@ -6,6 +6,11 @@ spec:
   accessModes:
     - ReadWriteMany
   storageClassName: rook-cephfs
+  mountOptions:
+    - uid=33
+    - gid=33
+    - file_mode=0755
+    - dir_mode=0755
   resources:
     requests:
       storage: 5Gi
