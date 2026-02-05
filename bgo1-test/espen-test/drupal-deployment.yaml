@@ -42,28 +42,28 @@ spec:
           - name: DRUPAL_ADMIN_USERNAME
             valueFrom:
               secretKeyRef:
-                name: ${app_name}-drupal-secret
-                key: adminUsername
+                name: ${app_name}-drupal-adminuser-secret
+                key: username
           - name: DRUPAL_ADMIN_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: ${app_name}-drupal-secret
-                key: adminPassword
+                name: ${app_name}-drupal-adminuser-secret
+                key: password
           - name: UIT_ORGREG_APIKEY
             valueFrom:
               secretKeyRef:
-                name: ${app_name}-drupal-secret
-                key: uitOrgregApikey
+                name: ${app_name}-drupal-orgreg-apikey-secret
+                key: password
           - name: UIT_FS_UTVEKSLINGSAVTALER_APIKEY
             valueFrom:
               secretKeyRef:
-                name: ${app_name}-drupal-secret
-                key: uitFsUtvekslingsavtalerApikey
+                name: ${app_name}-drupal-fs-utvekslingsavtaler-apikey-secret
+                key: password
           - name: UIT_IKNOWBASE_GRAPHQL_STUDIEKATALOG_APIKEY
             valueFrom:
               secretKeyRef:
-                name: ${app_name}-drupal-secret
-                key: uitIknowbaseGraphqlStudiekatalogApikey
+                name: ${app_name}-drupal-iknowbase-graphql-studiekatalog-secret
+                key: password
         image: uitcontainerregistry.azurecr.io/uit/drupal:11.3-0004
         volumeMounts: 
           - name: drupal-default

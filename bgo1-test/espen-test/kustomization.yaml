@@ -11,4 +11,7 @@ resources:
   - nginx-deployment.yaml
   - nginx-service.yaml
   - secret-db.yaml
-  - secret-drupal.yaml
+  - secret-drupal-adminuser.yaml
+  - secret-drupal-fs-utvekslingsavtaler-apikey.yaml
+  - secret-drupal-orgreg-apikey.yaml
+  - secret-drupal-iknowbase-graphql-studiekatalog-apikey.yaml
