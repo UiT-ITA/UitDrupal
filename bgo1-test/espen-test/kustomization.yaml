@@ -11,3 +11,4 @@ resources:
   - nginx-deployment.yaml
   - nginx-service.yaml
   - secret-db.yaml
+  - secret-drupal.yaml
