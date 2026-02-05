@@ -37,7 +37,9 @@ spec:
                 key: password
         image: uitcontainerregistry.azurecr.io/uit/drupal:11.3-0002
         volumeMounts: 
-          - name: drupal-code
+          - name: drupal-default
+            mountPath: /opt/drupal/web/sites/default
+          - name: drupal-default-files
             mountPath: /opt/drupal/web/sites/default/files
           #- name: settings-php
           #  mountPath: /opt/drupal/web/sites/default/settings.php
@@ -57,6 +59,9 @@ spec:
         - name: drupal-code
           persistentVolumeClaim: 
             claimName: drupal-code
+        - name: drupal-code-files
+          persistentVolumeClaim: 
+            claimName: drupal-code-files
         #- name: settings-php
         #  configMap:
         #    name: settings-php

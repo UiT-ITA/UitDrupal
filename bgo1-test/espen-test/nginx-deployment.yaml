@@ -21,7 +21,7 @@ spec:
       - name: nginx
         image: uitcontainerregistry.azurecr.io/uit/nginx-drupal:1.29-0002
         volumeMounts: 
-          - name: drupal-code
+          - name: drupal-code-files
             mountPath: /var/www/html/web/sites/default/files
         ports:
         - containerPort: 8080
@@ -35,9 +35,9 @@ spec:
             type:
               RuntimeDefault
       volumes: 
-        - name: drupal-code
+        - name: drupal-code-files
           persistentVolumeClaim: 
-            claimName: drupal-code
+            claimName: drupal-code-files
       imagePullSecrets:
       - name: ${image_pull_secret_name}      
 
