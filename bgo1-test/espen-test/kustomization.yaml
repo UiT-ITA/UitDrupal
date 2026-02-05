@@ -4,7 +4,8 @@ resources:
   - ../../base/uitcontainerregistry-pull-secret
   - ../../components/postgres
   - drupal-deployment.yaml
-  - drupal-pvc.yaml
+  - drupal-default-pvc.yaml
+  - drupal-default-files-pvc.yaml
   - drupal-service.yaml
   - ingress.yaml
   - nginx-deployment.yaml
