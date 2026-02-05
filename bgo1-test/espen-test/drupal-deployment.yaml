@@ -35,7 +35,7 @@ spec:
               secretKeyRef:
                 name: ${app_name}-db-secret
                 key: password
-        image: uitcontainerregistry.azurecr.io/uit/drupal:11.3-0003
+        image: uitcontainerregistry.azurecr.io/uit/drupal:11.3-0004
         volumeMounts: 
           - name: drupal-default
             mountPath: /opt/drupal/web/sites/default
