@@ -76,6 +76,8 @@ spec:
               secretKeyRef:
                 name: ${app_name}-drupal-restuser-secret
                 key: password
+          - name: ENABLE_ENTRYPOINT_D
+            value: "0"
         image: uitcontainerregistry.azurecr.io/uit/drupal:11.3-0007
         volumeMounts: 
           #- name: settings-php

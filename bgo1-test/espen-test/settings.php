@@ -76,20 +76,19 @@
  * specific needs.
  *
  * @code
-$databases['default']['default'] = [
-  'database' => getenv('POSTGRES_DB'),
-  'username' => getenv('POSTGRES_USER'),
-  'password' => getenv('POSTGRES_PASSWORD'),
-  'host' => getenv('POSTGRES_HOST'),
-  'port' => '5432',
-  'driver' => 'pgsql',
-  'prefix' => '',
-  'namespace' => 'Drupal\Core\Database\Driver\pgsql',
-];
-
+ * $databases['default']['default'] = [
+ *   'database' => 'database_name',
+ *   'username' => 'sql_username',
+ *   'password' => 'sql_password',
+ *   'host' => 'localhost',
+ *   'port' => '3306',
+ *   'driver' => 'mysql',
+ *   'prefix' => '',
+ *   'collation' => 'utf8mb4_general_ci',
+ * ];
  * @endcode
  */
-#$databases = [];
+$databases = [];
 
 /**
  * Customizing database settings.
@@ -287,7 +286,7 @@ $databases['default']['default'] = [
  *   $settings['hash_salt'] = file_get_contents('/home/example/salt.txt');
  * @endcode
  */
-$settings['hash_salt'] = '';
+$settings['hash_salt'] = 'uBQrqn4GaERWRFkm3iAI9iZtnxmI5vaktqDhle6c_-uzzIHeQrYZFcTIweokspoFLcb4yJsYUA';
 
 /**
  * Deployment identifier.
@@ -860,5 +859,15 @@ $settings['migrate_node_migrate_type_classic'] = FALSE;
 # if (file_exists($app_root . '/' . $site_path . '/settings.local.php')) {
 #   include $app_root . '/' . $site_path . '/settings.local.php';
 # }
-
+$databases['default']['default'] = array (
+  'database' => 'espen-test-uit',
+  'username' => 'espen-test-uit',
+  'password' => 'zYUJgnbE-LmKg83sVkgch',
+  'prefix' => '',
+  'host' => 'espen-test-uit-db-rw',
+  'port' => '5432',
+  'driver' => 'pgsql',
+  'namespace' => 'Drupal\\pgsql\\Driver\\Database\\pgsql',
+  'autoload' => 'core/modules/pgsql/src/Driver/Database/pgsql/',
+);
 $settings['config_sync_directory'] = '/opt/uit_sync';
