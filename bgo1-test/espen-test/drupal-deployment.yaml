@@ -78,9 +78,9 @@ spec:
                 key: password
         image: uitcontainerregistry.azurecr.io/uit/drupal:11.3-0007
         volumeMounts: 
-          - name: settings-php
-            mountPath: /var/www/html/web/sites/default/settings.php
-            subPath: settings.php
+          #- name: settings-php
+          #  mountPath: /var/www/html/web/sites/default/settings-template.php
+          #  subPath: settings.php
           - name: drupal-default-files
             mountPath: /var/www/html/web/sites/default/files          
         ports:
