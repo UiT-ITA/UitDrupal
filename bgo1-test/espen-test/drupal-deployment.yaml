@@ -95,9 +95,9 @@ spec:
             type:
               RuntimeDefault
       volumes: 
-        - name: drupal-default
-          persistentVolumeClaim: 
-            claimName: drupal-default
+        - name: settings-php
+          configMap:
+            name: settings-php
         - name: drupal-default-files
           persistentVolumeClaim: 
             claimName: drupal-default-files
