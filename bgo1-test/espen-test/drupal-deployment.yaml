@@ -79,9 +79,9 @@ spec:
         image: uitcontainerregistry.azurecr.io/uit/drupal:11.3-0007
         volumeMounts: 
           - name: drupal-default
-            mountPath: /opt/drupal/web/sites/default
+            mountPath: /var/www/html/web/sites/default
           - name: drupal-default-files
-            mountPath: /opt/drupal/web/sites/default/files          
+            mountPath: /var/www/html/web/sites/default/files          
         ports:
           - containerPort: 9000        
         securityContext:

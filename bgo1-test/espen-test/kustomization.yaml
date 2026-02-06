@@ -1,18 +1,4 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-  - ../../base/uitcontainerregistry-pull-secret
-  - ../../components/postgres
-  - drupal-deployment.yaml
-  - drupal-default-pvc.yaml
-  - drupal-default-files-pvc.yaml
-  - drupal-service.yaml
-  - ingress.yaml
-  - nginx-deployment.yaml
-  - nginx-service.yaml
-  - secret-db.yaml
-  - secret-drupal-adminuser.yaml
-  - secret-drupal-fs-utvekslingsavtaler-apikey.yaml
-  - secret-drupal-orgreg-apikey.yaml
-  - secret-drupal-iknowbase-graphql-studiekatalog-apikey.yaml
-  - secret-drupal-restuser.yaml
+  
