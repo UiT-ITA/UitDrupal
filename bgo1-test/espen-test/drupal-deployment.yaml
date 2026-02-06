@@ -64,7 +64,7 @@ spec:
               secretKeyRef:
                 name: ${app_name}-drupal-iknowbase-graphql-studiekatalog-secret
                 key: password
-        image: uitcontainerregistry.azurecr.io/uit/drupal:11.3-0005
+        image: uitcontainerregistry.azurecr.io/uit/drupal:11.3-0006
         volumeMounts: 
           - name: drupal-default
             mountPath: /opt/drupal/web/sites/default
