@@ -64,7 +64,19 @@ spec:
               secretKeyRef:
                 name: ${app_name}-drupal-iknowbase-graphql-studiekatalog-secret
                 key: password
-        image: uitcontainerregistry.azurecr.io/uit/drupal:11.3-0006
+          - name: DRUPAL_REST_BASEURL
+            value: "https://espen-test-uit.bgo1.test.rail.uib.no"
+          - name: DRUPAL_REST_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: ${app_name}-drupal-restuser-secret
+                key: username
+          - name: DRUPAL_REST_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: ${app_name}-drupal-restuser-secret
+                key: password
+        image: uitcontainerregistry.azurecr.io/uit/drupal:11.3-0007
         volumeMounts: 
           - name: drupal-default
             mountPath: /opt/drupal/web/sites/default
