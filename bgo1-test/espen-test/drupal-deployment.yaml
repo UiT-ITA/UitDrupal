@@ -80,6 +80,8 @@ spec:
                 key: password
           - name: ENABLE_ENTRYPOINT_D
             value: "0"
+          - name: IMPORT_STUDIEPROGRAM_TEST_DATA
+            value: "1"
         image: uitcontainerregistry.azurecr.io/uit/drupal:11.3-0009
         volumeMounts: 
           - name: settings-php
