@@ -860,13 +860,13 @@ $settings['migrate_node_migrate_type_classic'] = FALSE;
 #   include $app_root . '/' . $site_path . '/settings.local.php';
 # }
 $databases['default']['default'] = array (
-  'database' => 'espen-test-uit',
-  'username' => 'espen-test-uit',
-  'password' => 'zYUJgnbE-LmKg83sVkgch',
-  'prefix' => '',
-  'host' => 'espen-test-uit-db-rw',
-  'port' => '5432',
+  'database' => getenv('POSTGRES_DB'),
+  'username' => getenv('POSTGRES_USER'),
+  'password' => getenv('POSTGRES_PASSWORD'),
+  'host' => getenv('POSTGRES_HOST'),
+  'port' => getenv('POSTGRES_PORT'),
   'driver' => 'pgsql',
+  'prefix' => '',
   'namespace' => 'Drupal\\pgsql\\Driver\\Database\\pgsql',
   'autoload' => 'core/modules/pgsql/src/Driver/Database/pgsql/',
 );

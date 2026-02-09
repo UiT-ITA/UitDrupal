@@ -25,6 +25,8 @@ spec:
             value: ${app_name}
           - name: POSTGRES_HOST
             value: ${app_name}-db-rw
+          - name: POSTGRES_PORT
+            value: "5432"
           - name: POSTGRES_USER
             valueFrom:
               secretKeyRef:
@@ -34,7 +36,7 @@ spec:
             valueFrom:
               secretKeyRef:
                 name: ${app_name}-db-secret
-                key: password
+                key: password          
           - name: DRUPAL_SITE_NAME
             value: "Uit Drupal test Site"
           - name: DRUPAL_SITE_ENVIRONMENT
@@ -78,11 +80,11 @@ spec:
                 key: password
           - name: ENABLE_ENTRYPOINT_D
             value: "0"
-        image: uitcontainerregistry.azurecr.io/uit/drupal:11.3-0007
+        image: uitcontainerregistry.azurecr.io/uit/drupal:11.3-0009
         volumeMounts: 
-          #- name: settings-php
-          #  mountPath: /var/www/html/web/sites/default/settings-template.php
-          #  subPath: settings.php
+          - name: settings-php
+            mountPath: /var/www/html/web/sites/default/settings.php
+            subPath: settings.php
           - name: drupal-default-files
             mountPath: /var/www/html/web/sites/default/files          
         ports:
