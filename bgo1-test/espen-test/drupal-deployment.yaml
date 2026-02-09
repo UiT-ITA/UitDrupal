@@ -81,7 +81,7 @@ spec:
           - name: ENABLE_ENTRYPOINT_D
             value: "0"
           - name: IMPORT_STUDIEPROGRAM_TEST_DATA
-            value: "1"
+            value: "0"
           - name: STUDIEPROGRAM_TEST_DATA_PATH
             value: "/opt/uit_assets/test_data/all_studieprogram_nor_and_eng.json"
         image: uitcontainerregistry.azurecr.io/uit/drupal:11.3-0009
