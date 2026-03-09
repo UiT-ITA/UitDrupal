@@ -6,3 +6,5 @@ metadata:
 spec:
   image: uitcontainerregistry.azurecr.io/uit/drupal
   interval: 1m
+  secretRef:
+    name: uitcontainerregistry
