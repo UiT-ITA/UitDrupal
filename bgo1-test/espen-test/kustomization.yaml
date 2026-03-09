@@ -17,6 +17,7 @@ resources:
   - secret-drupal-iknowbase-graphql-studiekatalog-apikey.yaml
   - secret-drupal-restuser.yaml
   - drupal-image-policy.yaml
+  - drupal-repository.yaml
 configMapGenerator:  
   - name: settings-php
     files:
