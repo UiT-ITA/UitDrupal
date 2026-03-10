@@ -1,0 +1,41 @@
+name: Build and Push Docker Image to drupal test
+
+on:
+  workflow_dispatch:
+    inputs:
+      reason:
+        description: 'Reason for manual trigger'
+        required: false
+        type: string
+      tag_name:
+        description: 'Docker image tag name'
+        required: true
+        type: string
+
+jobs:
+  update-image-tag:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: test-server
+
+      - name: Update Drupal image tag
+        run: |
+          sed -i 's|image: uitcontainerregistry.azurecr.io/uit/drupal:.*|image: uitcontainerregistry.azurecr.io/uit/drupal:${{ github.event.inputs.tag_name }} # {"$imagepolicy": "flux-system:drupal-11-3"}|' bgo1-test/espen-test/drupal-deployment.yaml
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Commit changes
+        run: |
+          git add bgo1-test/espen-test/drupal-deployment.yaml
+          git commit -m "Drupal image tag updated for test server: ${{ github.event.inputs.tag_name }}"
+
+      - name: Push changes
+        run: |
+          git push origin test-server
+
