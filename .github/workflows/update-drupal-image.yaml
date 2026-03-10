@@ -19,7 +19,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          ref: test-server
+          ref: master
 
       - name: Update Drupal image tag
         run: |
@@ -44,5 +44,5 @@ jobs:
       - name: Push changes
         if: env.CHANGES_MADE == 'true'
         run: |
-          git push origin test-server
+          git push origin master
 
