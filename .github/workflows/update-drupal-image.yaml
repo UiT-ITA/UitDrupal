@@ -33,9 +33,16 @@ jobs:
       - name: Commit changes
         run: |
           git add bgo1-test/espen-test/drupal-deployment.yaml
-          git commit -m "Drupal image tag updated for test server: ${{ github.event.inputs.tag_name }}"
+          if git diff --staged --quiet; then
+            echo "No changes detected - tag ${{ github.event.inputs.tag_name }} is already set"
+            echo "CHANGES_MADE=false" >> $GITHUB_ENV
+          else
+            git commit -m "Drupal image tag updated for test server: ${{ github.event.inputs.tag_name }}"
+            echo "CHANGES_MADE=true" >> $GITHUB_ENV
+          fi
 
       - name: Push changes
+        if: env.CHANGES_MADE == 'true'
         run: |
           git push origin test-server
 
