@@ -23,7 +23,7 @@ jobs:
 
       - name: Update Drupal image tag
         run: |
-          sed -i 's|image: uitcontainerregistry.azurecr.io/uit/drupal:.*|image: uitcontainerregistry.azurecr.io/uit/drupal:${{ github.event.inputs.tag_name }} # {"$imagepolicy": "flux-system:drupal-11-3"}|' bgo1-test/espen-test/drupal-deployment.yaml
+          sed -i 's|image: uitcontainerregistry.azurecr.io/uit/drupal:.*|image: uitcontainerregistry.azurecr.io/uit/drupal:${{ github.event.inputs.tag_name }}|' bgo1-test/espen-test/drupal-deployment.yaml
 
       - name: Configure Git
         run: |
