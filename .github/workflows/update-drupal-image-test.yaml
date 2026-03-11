@@ -38,9 +38,18 @@ jobs:
           echo "  tag_name: ${{ github.event.inputs.tag_name }}"
           echo "  reason: ${{ github.event.inputs.reason }}"
 
+      - name: Validate tag_name input
+        run: |
+          # Only allow alphanumeric, dots, dashes, and underscores
+          if ! [[ "${{ github.event.inputs.tag_name }}" =~ ^[A-Za-z0-9._-]+$ ]]; then
+            echo "ERROR: tag_name contains invalid characters."
+            exit 1
+          fi
+
       - name: Update Drupal image tag
         run: |
-          sed -i 's|image: uitcontainerregistry.azurecr.io/uit/drupal:.*|image: uitcontainerregistry.azurecr.io/uit/drupal:${{ github.event.inputs.tag_name }}|' bgo1-test/espen-test/drupal-deployment.yaml
+          # Use validated tag_name
+          sed -i "s|image: uitcontainerregistry.azurecr.io/uit/drupal:.*|image: uitcontainerregistry.azurecr.io/uit/drupal:${{ github.event.inputs.tag_name }}|" bgo1-test/espen-test/drupal-deployment.yaml
 
       - name: Configure Git
         run: |
