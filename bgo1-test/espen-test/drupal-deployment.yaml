@@ -79,11 +79,17 @@ spec:
                 name: ${app_name}-drupal-restuser-secret
                 key: password
           - name: ENABLE_ENTRYPOINT_D
-            value: "0"
+            value: "1"
           - name: IMPORT_STUDIEPROGRAM_TEST_DATA
             value: "0"
           - name: STUDIEPROGRAM_TEST_DATA_PATH
             value: "/opt/uit_assets/test_data/all_studieprogram_nor_and_eng.json"
+          - name: DATALOAD_ENABLED
+            value: "0"
+          - name: APPLY_DRUPAL_CONFIG
+            value: "1"
+          - name: APPLY_DRUPAL_ENABLE_MODULES
+            value: "1"
         image: uitcontainerregistry.azurecr.io/uit/drupal:11.3-0022
         volumeMounts: 
           - name: settings-php
