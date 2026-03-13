@@ -1,15 +1,15 @@
-# This workflow updates the Drupal Docker image tag in the test deployment file.
+# This workflow updates the nginx Docker image tag in the test deployment file.
 # It is triggered manually via workflow_dispatch with the desired tag name.
 # The workflow will:
 #   1. Check out the repository
-#   2. Update the image tag in bgo1-test/espen-test/drupal-deployment.yaml
+#   2. Update the image tag in bgo1-test/espen-test/nginx-deployment.yaml
 #   3. Commit and push the changes (only if the tag was actually changed)
 #   4. Skip commit/push if the tag is already set (graceful idempotent behavior)
-# The workflow will be called by workflow in project https://github.com/UiT-ITA/docker-image-drupal-unprivileged
+# The workflow will be called by workflow in project https://github.com/UiT-ITA/docker-image-drupal-nginx
 # everytime a new image is pushed to the registry. When commit is pushed to master branch
 # flux at the kubernetes cluster will automatically deploy the new image.
 
-name: Build and Push Docker Image to drupal test
+name: Build and Push nginx Docker Image to drupal test
 
 on:
   workflow_dispatch:
@@ -46,10 +46,10 @@ jobs:
             exit 1
           fi
 
-      - name: Update Drupal image tag
+      - name: Update nginx image tag
         run: |
           # Use validated tag_name
-          sed -i "s|image: uitcontainerregistry.azurecr.io/uit/drupal:.*|image: uitcontainerregistry.azurecr.io/uit/drupal:${{ github.event.inputs.tag_name }}|" bgo1-test/espen-test/drupal-deployment.yaml
+          sed -i "s|image: uitcontainerregistry.azurecr.io/uit/nginx-drupal:.*|image: uitcontainerregistry.azurecr.io/uit/nginx-drupal:${{ github.event.inputs.tag_name }}|" bgo1-test/espen-test/nginx-deployment.yaml
 
       - name: Configure Git
         run: |
@@ -58,12 +58,12 @@ jobs:
 
       - name: Commit changes
         run: |
-          git add bgo1-test/espen-test/drupal-deployment.yaml
+          git add bgo1-test/espen-test/nginx-deployment.yaml
           if git diff --staged --quiet; then
             echo "No changes detected - tag ${{ github.event.inputs.tag_name }} is already set"
             echo "CHANGES_MADE=false" >> $GITHUB_ENV
           else
-            git commit -m "Drupal image tag updated for test server: ${{ github.event.inputs.tag_name }}"
+            git commit -m "nginx image tag updated for test server: ${{ github.event.inputs.tag_name }}"
             echo "CHANGES_MADE=true" >> $GITHUB_ENV
           fi
 
