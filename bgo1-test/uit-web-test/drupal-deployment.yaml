@@ -92,6 +92,10 @@ spec:
             value: "1"
           - name: DRUPAL_SITE_UUID
             value: "e8675260-b214-48a1-b1a5-5de324bd9d41"
+          - name: DRUPAL_INSTALL_METHOD
+            value: "drush"
+          - name: DRUPAL_DEFAULT_LANGUAGE
+            value: "en"
         image: uitcontainerregistry.azurecr.io/uit/drupal:11.3-0046
         volumeMounts: 
           - name: settings-php
