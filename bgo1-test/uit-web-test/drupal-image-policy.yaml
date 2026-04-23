@@ -1,0 +1,14 @@
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImagePolicy
+metadata:
+  name: drupal-11-3
+  namespace: flux-system
+spec:
+  imageRepositoryRef:
+    name: drupal
+  filterTags:
+    pattern: '^11\.3-(\d+)$'
+    extract: '$1'
+  policy:
+    numerical:
+      order: asc

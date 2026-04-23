@@ -67,7 +67,7 @@ spec:
                 name: ${app_name}-drupal-iknowbase-graphql-studiekatalog-secret
                 key: password
           - name: DRUPAL_REST_BASEURL
-            value: "https://espen-test-uit.bgo1.test.rail.uib.no"
+            value: "https://uit-web-test.bgo1.test.rail.uib.no"
           - name: DRUPAL_REST_USERNAME
             valueFrom:
               secretKeyRef:

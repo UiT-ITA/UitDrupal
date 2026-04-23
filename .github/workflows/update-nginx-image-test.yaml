@@ -2,7 +2,7 @@
 # It is triggered manually via workflow_dispatch with the desired tag name.
 # The workflow will:
 #   1. Check out the repository
-#   2. Update the image tag in bgo1-test/espen-test/nginx-deployment.yaml
+#   2. Update the image tag in bgo1-test/uit-web-test/nginx-deployment.yaml
 #   3. Commit and push the changes (only if the tag was actually changed)
 #   4. Skip commit/push if the tag is already set (graceful idempotent behavior)
 # The workflow will be called by workflow in project https://github.com/UiT-ITA/docker-image-drupal-nginx
@@ -49,7 +49,7 @@ jobs:
       - name: Update nginx image tag
         run: |
           # Use validated tag_name
-          sed -i "s|image: uitcontainerregistry.azurecr.io/uit/nginx-drupal:.*|image: uitcontainerregistry.azurecr.io/uit/nginx-drupal:${{ github.event.inputs.tag_name }}|" bgo1-test/espen-test/nginx-deployment.yaml
+          sed -i "s|image: uitcontainerregistry.azurecr.io/uit/nginx-drupal:.*|image: uitcontainerregistry.azurecr.io/uit/nginx-drupal:${{ github.event.inputs.tag_name }}|" bgo1-test/uit-web-test/nginx-deployment.yaml
 
       - name: Configure Git
         run: |
@@ -58,7 +58,7 @@ jobs:
 
       - name: Commit changes
         run: |
-          git add bgo1-test/espen-test/nginx-deployment.yaml
+          git add bgo1-test/uit-web-test/nginx-deployment.yaml
           if git diff --staged --quiet; then
             echo "No changes detected - tag ${{ github.event.inputs.tag_name }} is already set"
             echo "CHANGES_MADE=false" >> $GITHUB_ENV
