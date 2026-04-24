@@ -8,7 +8,7 @@ metadata:
     cert-manager.io/usages: "digital signature"
     cert-manager.io/private-key-rotation-policy: Always
     # When set only available from
-    nginx.ingress.kubernetes.io/whitelist-source-range: 129.242.0.0/16
+    nginx.ingress.kubernetes.io/whitelist-source-range: 129.242.0.0/16,158.37.63.0/24,158.37.66.0/24,158.39.75.0/24,158.39.48.0/24,158.39.200.0/24
 
 spec:
   ingressClassName: nginx
