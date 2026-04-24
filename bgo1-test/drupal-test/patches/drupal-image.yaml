@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ${app_name}-php-fpm
+spec:
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: ${app_name}-php-fpm
+    spec:
+      volumes:
+        - name: files
+          persistentVolumeClaim:
+            claimName: ${app_name}-files
+        - name: tmp
+          emptyDir: {}
+      imagePullSecrets:
+        - name: gitapp-adm-it-pub-systembruker
+      containers:
+        - name: ${app_name}-php-fpm
+          image: TODO: Image
+          volumeMounts:
+            - mountPath: /var/www/html/web/sites/default/files
+              name: files
+              readOnly: false
+            - name: tmp
+              mountPath: /tmp
+              readOnly: false
