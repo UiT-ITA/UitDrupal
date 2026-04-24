@@ -18,7 +18,7 @@ resources:
 #  - secret-drupal-restuser.yaml
 #  - drupal-image-policy.yaml
 #  - drupal-repository.yaml
-configMapGenerator:  
-  - name: settings-php
-    files:
-      - settings.php=settings.php
+#configMapGenerator:  
+#  - name: settings-php
+#    files:
+#      - settings.php=settings.php

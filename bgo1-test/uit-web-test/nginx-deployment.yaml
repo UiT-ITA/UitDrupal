@@ -21,7 +21,7 @@ spec:
       - name: nginx
         image: uitcontainerregistry.azurecr.io/uit/nginx-drupal:1.29-0018
         volumeMounts: 
-          - name: drupal-default-files
+          - name: drupal-default-files-test
             mountPath: /var/www/html/web/sites/default/files
         ports:
         - containerPort: 8080
@@ -35,9 +35,9 @@ spec:
             type:
               RuntimeDefault
       volumes: 
-        - name: drupal-default-files
+        - name: drupal-default-files-test
           persistentVolumeClaim: 
-            claimName: drupal-default-files
+            claimName: drupal-default-files-test
       imagePullSecrets:
       - name: ${image_pull_secret_name}      
 
