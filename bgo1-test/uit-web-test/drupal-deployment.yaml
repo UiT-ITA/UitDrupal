@@ -96,7 +96,7 @@ spec:
             value: "drush"
           - name: DRUPAL_DEFAULT_LANGUAGE
             value: "en"
-        image: uitcontainerregistry.azurecr.io/uit/drupal:11.3-0047
+        image: uitcontainerregistry.azurecr.io/uit/drupal:11.3-0048
         volumeMounts: 
           - name: settings-php
             mountPath: /var/www/html/web/sites/default/settings.php
