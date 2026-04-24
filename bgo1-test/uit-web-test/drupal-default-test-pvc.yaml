@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: drupal-default
+  name: drupal-default-test
 spec:
   accessModes:
     - ReadWriteMany

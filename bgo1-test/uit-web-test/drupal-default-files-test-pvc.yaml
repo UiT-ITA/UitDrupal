@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: drupal-default-files
+  name: drupal-default-files-test
 spec:
   accessModes:
     - ReadWriteMany
