@@ -3,10 +3,10 @@ kind: Kustomization
 resources:
   - ../../base/uitcontainerregistry-pull-secret
   - ../../components/postgres
-  - drupal-deployment.yaml
-  - drupal-default-pvc.yaml
-  - drupal-default-files-pvc.yaml
-  - drupal-service.yaml
+  #- drupal-deployment.yaml
+  #- drupal-default-pvc.yaml
+  #- drupal-default-files-pvc.yaml
+  #- drupal-service.yaml
   - ingress.yaml
   - nginx-deployment.yaml
   - nginx-service.yaml
