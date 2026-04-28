@@ -19,7 +19,7 @@ spec:
         fsGroup: 82
       containers:
       - name: nginx
-        image: uitcontainerregistry.azurecr.io/uit/nginx-drupal:1.29-0018
+        image: uitcontainerregistry.azurecr.io/uit/nginx-drupal:1.29-0019
         volumeMounts: 
           - name: drupal-default-files-test
             mountPath: /var/www/html/web/sites/default/files
