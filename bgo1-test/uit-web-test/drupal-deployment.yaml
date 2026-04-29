@@ -95,7 +95,7 @@ spec:
           - name: DRUPAL_INSTALL_METHOD
             value: "drush"
           - name: DRUPAL_DEFAULT_LANGUAGE
-            value: "en"
+            value: "nb"
         image: uitcontainerregistry.azurecr.io/uit/drupal:11.3-0052
         volumeMounts: 
           - name: settings-php
