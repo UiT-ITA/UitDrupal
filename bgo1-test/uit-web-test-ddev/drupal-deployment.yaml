@@ -96,6 +96,15 @@ spec:
             value: "drush"
           - name: DRUPAL_DEFAULT_LANGUAGE
             value: "nb"
+          - name: DBDUMP_FILENAME
+            value: "ddev_drupal_template_for_dev_0002.sql.gz"
+          - name: DB_EXPORT_BLOB_STORAGE_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: ${app_name}-secret-dbdump-blob
+                key: db-export-blob-storage-secret
+          - name: DB_EXPORTS_DIR
+            value: /tmp
         image: uitcontainerregistry.azurecr.io/uit/drupal:11.3-0063
         volumeMounts: 
           - name: settings-php

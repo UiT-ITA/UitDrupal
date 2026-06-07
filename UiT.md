@@ -125,3 +125,25 @@ REQUEST_METHOD=GET \
 cgi-fcgi -bind -connect 127.0.0.1:9000
 
 ```
+
+## Cloning the test server setup
+
+The current test server is bgo1-test/uit-web-test-ddev.
+
+To clone this to a new server copy the entire folder and give it a new name.
+
+In drupal-deployment.yaml change this line so that first part of utl is new folder name.
+
+```yaml
+          - name: DRUPAL_REST_BASEURL
+            value: "https://uit-web-test-ddev.bgo1.test.rail.uib.no"
+```
+
+For eample
+
+```yaml
+          - name: DRUPAL_REST_BASEURL
+            value: "https://my-new-server.bgo1.test.rail.uib.no"
+```
+
+Create a new secret-db.yaml where username is ${app_name}
