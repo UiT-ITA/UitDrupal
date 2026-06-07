@@ -93,7 +93,7 @@ spec:
           - name: DRUPAL_SITE_UUID
             value: "7cc673db-76ad-414f-923d-644b3c6f4045"
           - name: DRUPAL_INSTALL_METHOD
-            value: "drush"
+            value: "dbdump"
           - name: DRUPAL_DEFAULT_LANGUAGE
             value: "nb"
           - name: DBDUMP_FILENAME
@@ -102,7 +102,7 @@ spec:
             valueFrom:
               secretKeyRef:
                 name: ${app_name}-secret-dbdump-blob
-                key: db-export-blob-storage-secret
+                key: password
           - name: DB_EXPORTS_DIR
             value: /tmp
         image: uitcontainerregistry.azurecr.io/uit/drupal:11.3-0063
