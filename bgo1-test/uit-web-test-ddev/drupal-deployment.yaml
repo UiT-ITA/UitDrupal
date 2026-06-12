@@ -107,7 +107,7 @@ spec:
                 key: password
           - name: DB_EXPORTS_DIR
             value: /tmp
-        image: uitcontainerregistry.azurecr.io/uit/drupal:11.3-0072
+        image: uitcontainerregistry.azurecr.io/uit/drupal:11.3-0074
         volumeMounts: 
           - name: settings-php
             mountPath: /var/www/html/web/sites/default/settings.php
