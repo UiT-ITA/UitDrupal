@@ -107,6 +107,11 @@ spec:
                 key: password
           - name: DB_EXPORTS_DIR
             value: /tmp
+          - name: UIT_DRUPALAI_APIKEY
+            valueFrom:
+              secretKeyRef:
+                name: ${app_name}-openai-secret
+                key: password
         image: uitcontainerregistry.azurecr.io/uit/drupal:11.3-0077
         volumeMounts: 
           - name: settings-php
