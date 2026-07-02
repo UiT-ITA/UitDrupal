@@ -19,6 +19,7 @@ resources:
   - drupal-image-policy.yaml
   - drupal-repository.yaml
   - secret-dbdump-blob.yaml
+  - secret-openai.yaml
 configMapGenerator:  
   - name: settings-php
     files:
