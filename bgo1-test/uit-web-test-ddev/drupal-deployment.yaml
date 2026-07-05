@@ -112,7 +112,7 @@ spec:
               secretKeyRef:
                 name: ${app_name}-openai-secret
                 key: password
-        image: uitcontainerregistry.azurecr.io/uit/drupal:11.3-0082
+        image: uitcontainerregistry.azurecr.io/uit/drupal:11.3-0083
         volumeMounts: 
           - name: settings-php
             mountPath: /var/www/html/web/sites/default/settings.php
