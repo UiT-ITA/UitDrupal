@@ -90,6 +90,8 @@ spec:
             value: "1"
           - name: APPLY_DRUPAL_CONFIG
             value: "1"
+          - name: APPLY_SINGLE_CONTENT_SYNC
+            value: "1"
           - name: APPLY_DRUPAL_ENABLE_MODULES
             value: "0"
           - name: DRUPAL_SITE_UUID
