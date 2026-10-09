@@ -119,7 +119,7 @@ spec:
               secretKeyRef:
                 name: ${app_name}-feide-secret
                 key: password
-        image: uitcontainerregistry.azurecr.io/uit/drupal:11.3-0107
+        image: uitcontainerregistry.azurecr.io/uit/drupal:11.3-0110
         volumeMounts: 
           - name: settings-php
             mountPath: /var/www/html/web/sites/default/settings.php
