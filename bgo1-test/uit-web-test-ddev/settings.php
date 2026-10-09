@@ -871,3 +871,12 @@ $databases['default']['default'] = array (
   'autoload' => 'core/modules/pgsql/src/Driver/Database/pgsql/',
 );
 $settings['config_sync_directory'] = '/opt/uit_sync';
+
+/**
+ * OpenID Connect (Feide) client secret.
+ * Kept out of config/sync and injected from the environment instead.
+ */
+$openid_connect_feide_secret = getenv('OPENID_CONNECT_FEIDE_CLIENT_SECRET');
+if ($openid_connect_feide_secret !== false && $openid_connect_feide_secret !== '') {
+    $config['openid_connect.client.feide_test']['settings']['client_secret'] = $openid_connect_feide_secret;
+}

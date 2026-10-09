@@ -114,6 +114,11 @@ spec:
               secretKeyRef:
                 name: ${app_name}-openai-secret
                 key: password
+          - name: OPENID_CONNECT_FEIDE_CLIENT_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: ${app_name}-feide-secret
+                key: password
         image: uitcontainerregistry.azurecr.io/uit/drupal:11.3-0104
         volumeMounts: 
           - name: settings-php
