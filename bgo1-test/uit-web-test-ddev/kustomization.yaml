@@ -16,6 +16,7 @@ resources:
   - secret-drupal-orgreg-apikey.yaml
   - secret-drupal-iknowbase-graphql-studiekatalog-apikey.yaml
   - secret-drupal-restuser.yaml
+  - secret-drupal-feide.yaml
   - drupal-image-policy.yaml
   - drupal-repository.yaml
   - secret-dbdump-blob.yaml
