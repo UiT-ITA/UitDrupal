@@ -1,0 +1,36 @@
+---
+apiVersion: v1
+kind: Secret
+metadata:
+    name: drupal-fs-utvekslingsavtaler-apikey
+type: Opaque
+stringData:
+    password: ENC[AES256_GCM,data:8qq1Ic/aWYXJ9dOGZdcGEkIwhPM6ZRUmAdAQOytkXcCXNjSm,iv:cJ5MOQjy9kXCf54YJ/0pmkXXB/nQ899+qyHpX2VTKC0=,tag:zBPGtLxBed/XBTpE6aQj+g==,type:str]
+sops:
+    encrypted_regex: ^(data|stringData)$
+    lastmodified: "2026-10-19T15:09:00Z"
+    mac: ENC[AES256_GCM,data:oT/vaV1GGz+OJHk3lraEIlnjqm7qk9MwypKLhcb1rfW4msDcgx4UiMOC+CSY0KO709J308UuDehlXlmZpLvMzcSXJB3420LAHAk8rOhkFtPEVs95Je70z1MfIIRgI76p5xNjnaNnw1beGEtsIxAQFxcF4tgr0P7CjqM0W6m2Qnc=,iv:tRd8gB5WYQYarFU8vOo21BagG5adG5Tarwosp1eR/wk=,tag:/3sPmbXSVt9mZ7XBqmMiJw==,type:str]
+    pgp:
+        - created_at: "2026-10-19T15:09:00Z"
+          enc: |-
+            -----BEGIN PGP MESSAGE-----
+
+            hF4DNV2Bp8jlH8sSAQdAmVKTjcuTi/iMGJue7Br243+awAwZ7LnzgoJimXj23Gcw
+            0DaPmetxcTEawzp0aJ+t00uSGXkm5PXXiB8LUCtnGkee4YTGoDBDmkBm4Ge+62W2
+            0l4By3h0evQVPyYIohh/YfzyKb/+mNDD7kXOKYoGj8advNcjedMIQNlGcDU5KBJW
+            uB/ZLk1p8fD27klvwG8fafJ9NTTUptr/xpRhtD35yUCSFFf1IDpT6mNoQQPZKhhw
+            =o+NZ
+            -----END PGP MESSAGE-----
+          fp: AFDB50935E640B5E952678DCBEE7F92A551628F5
+        - created_at: "2026-10-19T15:09:00Z"
+          enc: |-
+            -----BEGIN PGP MESSAGE-----
+
+            hF4D2YK4vojxIRISAQdAjpHaHmlEqViInzVI1AX0KcguvBfq1h/oxxMd7nXgaCAw
+            Ohial6vaX2YBu+vPS6LGECcq/7w5RfoMM0Gkhpvi7WsyGaE0gi1YrnOr+3iLQZIW
+            0l4BHdhDxIuk92DPjtC0+Y2ujgGBelpp0/bI3g9+oX9FQixjVQFEG9V9pws/7Bs7
+            Cb/loghvrM/1t+ZaxthTrheW1f5nRSElgCjKxJV3r3dOJ3lFEtjlTfZEQD3mYX8x
+            =jwHw
+            -----END PGP MESSAGE-----
+          fp: 2D22B5B41611C07BDBEC03E75BDF4644E8CD8F78
+    version: 3.13.3
