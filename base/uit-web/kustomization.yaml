@@ -6,7 +6,6 @@ labels:
       app.kubernetes.io/part-of: "${app_name}"
     includeSelectors: true
     includeTemplates: true
-    includeVolumeClaimTemplates: true
 resources:
   - database.yaml
   - drupal-deployment.yaml
