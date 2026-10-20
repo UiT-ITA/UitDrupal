@@ -35,12 +35,12 @@ spec:
             - name: POSTGRES_USER
               valueFrom:
                 secretKeyRef:
-                  name: drupal-db-user
+                  name: db-drupal-user
                   key: username
             - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: drupal-db-user
+                  name: db-drupal-user
                   key: password
             - name: UIT_ORGREG_APIKEY
               valueFrom:
