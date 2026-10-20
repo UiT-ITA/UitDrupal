@@ -1,0 +1,102 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: drupal
+  labels:
+    app.kubernetes.io/name: drupal
+    app: drupal
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: drupal
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: drupal
+        app: drupal
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 33
+        runAsGroup: 33
+        fsGroup: 33
+      containers:
+        - name: drupal
+          env:
+            # Application configuration
+            - name: POSTGRES_DB
+              value: drupal
+            - name: POSTGRES_HOST
+              value: drupal-db-rw
+            - name: POSTGRES_PORT
+              value: "5432"
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: drupal-db-user
+                  key: username
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: drupal-db-user
+                  key: password
+            - name: UIT_ORGREG_APIKEY
+              valueFrom:
+                secretKeyRef:
+                  name: drupal-orgreg-apikey
+                  key: password
+            - name: UIT_FS_UTVEKSLINGSAVTALER_APIKEY
+              valueFrom:
+                secretKeyRef:
+                  name: drupal-fs-utvekslingsavtaler-apikey
+                  key: password
+            - name: UIT_IKNOWBASE_GRAPHQL_STUDIEKATALOG_APIKEY
+              valueFrom:
+                secretKeyRef:
+                  name: drupal-iknowbase-graphql-studiekatalog-apikey
+                  key: password
+            - name: UIT_DRUPALAI_APIKEY
+              valueFrom:
+                secretKeyRef:
+                  name: openai-apikey
+                  key: password
+            - name: OPENID_CONNECT_FEIDE_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: feide-client-secret
+                  key: password
+          image: uitcontainerregistry.azurecr.io/uit/drupal:11.3-0111
+          volumeMounts:
+            - name: settings-php
+              mountPath: /var/www/html/web/sites/default/settings.php
+              subPath: settings.php
+            - name: salt-txt
+              mountPath: /var/local/salt.txt
+              subPath: salt.txt
+            - name: ${app_name}-files
+              mountPath: /var/www/html/web/sites/default/files
+          ports:
+            - containerPort: 9000
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            runAsNonRoot: true
+            seccompProfile:
+              type:
+                RuntimeDefault
+      volumes:
+        - name: settings-php
+          configMap:
+            name: settings-php
+        - name: salt-txt
+          secret:
+            secretName: drupal-hash-salt
+        - name: ${app_name}-files
+          persistentVolumeClaim:
+            claimName: ${app_name}-files
+      imagePullSecrets:
+        - name: ${image_pull_secret_name}

@@ -1,0 +1,23 @@
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: drupal-db
+  labels:
+    app.kubernetes.io/name: drupal-db
+spec:
+  instances: 2
+  monitoring:
+    enablePodMonitor: true
+  bootstrap:
+    initdb:
+      database: drupal
+      owner: drupal
+      secret:
+        name: db-drupal-user
+  storage:
+    size: 16Gi
+
+  postgresql:
+    parameters:
+      shared_buffers: "256MB"

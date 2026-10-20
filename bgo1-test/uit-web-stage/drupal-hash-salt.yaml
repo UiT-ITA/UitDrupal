@@ -1,0 +1,37 @@
+apiVersion: v1
+kind: Secret
+metadata:
+    name: drupal-hash-salt
+    labels:
+        app.kubernetes.io/part-of: uit-web
+type: Opaque
+stringData:
+    salt.txt: ENC[AES256_GCM,data:rpRiuxvkrTW+oQLt5ol99yLEXZBNBJRylLe72U+uPa0ueI5MJnDIlfGqSVIEKHTwjE+RjuUq/NYTr/aZZN0Khn0Ahd88uj04CIw=,iv:x88L05ylzdfGc0ukbrwFOxF5NqBu+F0MODgKf0MqlqI=,tag:UzjRRDtl91tixitdDzTEVw==,type:str]
+sops:
+    encrypted_regex: ^(data|stringData)$
+    lastmodified: "2026-10-19T10:13:21Z"
+    mac: ENC[AES256_GCM,data:vT6nOAIohbmQ25vOvQmBB3Th7VLirEfw/zzk14fJMtq5P35jCfhULXDfE4mq+1F7yL6DiFXxjVa1nuEOkCCTwL04uq1eYyQY/OmZPVVMTL4FExpXTgcRo0zHHu+oj1WbnS7KFEUz4neU9gQ9ujVb2QX4xpKzdCmXZDA0Wp3t6BQ=,iv:kzWHXSB0ZukcheHcmNFv9N1nba7y5RMhN5osBeLsP6w=,tag:n5ivra3vVcCTpCLqVGFVoQ==,type:str]
+    pgp:
+        - created_at: "2026-10-19T10:13:20Z"
+          enc: |-
+            -----BEGIN PGP MESSAGE-----
+
+            hF4DNV2Bp8jlH8sSAQdADIothdYgkAbAj/sjM5rxsy4Uq18z9UlQ19/ZG9JKjVAw
+            PNMvnxIW/oU+PsdnUBL7Rl32z8/MCCI2yImNeckEER1FiQGfcUYx5PFXHkxpg1L5
+            0l4BCQdHoEK7W00ZXruLTfjW6l6+4SmAX+EWg7oiTcTC3h29cgMeHlNeLAnx55cO
+            Hxi0xfRseGPx3hbXWH/j+D3bzudALn6XaQR0otVX/GsFWx76MIgVepuD46OnoyI4
+            =TFHR
+            -----END PGP MESSAGE-----
+          fp: AFDB50935E640B5E952678DCBEE7F92A551628F5
+        - created_at: "2026-10-19T10:13:20Z"
+          enc: |-
+            -----BEGIN PGP MESSAGE-----
+
+            hF4D2YK4vojxIRISAQdATCJHtIBgyQIvJsd7zT72tIoCqI+yJrUHpbZEITiFRhYw
+            zCNZmaObBpZejAXSZ6qgm82FhtKFk48g3JnUVsRBN9TxyMe1WhidlU8Z0XFXJGce
+            0l4Bnt/fGKTV8dELJ6Af2gP/QHz05K1y2SsUTiWStt0Ielz+pi6RwPjI2Nqx5OwW
+            74+FxRjsBQ2Br5jpyh+tQ66CsbHYCGg+WTu4C8ojS2ZUbOQQvyE1gg4x+x1qaPx7
+            =Megs
+            -----END PGP MESSAGE-----
+          fp: 2D22B5B41611C07BDBEC03E75BDF4644E8CD8F78
+    version: 3.13.3

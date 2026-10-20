@@ -1,0 +1,36 @@
+---
+apiVersion: v1
+kind: Secret
+metadata:
+    name: drupal-orgreg-apikey
+type: Opaque
+stringData:
+    password: ENC[AES256_GCM,data:5zJlDS7oAWJv3+yUvhQxN84Nqej7LyLArie08fdmvMLxiYkN,iv:BF0Jf7ibs5n+luqYr7UMM2jSEC71UPW7S/FcDotX69Y=,tag:FkRb/XzTGzVDbdB7OwaI7w==,type:str]
+sops:
+    encrypted_regex: ^(data|stringData)$
+    lastmodified: "2026-10-19T15:09:01Z"
+    mac: ENC[AES256_GCM,data:q/XTETHq5Cs/lcydXt1dPRr/5FvVmhNYaxoFSoKBrMSL8abKMml7t0h2MZwoELKGYEXhVq3DOHnNYBhcX0Ey0/MaLAkBIqTGdSlFVETqdOH+/AAd5F4+fIaN1VUsZUFKrXQoRBSfFnDvj6oBNqDepUm5TzOQn4dtY8X3N/D5DB0=,iv:WEyiZVmKYqkSWahDFdUmEVZ1yMNnw6X+qnNTxroLeSs=,tag:sCTkPhnTGWjTGwmY3hriAg==,type:str]
+    pgp:
+        - created_at: "2026-10-19T15:09:00Z"
+          enc: |-
+            -----BEGIN PGP MESSAGE-----
+
+            hF4DNV2Bp8jlH8sSAQdAzn+Er9jbeabQlQWAzB6n028oQ3if+5Lt487taq2RvWUw
+            2rqUOVumbwb6egnX571Xq2CX5ojtcUtgSLJPhbnSdjhCyKSBfa5M5hAStM9LRPq3
+            0l4BoGfItATSjM2gRvy4U/oIBIxKNp6y2AoXE3BynvPzvG+8DgtUw4KtLOkEuR1k
+            qNNp3SgOmWC6iKf5I6Drb1ZNtCBt55bqrol8AI3OhFyNDObuz1zpDSOlE8IGOsAC
+            =jXDe
+            -----END PGP MESSAGE-----
+          fp: AFDB50935E640B5E952678DCBEE7F92A551628F5
+        - created_at: "2026-10-19T15:09:00Z"
+          enc: |-
+            -----BEGIN PGP MESSAGE-----
+
+            hF4D2YK4vojxIRISAQdAmWCq11HBbUoytFFscRid88MP/OmV2nqTKtJUVLw2mk4w
+            AOZ09A7Jj8Fap521dMzMaZ7vpPtXoItM+O9IN3bws8FZ2jcUAhJcA/kGcwG8ES3C
+            0l4BDaezq/SVgQVo5fGQnXTIoJZl7xghSYmjhESoMocfE/8pE+x51nianosZvXQy
+            2B4xvU43tXVVOYO7ioVzLHXGaYWEeUgjss8AAHzPZU6LfMF41gM+OBxZ/4Mfsxu2
+            =lPz0
+            -----END PGP MESSAGE-----
+          fp: 2D22B5B41611C07BDBEC03E75BDF4644E8CD8F78
+    version: 3.13.3

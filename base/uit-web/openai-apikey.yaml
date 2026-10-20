@@ -1,0 +1,36 @@
+---
+apiVersion: v1
+kind: Secret
+metadata:
+    name: openai-apikey
+type: Opaque
+stringData:
+    password: ENC[AES256_GCM,data:GwhVQOAMX4i8gyVFG1zkFnZJJ59GOZ9I4WlhpvWqtjmYP1qqjyQEf2omlFKv8vlG8Ch6HG2d8oOWSLeLtQjXF9+gy3DybK7+oCGqco7o860OyaWZ,iv:Cu83MVyq0kiE3f/S45UKdkdv4NywsVivSN+DMQ6lrMk=,tag:R66Pc/AeUoCf/A0gLIMKzg==,type:str]
+sops:
+    encrypted_regex: ^(data|stringData)$
+    lastmodified: "2026-10-19T15:09:00Z"
+    mac: ENC[AES256_GCM,data:wLpKcToUo3bLFz1G0FPw/0eDPOUbqGAd/F8/X2rJK7rIxzH+RGOblOXAZV0VH3avxLh2pLjiygqn+pOxbpO8RHZjylvbAoB5yUFGl2UbLa3MSF7jOFb8RaocHfTyzq5s7EQX9YNnZR71r+ZMC9xgmXx1JHJ1e5odOLmgcy9JFag=,iv:k5F2+Kg5E3PVpdwNrcDiJysvMzpRki6wdq/yo3T9yD0=,tag:wtSvmaa45qTm7txlB8gSQQ==,type:str]
+    pgp:
+        - created_at: "2026-10-19T15:09:00Z"
+          enc: |-
+            -----BEGIN PGP MESSAGE-----
+
+            hF4DNV2Bp8jlH8sSAQdAMVztcoR/QLsVaGhpgPcpu7W5RNnSgr9af4eHtcai1QAw
+            j/467ubWCG5n4ykKIodwdf+oOaQ03Ximnqt33OL/4AdTObg2mLDp8F5LkNKM5Wx/
+            0l4B51oQHMOipbl12PomhnOoTK3tSEwg/PxwNobHsTSkSL0BeBIeNZ4znyapEFpi
+            EUYe0KdaWR5OqsinxO6yMuJV3GhnmLw//i3lhMOdep4+7PblX0Uab1GhGmXtL5qM
+            =i/PC
+            -----END PGP MESSAGE-----
+          fp: AFDB50935E640B5E952678DCBEE7F92A551628F5
+        - created_at: "2026-10-19T15:09:00Z"
+          enc: |-
+            -----BEGIN PGP MESSAGE-----
+
+            hF4D2YK4vojxIRISAQdAPes80d/C/n1f8fIZKbw8w5IzqrdYOVG+7bYD1ivNzzkw
+            zbP2OCsGIRBYvYKfiogsc7ezW+xLX1SAYtceLF7g3ge0xEXJLuZqS5bgZowIsFZC
+            0l4BdbO9KjuzfV7MmJWNeBldSA7qRM/eAJmES+3HtUMa6l6x9OJ9+OExJE5Vv1AN
+            05FctZw8HXQj6fwqP08ApLtjJefYM+xWOTt1nA1A1wT+CDkFBy7VNCXNFqoSY4MU
+            =Uxkf
+            -----END PGP MESSAGE-----
+          fp: 2D22B5B41611C07BDBEC03E75BDF4644E8CD8F78
+    version: 3.13.3

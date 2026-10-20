@@ -1,0 +1,36 @@
+---
+apiVersion: v1
+kind: Secret
+metadata:
+    name: drupal-iknowbase-graphql-studiekatalog-apikey
+type: Opaque
+stringData:
+    password: ENC[AES256_GCM,data:Vb5Cw2gz40aSKENYi596EKXdd/ExrLKgXlVtx4BJdwU1QZgw,iv:Z+FZPmvaqxOGajvfJDaYAMFbgflAlXQEXVnmp2TSwDI=,tag:Pna7koaPY9uzCvtB0iKXsA==,type:str]
+sops:
+    encrypted_regex: ^(data|stringData)$
+    lastmodified: "2026-10-19T15:09:00Z"
+    mac: ENC[AES256_GCM,data:tw7PPBf+yYLWcAc7i5my4b78FfQfGyc9CbVVEipFMZJAzmLGir6uvhBVVLSpIu/U4DY3K3unz9x8awpPh6sqKQdsdj0MRtLjmkUaq8a9rzeqvu0D7I/cjADfiqE38MpnH7HmgWYb1R/YHtcAWyHxJ6nDBcLNc5ef2ACq73WojHw=,iv:jWm04CiFbHdzcerUCLVadN2M8FAzCAlP1wgIGgEZEJo=,tag:bhimdginW18o/gkHZeyHBg==,type:str]
+    pgp:
+        - created_at: "2026-10-19T15:09:00Z"
+          enc: |-
+            -----BEGIN PGP MESSAGE-----
+
+            hF4DNV2Bp8jlH8sSAQdAXtUpd5aA8g1s++HFHkFbYiaX/MM7Z3ajykz/d3WwHXsw
+            Fbjih7xM1SVevonb4WuHnf3OO3z0G3R+5UGv2oGhbddX4i85pN911bfP6A/TK7jE
+            0l4BgfDQUywmoeb6yWooh45ut+F+dsgLR3cRkFE2DzMdn13kw0RH3dIFak2e+WFz
+            YosV4L6DfNjwM0RZ/tmdwF5jGk7ApmG0wCHIAQE5v41Sadmc8KKWSttFbVVzZV/9
+            =abL8
+            -----END PGP MESSAGE-----
+          fp: AFDB50935E640B5E952678DCBEE7F92A551628F5
+        - created_at: "2026-10-19T15:09:00Z"
+          enc: |-
+            -----BEGIN PGP MESSAGE-----
+
+            hF4D2YK4vojxIRISAQdAw8S4NHvW55/FaVEyWsaKZcP4r61xVhZ/HuK2ob/HAy4w
+            bA0vk9aRHxU+weDVLViAwen1Fx/HHag2jfSBWOhn73uPVlX77yoZo7uvkVFv/lXO
+            0l4BLsSHnTLtvC6BlM2LYwqJ47V0IEOFUh0lBueGlxYcS8DLHdZxQh85pWJ0tOb7
+            qjONGzSDGJUCZ600WuVTZxAAVVgubhPuil2P2dgEac8qs1UpYxJcr8VLpM0D1Pl9
+            =c7ro
+            -----END PGP MESSAGE-----
+          fp: 2D22B5B41611C07BDBEC03E75BDF4644E8CD8F78
+    version: 3.13.3

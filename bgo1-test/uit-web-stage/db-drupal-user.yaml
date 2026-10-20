@@ -1,0 +1,36 @@
+apiVersion: v1
+kind: Secret
+metadata:
+    name: db-drupal-user
+type: Opaque
+stringData:
+    username: ENC[AES256_GCM,data:xdx7X98G,iv:3xlxtkAlItyA4R+RO+bFBffUc+W2zyRTRLS/WXy0fYE=,tag:7mvIqAZLsef6Kn5HUuUsiQ==,type:str]
+    password: ENC[AES256_GCM,data:A7qoJ+Jrvw+ckoVXLfbbOo7Ggdp1Fpv36KSA96K0mYKbTg==,iv:f7wtBku+rebDgUSRcVwOPcOK+X68BgJ7LdrNJ5HpS10=,tag:3LjxOk70Oa7nGHJzn3ycGw==,type:str]
+sops:
+    encrypted_regex: ^(data|stringData)$
+    lastmodified: "2026-10-19T09:22:58Z"
+    mac: ENC[AES256_GCM,data:kAE+x9sb8Ne1FOL+iMEkwYkddlpyu8xlzahm/yo9yFd6s50pVuWKZeqlYTxbr9HpEAOwgVIsDSIeDBs0ToYfTDBPm8/JCjlxQki/zCP7X3KsRvTTblRmqQ6yErTakKVDzAdDwvT+gbEojnaIsMDpbEjk4ss3kXhE0SveWDfcjV8=,iv:NrGGwkOzeLGtrLCjC0n6HJb+h7Zyi7RJCen8ZxfizHc=,tag:qdsjEMOrvjtWU6ogWWttBQ==,type:str]
+    pgp:
+        - created_at: "2026-10-19T09:22:58Z"
+          enc: |-
+            -----BEGIN PGP MESSAGE-----
+
+            hF4DNV2Bp8jlH8sSAQdA7Q+NuyoGEkn3MWpKZSxdERo2WWKt1rwq/Pqbo6kjg20w
+            L2cWv2ysTeexJ6kUsjpz0gpzOvN6l+rHvArgIfEd9lJH9Q41P20zhEcK0CAmx54/
+            0l4BKHDZdCrOQ8pJXrRMGT3B2GXkaXJeW7SL3/Pww/2s+flieTwy9eZdzE/+fP/a
+            j+iFYNTonlCjZuS86LpEJUqh8kqhRE12B0G3f9un9Kxrb87lARpigDdq9fvyWlbj
+            =ENrs
+            -----END PGP MESSAGE-----
+          fp: AFDB50935E640B5E952678DCBEE7F92A551628F5
+        - created_at: "2026-10-19T09:22:58Z"
+          enc: |-
+            -----BEGIN PGP MESSAGE-----
+
+            hF4D2YK4vojxIRISAQdAs6bJbVCsgeL5GbzfAEZza5503LsviW7LrgucuQURPwYw
+            WW+UZvqlqIAnYWRaTsf3PjSKzxEqXkIq8xpuxcC04u5j9QGp6izjW/0/8LJjz334
+            0l4BUp/Rv7doQVfmrecr8G/i6/6fp+q5yiDCOlKs6ZMe4sv0KnHwpRx9Q43+Pmmj
+            KnkBn5RDL0MalS2Cjw/8C6R/noujtmj26A/lZz0b8u6Cp11d/oAc77rvRBFMQM6z
+            =ITK6
+            -----END PGP MESSAGE-----
+          fp: 2D22B5B41611C07BDBEC03E75BDF4644E8CD8F78
+    version: 3.13.3
