@@ -32,7 +32,7 @@ spec:
           tcpSocket:
             port: 514
           timeoutSeconds: 10
-        name: ryslog
+        name: rsyslog
         ports:
         - containerPort: 514
           name: rsyslog-tcp
