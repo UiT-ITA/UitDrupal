@@ -18,6 +18,4 @@ resources:
   - nginx-deployment.yaml
   - nginx-service.yaml
   - openai-apikey.yaml
-  - rsyslog-deployment.yaml
-  - rsyslog-service.yaml
   - uit-web-files-pvc.yaml
