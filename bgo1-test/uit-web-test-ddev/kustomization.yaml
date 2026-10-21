@@ -7,7 +7,7 @@ resources:
   - drupal-default-test-pvc.yaml
   - drupal-default-files-test-pvc.yaml
   - drupal-service.yaml
-  - ingress.yaml
+#  - ingress.yaml
   - nginx-deployment.yaml
   - nginx-service.yaml
   - secret-db.yaml
