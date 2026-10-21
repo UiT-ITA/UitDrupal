@@ -1,18 +1,18 @@
 apiVersion: hnc.x-k8s.io/v1alpha2
 kind: SubnamespaceAnchor
 metadata:
-  name: uit-it-webadm-uit-web-stage
+  name: uit-it-webadm-uit-web-dev
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: uit-it-webadm-uit-web-stage
+  name: uit-it-webadm-uit-web-dev
 spec:
   sourceRef:
     kind: GitRepository
     name: uit-it-webadm
-  path: bgo1-test/uit-web-stage
-  targetNamespace: uit-it-webadm-uit-web-stage
+  path: bgo1-test/uit-web-dev
+  targetNamespace: uit-it-webadm-uit-web-dev
   prune: true
   wait: true
   interval: 30m0s
@@ -25,9 +25,9 @@ spec:
   postBuild:
     substitute:
       app_name: uit-web
-      app_env: stage
+      app_env: dev
       rail_cluster: bgo1-test
       rail_env: test
       rail_region: bgo1
-      ip_whitelist: 129.242.0.0/16,158.37.63.0/24,158.37.66.0/24,158.39.75.0/24,158.39.48.0/24,158.39.200.0/24,88.151.74.100/32
+      ip_whitelist: 129.242.0.0/16,158.37.63.0/24,158.37.66.0/24,158.39.75.0/24,158.39.48.0/24,158.39.200.0/24,88.151.74.100/32,2a04:141:12::/48
       image_pull_secret_name: uitcontainerregistry
