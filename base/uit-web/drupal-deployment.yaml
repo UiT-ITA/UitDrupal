@@ -79,6 +79,12 @@ spec:
               mountPath: /var/www/html/web/sites/default/files
           ports:
             - containerPort: 9000
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "50m"
+            limits:
+              memory: "256Mi"
           securityContext:
             allowPrivilegeEscalation: false
             capabilities:
