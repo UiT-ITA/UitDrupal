@@ -1,0 +1,8 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: ${app_name}-db
+spec:
+  imageName: ghcr.io/cloudnative-pg/postgresql:17-minimal-trixie
+  instances: 1
+  enablePDB: false

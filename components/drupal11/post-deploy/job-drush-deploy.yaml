@@ -1,0 +1,77 @@
+###
+# Run Drush deploy after application is successfully deployed to synchronize database with the latest codebase.
+###
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: ${app_name}-drupal-deploy-job
+spec:
+  backoffLimit: 0
+  template:
+    metadata:
+      labels:
+        app: ${app_name}-drupal
+    spec:
+      imagePullSecrets:
+        - name: ${image_pull_secret_name}
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 33
+        runAsGroup: 33
+        fsGroup: 33
+        fsGroupChangePolicy: "OnRootMismatch"
+      containers:
+        - name: ${app_name}-drupal-deploy-job
+          image: PATCH_PHP_FPM_IMAGE
+          command:
+            - /bin/sh
+            - -c
+            - "drush deploy"
+          ports:
+            - name: fastcgi
+              containerPort: 9000
+          volumeMounts:
+            - name: phpfpm-config
+              mountPath: /usr/local/etc/php-fpm.d/zz-docker.conf
+              subPath: zz-docker.conf
+            - name: php-config
+              mountPath: /usr/local/etc/php/conf.d/99-drupal.ini
+              subPath: 99-drupal.ini
+            - mountPath: /var/www/html/web/sites/default/files
+              name: files
+              readOnly: false
+            - name: tmp
+              mountPath: /tmp
+              readOnly: false
+          resources:
+            requests:
+              memory: "1Gi"
+              cpu: "500m"
+            limits:
+              memory: "1Gi"
+          # Prevent escalation attacks
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            seccompProfile:
+              type: RuntimeDefault
+            runAsNonRoot: true
+            runAsUser: 33
+            runAsGroup: 33
+            fsGroup: 33
+            fsGroupChangePolicy: "OnRootMismatch"
+      volumes:
+        - name: phpfpm-config
+          configMap:
+            name: phpfpm-config-post-deploy
+        - name: php-config
+          configMap:
+            name: php-config-post-deploy
+        - name: files
+          persistentVolumeClaim:
+            claimName: ${app_name}-files
+        - name: tmp
+          emptyDir: {}
+      restartPolicy: Never

@@ -1,0 +1,18 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ../../base/shared
+  - ../../base/git-pull-secrets
+
+# Remove IP block, adding begining of the file until the target value
+# and then replace (in this case with null)
+# Official name: Strategic merge
+patches:
+  - patch: |
+      apiVersion: networking.k8s.io/v1
+      kind: Ingress
+      metadata:
+        name: shared
+        annotations:
+          nginx.ingress.kubernetes.io/whitelist-source-range: null
+

@@ -1,0 +1,34 @@
+apiVersion: v1
+kind: Secret
+metadata:
+    name: gitapp-adm-it-pub-registry-read-rail
+type: kubernetes.io/dockerconfigjson
+data:
+    .dockerconfigjson: ENC[AES256_GCM,data:B6VUxuool2x3vbKk8XVgfG7tugS5cM0BBbePKR+NU0ijNkM+LjEDOoMzuZwiU+Z0ScJb0gUFvYFARj2FdSnzmI0vFLwgUhwBeEM3Wkjo/IgB2aN/pSFU/ZIXT4m7Cg/mAsSSqaifdAfAF/bpj/1RWBp+76PmKxW/THp2+4800izcZ/axadNCJo3zDjAsecGh8Ght9ntBETLIppWYBAteOR5JeN3cCHL7WhtZV3dIKpgi8iPBz2eSKzZc+z0iQdfsWRfSiSZPJ/49MrddkM+fpnU94VFu3jINBMPkDCCMZ0PfJMekfm7n+A5EnkFEXfkcSWhwdHpq+t/PQfNpA5/sQoEofy3PTNCgMIhM+MgmDHxU7+vHqXLLfytd9Q/d3KVa/CwQSeuLqvWWHs/0LZzRaj6IFMhKbEd/KvSHOdWhbi35KpljxNz6LpAtGlfxLRXNxEjRSkLWGedzsHg2FOV+K7urhC+ZS6Umi+SZdgJl/cidz5oE+vKnBxjpQv33uTHDpABhXRB7d3q42r0L,iv:nx+g1pjnRUpy0HlTaIyRgSjnf8dxIKbblmo2iGO/VFU=,tag:dmvt+acKnHWMG+xf24waUQ==,type:str]
+sops:
+    lastmodified: "2026-01-15T09:51:35Z"
+    mac: ENC[AES256_GCM,data:P6WhWg8gp5CzrfQDQOtLOdxdQp92AtZGgry28GT/IaqJ3QI5oRdafycE9+vK3iBVWgA/PILoTCP8PMYx4Vbzg0r1Eq75APfzlvicp11+/bYqBP8U3HwgmLjy4aya3A0JHSSqyXz2ad60RIYx24/ayj7wHx4bBw6MWUo1RWKYYFU=,iv:bqt/B+VN/+9mOz+w9S0QxmLxQednPWWgec2YR4C6Z04=,tag:Ez9WI774GGGNcb2rDk2ogg==,type:str]
+    pgp:
+        - created_at: "2026-01-15T09:51:35Z"
+          enc: |-
+            -----BEGIN PGP MESSAGE-----
+
+            hQIMA65l0w3ngmHxARAApDbcIJ3yWerWqDZyny+Oo0csx8mS4hNLMDWsCOezPTz+
+            wk8ih9y6XVnzxz3ILnRBP0pTmIQzCcYYrQYPONrEB5amr61gpI1phcJXBmFZp/hR
+            9XNQXkEJx1MrHQO9lIyisdXYal7cHHOywUc6Ge7AX2AOHdf3TE/7b2UXWxP0+y3h
+            xsnAPEQ5xsz9rYGHq9sqR6dJxLHybas05ZF3i/h8ToDToT5yXODThZnpNAWxQJNA
+            QN+EIdDWQeH/11EOM3nPkeGK/5p5BRysI5dVHlt+8NB+MascX/bymPscMPtSi8cI
+            mKgf/y3837QEuxvwZPN/KOO1DJ/R/fm1LJ9yG7ucxZDm9eoWRWj1gcXMrlf3hMwZ
+            ABexZZ/TlowcyHI+7Awa+MWSLEDcild37yhSMATuzeZLUg5Q0NeRMEqLsDIOSBiz
+            c8eZpSBFZpSExDcMTVRHCx4Wpd4+HXXMcdUMWK/TiHhKGSOsI/TiLucm7SjJ3KjD
+            F4k19PxiSDZ8pckpkz4xXEY/trQaYt47A7GdYrKGZPyi6WeMawgPOpmR+aI8p8Cy
+            Q3XJ2uAVps1w+C3UbZx1XXgbyCmFGbuAMfPKAwTw3OI++WlkiMmh6FD19Fk9G3Xq
+            Se4mNaPg8v/5c5wbwHnYuAUBGkbAEviG/pCbik072ddlfv+v5hJAjJhbE6oMNQ/U
+            aAEJAhAc05/kYZL5y+i8nMxZr5RxOdz/9D2a96ENNjZi7bSXQHc2HlGLRU8/gNzh
+            67UDyh4e72WxhzWD3HZOzSevx5bGWIvOYXNemidfUObDykjhWpAEisHEg7HCMZYr
+            sRxVEnsdind6
+            =rdQ5
+            -----END PGP MESSAGE-----
+          fp: 8FBE185B729E5225E312C259D2EBEC8CCACDA017
+    encrypted_regex: ^(data|stringData)$
+    version: 3.11.0

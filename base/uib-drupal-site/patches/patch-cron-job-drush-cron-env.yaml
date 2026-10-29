@@ -1,0 +1,40 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: ${app_name}-drupal-run-cron
+spec:
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            app: ${app_name}-drupal
+        spec:
+          containers:
+          - name: ${app_name}-drupal
+            env:
+            # Application configuration
+            - name: DRUPAL_TRUSTED_HOST_PATTERNS
+              value: ${drupal_trusted_host_patterns}
+            - name: DRUPAL_UIB_ENV
+              value: ${drupal_env}
+            - name: DRUPAL_UIB_FILE_ASSETS_PATH
+              value: sites/default/assets
+            
+            # Database connection
+            - name: DRUPAL_DATABASE_HOST
+              value: ${app_name}-db-rw
+            - name: DRUPAL_DATABASE_PREFIX
+              value: ""
+            - name: DRUPAL_DATABASE_NAME
+              value: ${app_name}
+            - name: DRUPAL_DATABASE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: ${app_name}-db-secret
+                  key: username
+            - name: DRUPAL_DATABASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: ${app_name}-db-secret
+                  key: password

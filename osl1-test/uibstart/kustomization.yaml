@@ -1,0 +1,40 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ../../base/uib-drupal-site
+  - ../../components/varnish-cluster
+  - db-restore-cron.yaml
+  - ingress-redirects.yaml
+  - secret-db.yaml
+  - secret-uibstart-test-s3.yaml
+  - secret-varnish-secret.yaml
+replicas:
+  - name: ${app_name}-php-fpm
+    count: 2
+images:
+  - name: PATCH_NGINX_IMAGE
+    newName: git.app.uib.no:4567/it/site/start.uib.no/start.uib.no-nginx # {"$imagepolicy": "adm-it-pub:uibstart-test-nginx-image-policy:name"}
+    newTag: test-37 # {"$imagepolicy": "adm-it-pub:uibstart-test-nginx-image-policy:tag"}
+  - name: PATCH_PHP_FPM_IMAGE
+    newName: git.app.uib.no:4567/it/site/start.uib.no/start.uib.no-php-fpm # {"$imagepolicy": "adm-it-pub:uibstart-test-php-fpm-image-policy:name"}
+    newTag: test-37 # {"$imagepolicy": "adm-it-pub:uibstart-test-php-fpm-image-policy:tag"}
+patches:
+  - path: patches/ingress.yaml
+  - path: patches/patch-cluster-db-pg.yaml
+  - path: patches/patch-cron-job-drush-cron-schedule.yaml
+  - path: patches/patch-deployment-php-fpm-resources.yaml
+configMapGenerator:
+  - name: download-today-s3-script
+    files:
+      - script.sh=../../scripts/download-today-s3/download-today-s3.sh
+  - name: restore-pg-db-script
+    files:
+      - script.sh=scripts/restore-pg-db.sh
+  - name: opcache-config
+    files:
+      - zzz-php-opcache.ini=opcache.ini
+  - name: ${app_name}-varnish-config
+    options:
+      disableNameSuffixHash: true
+    files:
+      - default.vcl=drupal-varnish-cluster.vcl

@@ -1,0 +1,13 @@
+[default]
+s3 =
+    # Increase concurrency since small files transfer quickly
+    max_concurrent_requests = 20
+    
+    # Keep the queue tightly constrained to prevent RAM bloat
+    max_queue_size = 500
+    
+    # 5MB is perfect for small files (anything under 5MB transfers in 1 chunk)
+    multipart_chunksize = 5MB
+    
+    # Small buffer size optimized for lower memory footprints
+    io_chunksize = 64KB

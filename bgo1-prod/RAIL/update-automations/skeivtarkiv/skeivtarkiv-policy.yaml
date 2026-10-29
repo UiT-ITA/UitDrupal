@@ -1,0 +1,12 @@
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImagePolicy
+metadata:
+  name: skeivtarkiv-test-image-policy
+spec:
+  imageRepositoryRef:
+    name: skeivtarkiv-test-image-repository
+  filterTags:
+    pattern: '^test-[0-9]+$'
+  policy:
+    alphabetical:
+      order: asc

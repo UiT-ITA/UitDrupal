@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ${app_name}-php-fpm
+spec:
+  template:
+    metadata:
+      labels:
+        app: ${app_name}-php-fpm
+    spec:
+      containers:
+        - name: ${app_name}-php-fpm
+          env:
+          # Migration db env vars
+          - name: MARIADB_HOST
+            value: ${app_name}-mariadb
+          - name: MARIADB_PORT
+            value: "3306"
+          - name:  MARIADB_DATABASE
+            valueFrom:
+              secretKeyRef:
+                name: ${app_name}-mariadb-secret
+                key: database
+          - name: MARIADB_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: ${app_name}-mariadb-secret
+                key: username
+          - name: MARIADB_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: ${app_name}-mariadb-secret
+                key: password
+            

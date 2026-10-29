@@ -1,0 +1,20 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: xyzzy
+spec:
+  rules:
+  - host: example-from-docs.bgo1.prod.rail.uhdc.no
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: xyzzy
+            port:
+              name: http
+  tls:
+  - hosts:
+    - example-from-docs.bgo1.prod.rail.uhdc.no
+    secretName: example-from-docs.bgo1.prod.rail.uhdc.no-tls

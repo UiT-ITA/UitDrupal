@@ -1,0 +1,7 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ../../../../components/drupal11/post-deploy
+  - ../../../../base/git-pull-secrets
+patches:
+  - path: patches/patch-job-drush-deploy-env.yaml

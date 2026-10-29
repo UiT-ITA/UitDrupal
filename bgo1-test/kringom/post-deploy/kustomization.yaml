@@ -1,0 +1,13 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ../../../base/uib-drupal-site/post-deploy
+patches:
+  - path: patches/patch-job-drush-deploy-env.yaml
+images:
+  - name: PATCH_NGINX_IMAGE
+    newName: git.app.uib.no:4567/it/site/grind.no/kringom-nginx # {"$imagepolicy": "adm-it-pub:kringom-test-nginx-image-policy:name"}
+    newTag: test-347 # {"$imagepolicy": "adm-it-pub:kringom-test-nginx-image-policy:tag"}
+  - name: PATCH_PHP_FPM_IMAGE
+    newName: git.app.uib.no:4567/it/site/grind.no/kringom-php-fpm # {"$imagepolicy": "adm-it-pub:kringom-test-php-fpm-image-policy:name"}
+    newTag: test-347 # {"$imagepolicy": "adm-it-pub:kringom-test-php-fpm-image-policy:tag"}

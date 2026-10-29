@@ -1,0 +1,87 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: ${app_name}-drupal-run-cron
+spec:
+  schedule: "*/15 * * * *"
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 1
+  concurrencyPolicy: Replace
+  jobTemplate:
+    spec:
+      backoffLimit: 0
+      template:
+        spec:
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 33
+            runAsGroup: 33
+            fsGroup: 33
+            fsGroupChangePolicy: "OnRootMismatch"
+          imagePullSecrets:
+            - name: ${image_pull_secret_name}
+          containers:
+            - name: ${app_name}-drupal
+              image: PATCH_PHP_FPM_IMAGE
+              command:
+                - /bin/sh
+                - -c
+                - "drush maint:status && drush cron"
+              ports:
+                - name: fastcgi
+                  containerPort: 9000
+              env:
+                - name: RAIL_SMTP_RELAY_HOST
+                  value: "smtp.${rail_region}.${rail_env}.rail.uhdc.no."
+                - name: RAIL_SMTP_RELAY_PORT
+                  value: "25"
+              volumeMounts:
+                - mountPath: /var/www/html/web/sites/default/assets
+                  name: assets
+                  readOnly: false
+                - mountPath: /var/www/html/web/sites/default/files
+                  name: files
+                  readOnly: false
+                - name: tmp
+                  mountPath: /tmp
+                  readOnly: false
+                - name: phpfpm-config
+                  mountPath: /usr/local/etc/php-fpm.d/zz-docker.conf
+                  subPath: zz-docker.conf
+                - name: php-config
+                  mountPath: /usr/local/etc/php/conf.d/99-php-fpm.ini
+                  subPath: 99-php-fpm.ini
+              resources:
+                requests:
+                  memory: "1Gi"
+                  cpu: "500m"
+                limits:
+                  memory: "1Gi"
+              # Prevent escalation attacks
+              securityContext:
+                allowPrivilegeEscalation: false
+                capabilities:
+                  drop:
+                    - ALL
+                seccompProfile:
+                  type: RuntimeDefault
+                runAsNonRoot: true
+                runAsUser: 33
+                runAsGroup: 33
+                fsGroup: 33
+                fsGroupChangePolicy: "OnRootMismatch"
+          volumes:
+            - name: assets
+              emptyDir: {}
+            - name: files
+              persistentVolumeClaim:
+                claimName: ${app_name}-files
+            - name: tmp
+              emptyDir: {}
+            - name: phpfpm-config
+              configMap:
+                name: phpfpm-config
+            - name: php-config
+              configMap:
+                name: php-config
+          restartPolicy: Never

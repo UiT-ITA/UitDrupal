@@ -1,0 +1,24 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ../../base/w4/sandbox
+  - secret-rabbitmq.yaml
+  - secret-db.yaml
+  - secret-valkey.yaml
+  - secret-varnish-secret.yaml
+patches:
+  - path: patches/ingress.yaml
+replicas:
+  - name: ${app_name}-php-fpm
+    count: 1
+configMapGenerator:
+  - name: sync-s3-script
+    files:
+      - script.sh=../../scripts/sync-s3/sync-s3.sh
+images:
+  - name: PATCH_NGINX_IMAGE
+    newName: git.app.uib.no:4567/it/site/w4.uib.no/w4-nginx # {"$imagepolicy": "adm-it-pub:w4-sandbox-nginx-image-policy:name"}
+    newTag: sandbox-15258 # {"$imagepolicy": "adm-it-pub:w4-sandbox-nginx-image-policy:tag"}
+  - name: PATCH_PHP_FPM_IMAGE
+    newName: git.app.uib.no:4567/it/site/w4.uib.no/w4-php-fpm # {"$imagepolicy": "adm-it-pub:w4-sandbox-php-fpm-image-policy:name"}
+    newTag: sandbox-15258 # {"$imagepolicy": "adm-it-pub:w4-sandbox-php-fpm-image-policy:tag"}

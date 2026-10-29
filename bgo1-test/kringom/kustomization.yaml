@@ -1,0 +1,51 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ../../base/uib-drupal-site
+  - ../../components/solr-cloud
+  - ../../components/varnish-cluster
+  - ../../components/valkey-cluster
+  - db-restore-cron.yaml
+  - secret-db.yaml
+  - secret-kringom-test-s3.yaml
+  - secret-solr-auth.yaml
+  - secret-varnish-secret.yaml
+  - secret-valkey.yaml
+replicas:
+  - name: ${app_name}-php-fpm
+    count: 2
+images:
+  - name: PATCH_NGINX_IMAGE
+    newName: git.app.uib.no:4567/it/site/grind.no/kringom-nginx # {"$imagepolicy": "adm-it-pub:kringom-test-nginx-image-policy:name"}
+    newTag: test-347 # {"$imagepolicy": "adm-it-pub:kringom-test-nginx-image-policy:tag"}
+  - name: PATCH_PHP_FPM_IMAGE
+    newName: git.app.uib.no:4567/it/site/grind.no/kringom-php-fpm # {"$imagepolicy": "adm-it-pub:kringom-test-php-fpm-image-policy:name"}
+    newTag: test-347 # {"$imagepolicy": "adm-it-pub:kringom-test-php-fpm-image-policy:tag"}
+  - name: PATCH_SOLR_IMAGE
+    newName: git.app.uib.no:4567/itpublic/dockerimages/solr/solr # {"$imagepolicy": "adm-it-pub:solr-image-policy:name"}
+    newTag: "9.10.1" # {"$imagepolicy": "adm-it-pub:solr-image-policy:tag"}
+  - name: PATCH_ZOOKEEPER_IMAGE
+    newName: git.app.uib.no:4567/itpublic/dockerimages/zookeeper/zookeeper # {"$imagepolicy": "adm-it-pub:zookeeper-image-policy:name"}
+    newTag: "3.9.6" # {"$imagepolicy": "adm-it-pub:zookeeper-image-policy:tag"}
+patches:
+  - path: patches/ingress.yaml
+  - path: patches/patch-cluster-db-pg.yaml
+  - path: patches/patch-cron-job-drush-cron-env.yaml
+  - path: patches/patch-cron-job-drush-cron-schedule.yaml
+  - path: patches/patch-deployment-php-fpm-env.yaml
+  - path: patches/patch-deployment-php-fpm-resources.yaml
+configMapGenerator:
+  - name: download-today-s3-script
+    files:
+      - script.sh=../../scripts/download-today-s3/download-today-s3.sh
+  - name: restore-pg-db-script
+    files:
+      - script.sh=scripts/restore-pg-db.sh
+  - name: opcache-config
+    files:
+      - zzz-php-opcache.ini=opcache.ini
+  - name: ${app_name}-varnish-config
+    options:
+      disableNameSuffixHash: true
+    files:
+      - default.vcl=drupal-varnish-cluster.vcl

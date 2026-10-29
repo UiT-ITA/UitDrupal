@@ -1,0 +1,21 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ../../base/w4/production
+  - secret-db.yaml
+  - secret-rabbitmq.yaml
+  - secret-valkey.yaml
+  - secret-varnish-secret.yaml
+patches:
+  - path: patches/ingress.yaml
+  - path: patches/cluster-db-pg.yaml
+  - path: patches/files-size.yaml
+images:
+  # Image name used in base and overlays must be the same for image replacement to work
+  - name: PATCH_NGINX_IMAGE
+    newName: git.app.uib.no:4567/it/site/w4.uib.no/w4-nginx
+    newTag: "129.7" # {"$imagepolicy": "adm-it-pub:w4-prod-nginx-image-policy:tag"}
+  # Image name used in base and overlays must be the same for image replacement to work
+  - name: PATCH_PHP_FPM_IMAGE
+    newName: git.app.uib.no:4567/it/site/w4.uib.no/w4-php-fpm
+    newTag: "129.7" # {"$imagepolicy": "adm-it-pub:w4-prod-php-fpm-image-policy:tag"}

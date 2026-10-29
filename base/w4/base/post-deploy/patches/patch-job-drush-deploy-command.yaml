@@ -1,0 +1,17 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: ${app_name}-drupal-deploy-job
+spec:
+  template:
+    spec:
+      containers:
+        - name: ${app_name}-drupal-deploy-job
+          command:
+            - /bin/sh
+            - -c
+            - |
+              set -e
+              drush deploy
+              drush config:import --yes
+              drush cr

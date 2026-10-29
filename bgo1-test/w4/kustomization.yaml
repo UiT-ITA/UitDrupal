@@ -1,0 +1,25 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ../../base/w4/test
+  - secret-db.yaml
+  - secret-rabbitmq.yaml
+  - secret-valkey.yaml
+  - secret-varnish-secret.yaml
+replicas:
+  - name: ${app_name}-php-fpm
+    count: 2
+patches:
+  - path: patches/files-size.yaml
+  - path: patches/ingress.yaml
+  - path: patches/patch-cronjob-sync-courses.yaml
+  - path: patches/patch-helmrelease-valkey.yaml
+images:
+  # Image name used in base and overlays must be the same for image replacement to work
+  - name: PATCH_NGINX_IMAGE
+    newName: git.app.uib.no:4567/it/site/w4.uib.no/w4-nginx
+    newTag: rail-test-16652 # {"$imagepolicy": "adm-it-pub:w4-test-nginx-image-policy:tag"}
+  # Image name used in base and overlays must be the same for image replacement to work
+  - name: PATCH_PHP_FPM_IMAGE
+    newName: git.app.uib.no:4567/it/site/w4.uib.no/w4-php-fpm
+    newTag: rail-test-16652 # {"$imagepolicy": "adm-it-pub:w4-test-php-fpm-image-policy:tag"}

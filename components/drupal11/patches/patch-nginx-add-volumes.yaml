@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ${app_name}-nginx
+spec:
+  template:
+    metadata:
+      labels:
+        app: ${app_name}-nginx
+    spec:
+      volumes:
+        - name: assets
+          persistentVolumeClaim:
+            claimName: ${app_name}-assets
+        - name: files
+          persistentVolumeClaim:
+            claimName: ${app_name}-files
+        - name: nginx-cache
+          emptyDir: {}
+      containers:
+        - name: ${app_name}-nginx
+          volumeMounts:
+            - mountPath: /var/www/html/web/sites/default/assets
+              name: assets
+              readOnly: true
+            - mountPath: /var/www/html/web/sites/default/files
+              name: files
+              readOnly: true
+            - mountPath: /var/cache/nginx
+              name: nginx-cache
+              readOnly: false

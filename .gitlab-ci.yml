@@ -1,0 +1,28 @@
+stages:
+  - mirror
+
+mirror:
+  stage: mirror
+  image: alpine:3
+  rules:
+    - if: $CI_COMMIT_BRANCH
+  variables:
+    MIRROR_URL: "git@git.app.uib.no:platform_public/rail/gitops/adm-it-pub-mirror.git"
+  before_script:
+    - apk add --no-cache openssh-client git
+    - eval $(ssh-agent -s)
+    - echo $MIRROR_URL
+    - chmod 400 "$GITAPP_SSH_PRIVATE_KEY"
+    - ssh-add "$GITAPP_SSH_PRIVATE_KEY"
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - echo "Host target-host\n  StrictHostKeyChecking no\n  UserKnownHostsFile=/dev/null" > ~/.ssh/config
+    - chmod 600 ~/.ssh/config
+    - git config --global user.email "mirror@gitlab.uib.no"
+    - git config --global user.name "GitLab Mirror"
+    - git config core.compression 0
+  script:
+    - git remote add mirror $MIRROR_URL || true
+    - GIT_SSH_COMMAND="ssh -o StrictHostKeyChecking=no" git push mirror HEAD:main --force
+
+  timeout: 2m

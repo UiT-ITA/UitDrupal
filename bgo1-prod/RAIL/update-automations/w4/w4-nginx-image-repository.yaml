@@ -1,0 +1,9 @@
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImageRepository
+metadata:
+  name: w4-nginx-image-repository
+spec:
+  image: git.app.uib.no:4567/it/site/w4.uib.no/w4-nginx
+  interval: 1m
+  secretRef:
+    name: gitapp-adm-it-pub-registry-read-rail

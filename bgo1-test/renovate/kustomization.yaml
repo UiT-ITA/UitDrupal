@@ -1,0 +1,15 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ../../base/git-pull-secrets
+  - cronjob-renovate.yaml
+  - pvc-renovate-workdir.yaml
+  - secrets/secret-renovate-env.yaml
+configMapGenerator:
+  - name: renovate-config
+    files:
+      - config.json=config.json
+images:
+  - name: PATCH_RENOVATE_IMAGE
+    newName: git.app.uib.no:4567/itpublic/dockerimages/renovate/renovate # {"$imagepolicy": "adm-it-pub:renovate-image-policy:name"}
+    newTag: 43.288.0 # {"$imagepolicy": "adm-it-pub:renovate-image-policy:tag"}

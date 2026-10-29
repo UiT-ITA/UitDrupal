@@ -1,0 +1,23 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: ${app_name}-drupal-run-cron
+spec:
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            app: ${app_name}-drupal
+        spec:
+          containers:
+            - name: ${app_name}-drupal
+              volumeMounts:
+                - name: php-config-overrides
+                  mountPath: /usr/local/etc/php/conf.d/zzz-php-fpm.ini
+                  subPath: zzz-php-fpm.ini
+                  readOnly: true
+          volumes:
+            - name: php-config-overrides
+              configMap:
+                name: php-config-overrides

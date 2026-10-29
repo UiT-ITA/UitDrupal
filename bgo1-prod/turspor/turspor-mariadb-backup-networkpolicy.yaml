@@ -1,0 +1,18 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: turspor-db-backup-networkpolicy
+  namespace: adm-it-pub-turspor
+spec:
+  podSelector:
+    matchLabels:
+      app: turspor-db-backup  # Ensure the label matches the label of your CronJob pod
+  ingress:
+    - from:
+        - podSelector: {}  # Allows access from all pods within the same namespace
+  egress:
+    - to:
+        - podSelector: {}  # Allows egress to all pods within the same namespace
+  policyTypes:
+    - Ingress
+    - Egress

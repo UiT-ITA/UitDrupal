@@ -1,0 +1,9 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ck8s-user-demo-deployment.yaml
+  - service.yaml
+  - ingress.yaml
+  - pull-secret.yaml
+  - ck8s-user-demo-default-deny-all-np.yaml
+  - ck8s-user-demo-networkpolicy.yaml

@@ -1,0 +1,33 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: ${app_name}-db
+  # annotations:
+  # cnpg.io/skipWalArchiving: "enabled"
+spec:
+  instances: 1
+  enablePDB: false
+  postgresql:
+    parameters:
+      # Threshold: Log any query taking longer than 500ms
+      log_min_duration_statement: "500ms"
+      
+      # Recommended prefix for clean CloudNativePG log scraping
+      log_line_prefix: '%m [%p] %q%u@%d '
+      
+      # Prevent duplicate logging if you log all statements elsewhere
+      log_statement: "none"
+      
+      # Enable query statistics; CNPG loads pg_stat_statements automatically
+      pg_stat_statements.track: "all"
+
+      # Set the minimum duration for auto_explain to log slow queries
+      auto_explain.log_min_duration: "500ms"
+
+#   postgresql:
+#     parameters:
+#       # These settings are not optimal for any environment, but are necessary for restore performance.
+#       # It should be ok as all test / sandbox environments are not required to keep data for a long time.
+#       # TODO: Look into restoring from object store backup once we have migrated to RAIL.
+#       fsync: "off"
+#       full_page_writes: "off"

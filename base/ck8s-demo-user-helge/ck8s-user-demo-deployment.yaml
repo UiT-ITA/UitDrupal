@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ck8s-user-demo
+  creationTimestamp: null
+  labels:
+    app: ck8s-user-demo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ck8s-user-demo
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: ck8s-user-demo
+    spec:
+      imagePullSecrets:
+      - name: pull-secret
+      securityContext:                  # Add this
+        runAsNonRoot: true              #
+        seccompProfile:                 #
+          type: RuntimeDefault          #
+          #runAsUser: 1000                 #
+          #readOnlyRootFilesystem: true    #
+      containers:
+      - image: itgit.app.uib.no:4567/it/dpv/daf/pub/rail-course-helge/ck8s-user-demo:1.0.0
+        name: ck8s-user-demo
+        securityContext:                  # Add this
+          allowPrivilegeEscalation: false #
+          capabilities:                   #
+            drop:                         #
+            - ALL                         #
+        resources:
+          limits:         # Add this
+            cpu: 100m     #
+            memory: 128Mi #
+          requests:       #
+            cpu: 100m     #
+            memory: 128Mi #
+status: {}

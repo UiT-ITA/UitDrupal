@@ -1,0 +1,21 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: ${app_name}-drupal-run-cron
+spec:
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          volumes:
+            - name: assets
+              emptyDir:
+                $patch: delete
+              persistentVolumeClaim:
+                claimName: ${app_name}-assets
+          containers:
+            - name: ${app_name}-drupal
+              volumeMounts:
+                - mountPath: /var/www/html/web/sites/default/assets
+                  name: assets
+                  readOnly: false

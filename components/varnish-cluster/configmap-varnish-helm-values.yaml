@@ -1,0 +1,479 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: varnish-helm-values
+  namespace: flux-system
+data:
+  values.yaml: |
+    global:
+      imagePullSecrets:
+        - name: gitapp-adm-it-pub-systembruker
+
+      # Sets the securityContext of the Pod.
+      podSecurityContext:
+        fsGroup: 999
+
+      # Sets the securityContext for all containers.
+      securityContext:
+        allowPrivilegeEscalation: false
+        runAsUser: 999
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+        capabilities:
+          drop:
+            - ALL
+
+    # Configures Varnish Cache server.
+    server:
+      replicas: ${varnish_server_replicas:=3}
+
+      # Sets the deployment kind. Can be either a Deployment or StatefulSet.
+      kind: "StatefulSet"
+
+      # Enables shared process namespace. May be required in case `extraContainers` needs to
+      # notify other process in the same Pod using UNIX signals.
+      # https://kubernetes.io/docs/tasks/configure-pod-container/share-process-namespace/
+      shareProcessNamespace: false
+
+      http:
+        enabled: true
+        port: 6081
+
+      admin:
+        # Sets the address for Varnish management interface to listens to.
+        address: "127.0.0.1"
+
+        # Sets the port for Varnish management interface to listens to.
+        port: 6082
+
+      # Sets the extra environment variables for Varnish Cache server. Can be set as a templated string or a YAML list.
+      extraEnvs:
+        - name: VARNISH_SIZE
+          value: "${VARNISH_SIZE:=512m}"
+        - name: VARNISH_TRANSIENT_SIZE
+          value: "${VARNISH_TRANSIENT_SIZE:=128m}"
+        - name: MALLOC_CONF
+          value: "${VARNISH_MALLOC_CONF:=}"
+        # Read by the VCL to authorize PURGE/BAN/URIBAN via X-Ban-Token.
+        # Optional: without the Secret, only unproxied requests from the purge ACL are allowed.
+        - name: VARNISH_BAN_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: ${app_name}-varnish-ban-token
+              key: varnish_ban_token
+              optional: true
+
+      # Sets the default Time To Live (TTL) for cached objects.
+      ttl: 120
+
+      # Sets the minimum number of worker threads in each pool.
+      # See also https://varnish-cache.org/docs/6.0/reference/varnishd.html#thread-pool-min
+      minThreads: 50
+
+      # Sets the maximum number of worker threads in each pool.
+      # See also https://varnish-cache.org/docs/6.0/reference/varnishd.html#thread-pool-max
+      maxThreads: 200
+
+      # Sets the idle threshold where threads idle for at least this long will be destroyed.
+      # See also https://varnish-cache.org/docs/6.0/reference/varnishd.html#thread-pool-timeout
+      threadTimeout: 120
+
+      # Sets the extra arguments for Varnish Cache server.
+      extraArgs:
+        - -s
+        - malloc,$(VARNISH_SIZE)
+        # Should be set to a value roughly a quarter of $VARNISH_SIZE,
+        # but can be adjusted based on the workload.
+        # Setting this too high may cause Varnish to consume all memory and cause OOM kills,
+        # while setting it too low may cause Varnish to run out of worker threads and fail to serve requests,
+        # which can cause cascading failures in a cluster.
+        - -s
+        - Transient=malloc,$(VARNISH_TRANSIENT_SIZE)
+        # Reduce per-client overhead (default is often 64k, but explicitly defining it here prevents unexpected defaults)
+        - -p
+        - workspace_client=64k
+
+      # Declares the extra volumeClaimTemplates. Can be set as either a YAML list or a
+      # templated string. Only available when serverkind is set to StatefulSet.
+      #extraVolumeClaimTemplates: []
+      # extraVolumeClaimTemplates: |
+      #   - metadata:
+      #       name: {{ .Release.Name }}-local-data
+      #     spec:
+      #       resources:
+      #         requests:
+      #           storage: 2Gi
+      #       volumeMode: Filesystem
+      #       accessModes:
+      #         - ReadWriteOnce
+
+      # Declares the extra init containers to run before Varnish pods are run. Can be set
+      # as either a YAML list or a templated string.
+      extraInitContainers: |
+        - name: wait-for-peers
+          image: git.app.uib.no:4567/itpublic/dockerimages/alpine-docker/docker:cli
+          command:
+            - sh
+            - -c
+            - |
+              POD_NAME="$(hostname | tr -d '\n')"
+              STS_PREFIX="$(printf '%s' "$POD_NAME" | sed 's/-[0-9][0-9]*$//')"
+              ORDINAL="${POD_NAME##*-}"
+              NS="$(tr -d '\n' < /var/run/secrets/kubernetes.io/serviceaccount/namespace)"
+              REPLICAS="${varnish_server_replicas:=3}"
+
+              case "$REPLICAS" in
+                ''|*[!0-9]*) REPLICAS=3 ;;
+              esac
+
+              if [ "$REPLICAS" -le 1 ]; then
+                echo "Single replica ($REPLICAS), skipping peer wait"
+                exit 0
+              fi
+
+              ORD=0
+              while [ "$ORD" -lt "$REPLICAS" ]; do
+                if [ "$ORD" = "$ORDINAL" ]; then
+                  ORD=$((ORD + 1))
+                  continue
+                fi
+
+                HOST="$STS_PREFIX-$ORD.varnish-cache.$NS.svc.cluster.local"
+                until nslookup "$HOST" >/dev/null 2>&1; do
+                  echo "Waiting for peer DNS: $HOST"
+                  sleep 2
+                done
+                echo "Peer DNS ready: $HOST"
+                ORD=$((ORD + 1))
+              done
+          securityContext:
+            {{- toYaml .Values.global.securityContext | nindent 4 }}
+
+      # Declares the extra volumes to mount with Varnish container. Can be set as either a
+      # YAML list or a templated string.
+      #extraVolumeMounts: []
+      extraVolumeMounts: |
+        # - name: {{ .Release.Name }}-local-data
+        #   mountPath: /var/lib/data
+        - name: default-vcl
+          mountPath: /etc/varnish/default.vcl
+          subPath: default.vcl  
+        - name: varnish-workdir
+          mountPath: /var/lib/varnish
+
+      # Declares the extra volumes to mount to the pod. Can be set as either a YAML list
+      # or a templated string.
+      #extraVolumes: []
+      extraVolumes: |
+        #   - name: {{ .Release.Name }}-local-data
+        #     persistentVolumeClaim:
+        #       claimName: {{ .Release.Name }}-local-data
+        - name: default-vcl
+          configMap:
+            name: ${app_name}-varnish-config
+        - name: varnish-workdir
+          emptyDir: {}
+
+      # Sets the Varnish secret from Kubernetes secret. Either server.secret
+      # or server.secretFrom can be set.
+      #secretFrom:
+      #  name: secret-name
+      #  key: varnish-secret
+      secretFrom:
+        name: ${app_name}-varnish-secret
+        key: secret
+
+      # Sets the command to execute.
+      command: []
+      #command: ["/entrypoint.sh","-d"]
+
+      # Configures the path to the default VCL configuration file. This configuration
+      # option also affects the location where `vclConfig` is mounted (if present).
+      vclConfigPath: "/etc/varnish/default.vcl"
+
+      # Configures the default VCL. Can be set as a templated string.
+      vclConfig: ""
+
+      # Configures delayed shutdown for zero-downtime downscaling.
+      delayedShutdown:
+        # Delayed shutdown method. Can be one of:
+        #
+        #     none      Do not perform delayed shutdown
+        #     sleep     Perform sleep in preStop for specific seconds
+        #     mempool   Automatically determine if there is any active clients before shutting down
+        #
+        # Note that when this value is set to anything other than "none"
+        # `server.terminationGracePeriodSeconds` must also be set to the
+        # maximum time it takes for Varnish Cache to shutdown.
+        method: "none"
+
+        # Configures "sleep" delayed shutdown method.
+        sleep:
+          seconds: 90
+
+        # Configures "mempool" delayed shutdown method.
+        mempool:
+          # Poll the mempool session every given pollSeconds.
+          pollSeconds: 1
+
+          # Wait for the given waitSeconds before fully shutting down.
+          waitSeconds: 5
+
+      # Sets the image and tag to use to deploy Varnish Cache.
+      # If tag is blank, appVersion is used.
+      image:
+        repository: git.app.uib.no:4567/itpublic/dockerimages/varnish-unprivileged
+        pullPolicy: IfNotPresent
+        tag: "6.0.16"
+
+      # Enables or disables autoscaling.
+      autoscaling:
+        enabled: false
+
+      # Enables or disables PodDisruptionBudget.
+      # See also https://kubernetes.io/docs/tasks/run-application/configure-pdb/
+      pdb:
+        enabled: true
+
+        # Sets the minimum number of healthy pods to allow for disruption.
+        #minAvailable: "2"
+
+        # Sets the maximum number of unhealthy pods to allow for disruption.
+        maxUnavailable: "1"
+
+      service:
+        enabled: true
+
+        # Sets the extra labels for Varnish Cache services. Can be set as a templated string.
+        labels: {}
+
+        # Sets the extra annotations for Varnish Cache services. Can be set as a templated string.
+        annotations: {}
+
+        # Type of the service. Can be ClusterIP or NodePort.
+        #
+        # See also https://kubernetes.io/docs/concepts/services-networking/service/
+        type: ClusterIP
+        clusterIP: "None"  # Headless service for StatefulSet peer discovery
+
+        # Sets the internal traffic policy for this service. InternalTrafficPolicy describes how nodes distribute service
+        # traffic they receive on the ClusterIP. Can be set to "Local" or "Cluster" (default)
+        #
+        # See also https://kubernetes.io/docs/reference/kubernetes-api/service-resources/service-v1/
+        internalTrafficPolicy: Cluster
+
+        # Sets the external traffic policy for this service. externalTrafficPolicy describes how nodes distribute service
+        # traffic they receive on one of the Service's "externally-facing" addresses (NodePorts, ExternalIPs, and
+        # LoadBalancer IPs). Can be set to "Local" or "Cluster" (default)
+        #
+        # See also https://kubernetes.io/docs/reference/kubernetes-api/service-resources/service-v1/
+        # externalTrafficPolicy is only valid for NodePort/LoadBalancer; must be
+        # unset for ClusterIP or Kubernetes will reject the Service.
+        externalTrafficPolicy: ""
+
+        # Enables or disables the Varnish HTTP service.
+        http:
+          enabled: true
+
+          # Sets the port to listen HTTP service to.
+          #
+          # Note that when headless service is used (server.service.type set to "ClusterIP" and
+          # server.service.clusterIP set to "None") the port defined here won't be used. Instead,
+          # Varnish must be connected via the port defined in the pod (i.e., server.http.port).
+          port: 80
+
+      # Sets the extra annotations for Varnish Cache pod template. Can be set as a templated string.
+      podAnnotations: {}
+
+      # Configures a probe for checking if a Pod has started.
+      startupProbe: {}
+      #startupProbe:
+      #  initialDelaySeconds: 5
+      #  periodSeconds: 10
+      #  timeoutSeconds: 1
+      #  successThreshold: 1
+      #  failureThreshold: 3
+
+      # Configures a probe for checking if a Pod is ready to receive a connection.
+      readinessProbe:
+        # Sets the initial delays in seconds until the first probe is performed.
+        initialDelaySeconds: 5
+
+        # Sets the interval in seconds between each probes.
+        periodSeconds: 10
+
+        # Sets the timeout in seconds probe is considered timed out.
+        timeoutSeconds: 1
+
+        # Sets the consecutive successes until a probe is considered a success.
+        successThreshold: 1
+
+        # Sets the consecutive failures until a probe is considered a failure.
+        failureThreshold: 3
+
+      # Configures a probe for checking if a Pod can continue to receive a connection.
+      livenessProbe:
+        # Sets the initial delays in seconds until the first probe is performed.
+        initialDelaySeconds: 30
+
+        # Sets the interval in seconds between each probes.
+        periodSeconds: 10
+
+        # Sets the timeout in seconds probe is considered timed out.
+        timeoutSeconds: 5
+
+        # Sets the consecutive successes until a probe is considered a success.
+        successThreshold: 1
+
+        # Sets the consecutive failures until a probe is considered a failure.
+        failureThreshold: 3
+
+      # Configures a resource limits.
+      #resources: {}
+      resources:
+        limits:
+          cpu: ${VARNISH_SERVER_CPU_LIMIT:=1000m}
+          memory: ${VARNISH_SERVER_MEMORY_LIMIT:=768Mi}
+        requests:
+          cpu: ${VARNISH_SERVER_CPU_REQUEST:=500m}
+          memory: ${VARNISH_SERVER_MEMORY_REQUEST:=640Mi}
+
+      # Configures a node selector to assign a Pod. Can be set as a templated string
+      # or a YAML map.
+      nodeSelector: {}
+      #nodeSelector:
+      #  beta.kubernetes.io/arch: amd64
+
+      # Configures toleration settings for a Pod. Can be set as a templated string
+      # or a YAML list.
+      tolerations: []
+
+      # Configures an affinity for a Pod. Can be set as a templated string or
+      # a YAML map. By default, require Varnish to be deployed only on a node
+      # it was not already deployed on.
+      affinity: |
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchLabels:
+                  app.kubernetes.io/name: {{ include "varnish-cache.name" . }}
+                  app.kubernetes.io/instance: {{ .Release.Name }}
+              topologyKey: kubernetes.io/hostname
+
+      # Enable or Disable Network Policy.
+      # See also: https://kubernetes.io/docs/concepts/services-networking/network-policies/
+      networkPolicy:
+        enabled: false
+
+        # Allow all connections from any source. To be set to false if extraIngress is used.
+        allowIngress: true
+
+        # Allow all connections to any destinations. To be set to false if extraEgress is used.
+        allowEgress: true
+
+      # Configures the Varnish NCSA sidecar.
+      varnishncsa:
+        enabled: true
+
+        # Sets the image and tag to use to deploy Varnish NCSA sidecar. Setting this to "-"
+        # will inherit the same image as with server.image.
+        image:
+          repository: "git.app.uib.no:4567/itpublic/dockerimages/varnish-unprivileged"
+          pullPolicy: "IfNotPresent"
+          tag: "6.0.16"
+
+        # Keep NCSA on the same UID/GID as varnishd so it can read _.vsm_child (2750).
+        securityContext:
+          allowPrivilegeEscalation: false
+          runAsUser: 999
+          runAsGroup: 999
+          runAsNonRoot: true
+          seccompProfile:
+            type: RuntimeDefault
+          capabilities:
+            drop:
+              - ALL
+
+        # Sets the extra arguments for Varnish NCSA sidecar.
+        extraArgs:
+          - -c
+
+        # Configures a probe for checking if a Pod is ready to receive a connection.
+        readinessProbe:
+          # Sets the initial delays in seconds until the first probe is performed.
+          initialDelaySeconds: 5
+
+          # Sets the interval in seconds between each probes.
+          periodSeconds: 10
+
+          # Sets the timeout in seconds probe is considered timed out.
+          timeoutSeconds: 5
+
+          # Sets the consecutive successes until a probe is considered a success.
+          successThreshold: 1
+
+          # Sets the consecutive failures until a probe is considered a failure.
+          failureThreshold: 3
+
+        # Configures a probe for checking if a Pod can continue to receive a connection.
+        livenessProbe:
+          # Sets the initial delays in seconds until the first probe is performed.
+          initialDelaySeconds: 30
+
+          # Sets the interval in seconds between each probes.
+          periodSeconds: 10
+
+          # Sets the timeout in seconds probe is considered timed out.
+          timeoutSeconds: 10
+
+          # Sets the consecutive successes until a probe is considered a success.
+          successThreshold: 1
+
+          # Sets the consecutive failures until a probe is considered a failure.
+          failureThreshold: 3
+
+        # Configures a resource limits for Varnish NCSA container.
+        #resources: {}
+        resources:
+          limits:
+            cpu: ${VARNISH_NCSA_CPU_LIMIT:=200m}
+            memory: ${VARNISH_NCSA_MEMORY_LIMIT:=128Mi}
+          requests:
+            cpu: ${VARNISH_NCSA_CPU_REQUEST:=100m}
+            memory: ${VARNISH_NCSA_MEMORY_REQUEST:=128Mi}
+
+      # Declares the extra containers to run alongside Varnish pods. Can be set as either
+      # a YAML list or a templated string.
+      extraContainers: |
+        - name: prometheus-varnish-exporter
+          image: git.app.uib.no:4567/itpublic/dockerimages/prometheus-varnish-exporter-unprivileged:varnish-6.0.16
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+          args:
+            - -n
+            - "$(POD_NAME)"
+            - -web.listen-address
+            - ":9273"
+          ports:
+            - name: metrics
+              containerPort: 9273
+              protocol: TCP
+          securityContext:
+            {{- toYaml .Values.global.securityContext | nindent 4 }}
+          resources:
+            limits:
+              cpu: ${VARNISH_EXPORTER_CPU_LIMIT:=150m}
+              memory: ${VARNISH_EXPORTER_MEMORY_LIMIT:=64Mi}
+            requests:
+              cpu: ${VARNISH_EXPORTER_CPU_REQUEST:=100m}
+              memory: ${VARNISH_EXPORTER_MEMORY_REQUEST:=32Mi}
+          volumeMounts:
+            - name: varnish-workdir
+              mountPath: /var/lib/varnish
+              readOnly: true

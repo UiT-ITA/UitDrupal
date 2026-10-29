@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ${app_name}-php-fpm
+spec:
+  template:
+    metadata:
+      labels:
+        app: ${app_name}-php-fpm
+    spec:
+      containers:
+        - name: ${app_name}-php-fpm
+          env:
+          - name: DRUPAL_UIB_ENV
+            value: test-s3
+          - name: DRUPAL_UIB_S3_REGION
+            value: 'None'
+          - name: DRUPAL_UIB_S3FS_REGION
+            value: 'None'
+          - name: DRUPAL_UIB_S3_ACCESS_KEY
+            valueFrom:
+              secretKeyRef:
+                name: ${app_name}-s3-secret
+                key: access
+          - name: DRUPAL_UIB_S3_SECRET_KEY
+            valueFrom:
+              secretKeyRef:
+                name: ${app_name}-s3-secret
+                key: secret
+          - name: DRUPAL_UIB_S3FS_ACCESS_KEY
+            valueFrom:
+              secretKeyRef:
+                name: ${app_name}-s3fs-secret
+                key: access
+          - name: DRUPAL_UIB_S3FS_SECRET_KEY
+            valueFrom:
+              secretKeyRef:
+                name: ${app_name}-s3fs-secret
+                key: secret
+          - name: AWS_ENDPOINT_URL
+            value: 'https://object.api.bgo.nrec.no'
+          - name: DRUPAL_UIB_S3_BUCKET
+            value: 'profile.uib.no-sandbox'
+          - name: DRUPAL_UIB_S3FS_BUCKET
+            value: 'profile.uib.no-sandbox-s3'

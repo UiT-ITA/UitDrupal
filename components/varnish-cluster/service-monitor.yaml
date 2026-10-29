@@ -1,0 +1,13 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: varnish-cache
+  labels:
+    app: varnish-cache
+spec:
+  selector:
+    matchLabels:
+      app: varnish-cache
+  endpoints:
+    - port: metrics
+      path: /metrics

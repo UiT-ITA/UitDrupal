@@ -1,0 +1,9 @@
+###
+# Run Drush deploy after application is successfully deployed to synchronize database with the latest codebase.
+###
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: ${app_name}-drupal-deploy-job
+spec:
+  suspend: ${is_replica}

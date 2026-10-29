@@ -1,0 +1,13 @@
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImagePolicy
+metadata:
+  name: uibstart-test-nginx-image-policy
+spec:
+  imageRepositoryRef:
+    name: uibstart-nginx-image-repository
+  filterTags:
+    pattern: "^test-(?P<build>[0-9]+)$"
+    extract: "$build"
+  policy:
+    numerical:
+      order: asc

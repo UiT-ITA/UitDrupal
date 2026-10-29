@@ -1,0 +1,11 @@
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImagePolicy
+metadata:
+  name: nginx-alpine-unprivileged-image-policy
+spec:
+  imageRepositoryRef:
+    name: nginx-alpine-unprivileged-image-repository
+  digestReflectionPolicy: IfNotPresent
+  policy:
+    semver:
+      range: 1.x.x

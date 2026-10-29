@@ -1,0 +1,1209 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      },
+      {
+        "builtIn": true,
+        "datasource": {
+          "type": "datasource",
+          "uid": "grafana"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "description": "Blackbox exporter probes",
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 1,
+  "id": 4860,
+  "links": [],
+  "panels": [
+    {
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "noValue": "All down",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "dark-red"
+              },
+              {
+                "color": "semi-dark-red",
+                "value": 75
+              },
+              {
+                "color": "red",
+                "value": 90
+              },
+              {
+                "color": "green",
+                "value": 99
+              }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 3,
+        "x": 0,
+        "y": 0
+      },
+      "id": 41,
+      "options": {
+        "barShape": "flat",
+        "barWidthFactor": 0.5,
+        "effects": {
+          "barGlow": false,
+          "centerGlow": false,
+          "gradient": false
+        },
+        "endpointMarker": "point",
+        "minVizHeight": 75,
+        "minVizWidth": 75,
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "segmentCount": 1,
+        "segmentSpacing": 0.3,
+        "shape": "gauge",
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true,
+        "sizing": "auto",
+        "sparkline": false,
+        "textMode": "auto"
+      },
+      "pluginVersion": "12.0.3",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DATASOURCE}"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "100 * (count((probe_success{instance=~\"$instance\",namespace=~\"$NAMESPACE\"} or probe_success{instance=~\"$instance\",kubernetes_namespace=~\"$NAMESPACE\"} or probe_success{instance=~\"$instance\",exported_namespace=~\"$NAMESPACE\"}) == 1) / count(probe_success{instance=~\"$instance\",namespace=~\"$NAMESPACE\"} or probe_success{instance=~\"$instance\",kubernetes_namespace=~\"$NAMESPACE\"} or probe_success{instance=~\"$instance\",exported_namespace=~\"$NAMESPACE\"}))",
+          "format": "table",
+          "hide": false,
+          "instant": true,
+          "legendFormat": "__auto",
+          "range": false,
+          "refId": "A"
+        }
+      ],
+      "title": "Total status",
+      "type": "gauge"
+    },
+    {
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 16,
+        "x": 3,
+        "y": 0
+      },
+      "id": 54,
+      "options": {
+        "annotations": {
+          "clustering": -1,
+          "multiLane": false
+        },
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "right",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "maxHeight": 600,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.0.3",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DATASOURCE}"
+          },
+          "editorMode": "code",
+          "expr": "sum(probe_http_status_code{instance=~\"$instance\",namespace=~\"$NAMESPACE\"} or probe_http_status_code{instance=~\"$instance\",kubernetes_namespace=~\"$NAMESPACE\"} or probe_http_status_code{instance=~\"$instance\",exported_namespace=~\"$NAMESPACE\"}) by (instance)",
+          "hide": false,
+          "legendFormat": "{{instance}}",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "HTTP status",
+      "type": "timeseries"
+    },
+    {
+      "description": "",
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 5,
+        "x": 19,
+        "y": 0
+      },
+      "id": 87,
+      "options": {
+        "limit": 10,
+        "navigateAfter": "10m",
+        "navigateBefore": "10m",
+        "navigateToPanel": true,
+        "onlyFromThisDashboard": true,
+        "onlyInTimeRange": false,
+        "showTags": true,
+        "showTime": true,
+        "showUser": true
+      },
+      "pluginVersion": "12.0.3",
+      "title": "Annotations",
+      "type": "annolist"
+    },
+    {
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "dark-red"
+              },
+              {
+                "color": "yellow",
+                "value": 98
+              },
+              {
+                "color": "super-light-yellow",
+                "value": 99.7
+              },
+              {
+                "color": "light-green",
+                "value": 99.8
+              },
+              {
+                "color": "green",
+                "value": 99.9
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 13,
+        "w": 24,
+        "x": 0,
+        "y": 5
+      },
+      "id": 119,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.0.3",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DATASOURCE}"
+          },
+          "editorMode": "code",
+          "expr": "(avg_over_time(probe_success{instance=~\"$instance\",namespace=~\"$NAMESPACE\"}[7d]) or avg_over_time(probe_success{instance=~\"$instance\",kubernetes_namespace=~\"$NAMESPACE\"}[7d]) or avg_over_time(probe_success{instance=~\"$instance\",exported_namespace=~\"$NAMESPACE\"}[7d])) * 100",
+          "hide": false,
+          "instant": false,
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Oppetid siste 7 dagar",
+      "transformations": [
+        {
+          "id": "labelsToFields",
+          "options": {
+            "keepLabels": [
+              "instance"
+            ],
+            "mode": "columns",
+            "valueLabel": "instance"
+          }
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "left",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "filterable": true,
+            "inspect": false
+          },
+          "mappings": [],
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "SSL Cert Expiry (days)"
+            },
+            "properties": [
+              {
+                "id": "decimals",
+                "value": 0
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "rgba(0, 0, 0, 0)"
+                    },
+                    {
+                      "color": "red",
+                      "value": 0
+                    },
+                    {
+                      "color": "orange",
+                      "value": 1
+                    },
+                    {
+                      "color": "yellow",
+                      "value": 7
+                    },
+                    {
+                      "color": "green",
+                      "value": 24
+                    }
+                  ]
+                }
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "mode": "basic",
+                  "type": "gauge"
+                }
+              },
+              {
+                "id": "min",
+                "value": 0
+              },
+              {
+                "id": "max",
+                "value": 365
+              },
+              {
+                "id": "custom.filterable",
+                "value": false
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Status"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "0": {
+                        "text": "DOWN"
+                      },
+                      "1": {
+                        "text": "UP"
+                      }
+                    },
+                    "type": "value"
+                  }
+                ]
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "red"
+                    },
+                    {
+                      "color": "green",
+                      "value": 1
+                    }
+                  ]
+                }
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "mode": "gradient",
+                  "type": "color-background"
+                }
+              },
+              {
+                "id": "custom.width",
+                "value": 76
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Code"
+            },
+            "properties": [
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "rgba(0, 0, 0, 0)"
+                    },
+                    {
+                      "color": "green",
+                      "value": 200
+                    },
+                    {
+                      "color": "yellow",
+                      "value": 300
+                    },
+                    {
+                      "color": "red",
+                      "value": 500
+                    }
+                  ]
+                }
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "mode": "gradient",
+                  "type": "color-background"
+                }
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "0": {
+                        "text": ""
+                      }
+                    },
+                    "type": "value"
+                  }
+                ]
+              },
+              {
+                "id": "custom.width",
+                "value": 78
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "SSL"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "0": {
+                        "text": "NO"
+                      },
+                      "1": {
+                        "text": "OK"
+                      }
+                    },
+                    "type": "value"
+                  }
+                ]
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "rgba(3, 3, 3, 0)"
+                    },
+                    {
+                      "color": "red",
+                      "value": 0
+                    },
+                    {
+                      "color": "green",
+                      "value": 1
+                    }
+                  ]
+                }
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "mode": "gradient",
+                  "type": "color-background"
+                }
+              },
+              {
+                "id": "custom.width",
+                "value": 77
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Probe Duration (s)"
+            },
+            "properties": [
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "green"
+                    },
+                    {
+                      "color": "yellow",
+                      "value": 0.8
+                    },
+                    {
+                      "color": "red",
+                      "value": 2
+                    }
+                  ]
+                }
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "mode": "basic",
+                  "type": "gauge"
+                }
+              },
+              {
+                "id": "custom.filterable",
+                "value": false
+              },
+              {
+                "id": "decimals",
+                "value": 2
+              },
+              {
+                "id": "max",
+                "value": 3
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "DNS Lookup Duration (s)"
+            },
+            "properties": [
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "green"
+                    },
+                    {
+                      "color": "yellow",
+                      "value": 0.1
+                    },
+                    {
+                      "color": "red",
+                      "value": 0.2
+                    }
+                  ]
+                }
+              },
+              {
+                "id": "max",
+                "value": 0.3
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "mode": "basic",
+                  "type": "gauge"
+                }
+              },
+              {
+                "id": "custom.filterable",
+                "value": false
+              },
+              {
+                "id": "decimals",
+                "value": 3
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Instance"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "targetBlank": true,
+                    "title": "${__data.fields.Instance}",
+                    "url": "${__data.fields.Instance}"
+                  }
+                ]
+              },
+              {
+                "id": "custom.width",
+                "value": 276
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "TLS Version"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 117
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 13,
+        "w": 24,
+        "x": 0,
+        "y": 18
+      },
+      "id": 2,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true,
+        "sortBy": [
+          {
+            "desc": true,
+            "displayName": "Status"
+          }
+        ]
+      },
+      "pluginVersion": "12.0.3",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DATASOURCE}"
+          },
+          "expr": "max by (instance) (probe_success{instance=~\"$instance\",namespace=~\"$NAMESPACE\"} or probe_success{instance=~\"$instance\",kubernetes_namespace=~\"$NAMESPACE\"} or probe_success{instance=~\"$instance\",exported_namespace=~\"$NAMESPACE\"})",
+          "format": "table",
+          "hide": false,
+          "instant": true,
+          "interval": "",
+          "legendFormat": "",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DATASOURCE}"
+          },
+          "expr": "max by (instance) (probe_http_ssl{instance=~\"$instance\",namespace=~\"$NAMESPACE\"} or probe_http_ssl{instance=~\"$instance\",kubernetes_namespace=~\"$NAMESPACE\"} or probe_http_ssl{instance=~\"$instance\",exported_namespace=~\"$NAMESPACE\"}) > 0",
+          "format": "table",
+          "hide": false,
+          "instant": true,
+          "interval": "",
+          "legendFormat": "",
+          "refId": "B"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DATASOURCE}"
+          },
+          "expr": "min by (instance) (((probe_ssl_earliest_cert_expiry{instance=~\"$instance\",namespace=~\"$NAMESPACE\"} or probe_ssl_earliest_cert_expiry{instance=~\"$instance\",kubernetes_namespace=~\"$NAMESPACE\"} or probe_ssl_earliest_cert_expiry{instance=~\"$instance\",exported_namespace=~\"$NAMESPACE\"}) - time()) / 3600 / 24)",
+          "format": "table",
+          "hide": false,
+          "instant": true,
+          "interval": "",
+          "legendFormat": "",
+          "refId": "C"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DATASOURCE}"
+          },
+          "expr": "max by (instance) (probe_http_status_code{instance=~\"$instance\",namespace=~\"$NAMESPACE\"} or probe_http_status_code{instance=~\"$instance\",kubernetes_namespace=~\"$NAMESPACE\"} or probe_http_status_code{instance=~\"$instance\",exported_namespace=~\"$NAMESPACE\"}) > 0",
+          "format": "table",
+          "hide": false,
+          "instant": true,
+          "interval": "",
+          "legendFormat": "",
+          "refId": "D"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DATASOURCE}"
+          },
+          "expr": "avg by (instance) (avg_over_time(probe_duration_seconds{instance=~\"$instance\",namespace=~\"$NAMESPACE\"}[1m]) or avg_over_time(probe_duration_seconds{instance=~\"$instance\",kubernetes_namespace=~\"$NAMESPACE\"}[1m]) or avg_over_time(probe_duration_seconds{instance=~\"$instance\",exported_namespace=~\"$NAMESPACE\"}[1m]))",
+          "format": "table",
+          "hide": false,
+          "instant": false,
+          "interval": "",
+          "intervalFactor": 1,
+          "legendFormat": "",
+          "refId": "E"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DATASOURCE}"
+          },
+          "expr": "max by (instance, version) (probe_tls_version_info{instance=~\"$instance\",namespace=~\"$NAMESPACE\"} or probe_tls_version_info{instance=~\"$instance\",kubernetes_namespace=~\"$NAMESPACE\"} or probe_tls_version_info{instance=~\"$instance\",exported_namespace=~\"$NAMESPACE\"})",
+          "format": "table",
+          "hide": false,
+          "instant": true,
+          "interval": "",
+          "legendFormat": "",
+          "refId": "F"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DATASOURCE}"
+          },
+          "expr": "avg by (instance) (avg_over_time(probe_dns_lookup_time_seconds{instance=~\"$instance\",namespace=~\"$NAMESPACE\"}[1m]) or avg_over_time(probe_dns_lookup_time_seconds{instance=~\"$instance\",kubernetes_namespace=~\"$NAMESPACE\"}[1m]) or avg_over_time(probe_dns_lookup_time_seconds{instance=~\"$instance\",exported_namespace=~\"$NAMESPACE\"}[1m]))",
+          "format": "table",
+          "hide": false,
+          "instant": true,
+          "interval": "",
+          "legendFormat": "",
+          "refId": "G"
+        }
+      ],
+      "title": "HTTP Probe Overview",
+      "transformations": [
+        {
+          "id": "seriesToColumns",
+          "options": {
+            "byField": "instance"
+          }
+        },
+        {
+          "id": "filterFieldsByName",
+          "options": {
+            "include": {
+              "names": [
+                "instance",
+                "Value",
+                "Value #A",
+                "Value #B",
+                "Value #C",
+                "Value #D",
+                "Value #E",
+                "Value #F",
+                "Value #G",
+                "version"
+              ]
+            }
+          }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true,
+              "Time 1": true,
+              "Time 2": true,
+              "Time 3": true,
+              "Time 4": true,
+              "Time 5": true,
+              "Time 6": true,
+              "Time 7": true,
+              "Time 8": true,
+              "Value": false,
+              "Value #A": false,
+              "Value #B": false,
+              "Value #F": true,
+              "__name__": true,
+              "__name__ 1": true,
+              "__name__ 2": true,
+              "__name__ 3": true,
+              "__name__ 4": true,
+              "__name__ 5": true,
+              "__name__ 6": true,
+              "__name__ 7": true,
+              "job": true,
+              "job 1": true,
+              "job 2": true,
+              "job 3": true,
+              "job 4": true,
+              "job 5": true,
+              "job 6": true,
+              "job 7": true,
+              "job 8": true,
+              "phase": true,
+              "type": true,
+              "type 1": true,
+              "type 2": true,
+              "type 3": true,
+              "type 4": true,
+              "type 5": true,
+              "type 6": true,
+              "type 7": true,
+              "type 8": true,
+              "version": false
+            },
+            "indexByName": {
+              "Time 1": 9,
+              "Time 2": 13,
+              "Time 3": 17,
+              "Time 4": 20,
+              "Time 5": 24,
+              "Time 6": 28,
+              "Time 7": 32,
+              "Value #A": 1,
+              "Value #B": 3,
+              "Value #C": 5,
+              "Value #D": 2,
+              "Value #E": 6,
+              "Value #F": 8,
+              "Value #G": 7,
+              "__name__ 1": 10,
+              "__name__ 2": 14,
+              "__name__ 3": 21,
+              "__name__ 4": 25,
+              "__name__ 5": 29,
+              "instance": 0,
+              "job 1": 11,
+              "job 2": 15,
+              "job 3": 18,
+              "job 4": 22,
+              "job 5": 26,
+              "job 6": 30,
+              "type 1": 12,
+              "type 2": 16,
+              "type 3": 19,
+              "type 4": 23,
+              "type 5": 27,
+              "type 6": 31,
+              "version": 4
+            },
+            "renameByName": {
+              "Value": "Up",
+              "Value #A": "Status",
+              "Value #B": "SSL",
+              "Value #C": "SSL Cert Expiry (days)",
+              "Value #D": "Code",
+              "Value #E": "Probe Duration (s)",
+              "Value #F": "",
+              "Value #G": "DNS Lookup Duration (s)",
+              "Value #H": "Probe IP",
+              "instance": "Instance",
+              "type 6": "",
+              "version": "TLS Version"
+            }
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "description": "Returns how long the probe took to complete in seconds",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "s"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 24,
+        "x": 0,
+        "y": 31
+      },
+      "id": 4,
+      "options": {
+        "annotations": {
+          "clustering": -1,
+          "multiLane": false
+        },
+        "legend": {
+          "calcs": [
+            "mean",
+            "max",
+            "min"
+          ],
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "maxHeight": 600,
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "pluginVersion": "12.0.3",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DATASOURCE}"
+          },
+          "expr": "sum(probe_http_duration_seconds{instance=~\"$instance\",namespace=~\"$NAMESPACE\"} or probe_http_duration_seconds{instance=~\"$instance\",kubernetes_namespace=~\"$NAMESPACE\"} or probe_http_duration_seconds{instance=~\"$instance\",exported_namespace=~\"$NAMESPACE\"}) by (instance)",
+          "hide": false,
+          "instant": false,
+          "interval": "",
+          "intervalFactor": 2,
+          "legendFormat": "{{ instance }}",
+          "refId": "A"
+        }
+      ],
+      "title": "HTTP Probe Duration",
+      "type": "timeseries"
+    },
+    {
+      "collapsed": true,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 40
+      },
+      "id": 6,
+      "panels": [
+        {
+          "description": "Duration of http request by phase, summed over all redirects",
+          "fieldConfig": {
+            "defaults": {},
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 24,
+            "x": 0,
+            "y": 0
+          },
+          "id": 120,
+          "options": {
+            "alertThreshold": true
+          },
+          "pluginVersion": "10.3.1",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${DATASOURCE}"
+              },
+              "expr": "probe_http_duration_seconds{instance=~\"$instance\",namespace=~\"$NAMESPACE\"} or probe_http_duration_seconds{instance=~\"$instance\",kubernetes_namespace=~\"$NAMESPACE\"} or probe_http_duration_seconds{instance=~\"$instance\",exported_namespace=~\"$NAMESPACE\"}",
+              "hide": false,
+              "interval": "",
+              "intervalFactor": 2,
+              "legendFormat": "{{ phase }}",
+              "refId": "A"
+            }
+          ],
+          "title": "HTTP Probe Phases Duration",
+          "type": "timeseries"
+        }
+      ],
+      "repeat": "instance",
+      "title": "$instance",
+      "type": "row"
+    }
+  ],
+  "preload": false,
+  "refresh": "30s",
+  "schemaVersion": 41,
+  "tags": [
+    "http"
+  ],
+  "templating": {
+    "list": [
+      {
+        "current": {
+          "text": "prom-adm-it-pub",
+          "value": "beyjkc3oy7z7ka"
+        },
+        "includeAll": false,
+        "label": "Datasource",
+        "name": "DATASOURCE",
+        "options": [],
+        "query": "prometheus",
+        "refresh": 1,
+        "regex": "",
+        "type": "datasource"
+      },
+      {
+        "allValue": "adm-it-pub-.+",
+        "current": {
+          "text": "All",
+          "value": "$__all"
+        },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "${DATASOURCE}"
+        },
+        "definition": "query_result(count by (namespace) (probe_success{namespace=~\"adm-it-pub-.+\"}) or count by (namespace) (label_replace(probe_success{kubernetes_namespace=~\"adm-it-pub-.+\"}, \"namespace\", \"$1\", \"kubernetes_namespace\", \"(.*)\")) or count by (namespace) (label_replace(probe_success{exported_namespace=~\"adm-it-pub-.+\"}, \"namespace\", \"$1\", \"exported_namespace\", \"(.*)\")))",
+        "includeAll": true,
+        "label": "Namespace",
+        "multi": true,
+        "name": "NAMESPACE",
+        "options": [],
+        "query": {
+          "query": "query_result(count by (namespace) (probe_success{namespace=~\"adm-it-pub-.+\"}) or count by (namespace) (label_replace(probe_success{kubernetes_namespace=~\"adm-it-pub-.+\"}, \"namespace\", \"$1\", \"kubernetes_namespace\", \"(.*)\")) or count by (namespace) (label_replace(probe_success{exported_namespace=~\"adm-it-pub-.+\"}, \"namespace\", \"$1\", \"exported_namespace\", \"(.*)\")))",
+          "refId": "PrometheusVariableQueryEditor-VariableQuery"
+        },
+        "refresh": 1,
+        "regex": "/namespace=\"([^\"]+)\"/",
+        "sort": 4,
+        "type": "query"
+      },
+      {
+        "allValue": ".+",
+        "current": {
+          "text": "All",
+          "value": [
+            "$__all"
+          ]
+        },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "${DATASOURCE}"
+        },
+        "definition": "query_result(count by (instance) (probe_success{namespace=~\"$NAMESPACE\"}) or count by (instance) (label_replace(probe_success{kubernetes_namespace=~\"$NAMESPACE\"}, \"namespace\", \"$1\", \"kubernetes_namespace\", \"(.*)\")) or count by (instance) (label_replace(probe_success{exported_namespace=~\"$NAMESPACE\"}, \"namespace\", \"$1\", \"exported_namespace\", \"(.*)\")))",
+        "includeAll": true,
+        "label": "Instance",
+        "multi": true,
+        "name": "instance",
+        "options": [],
+        "query": {
+          "query": "query_result(count by (instance) (probe_success{namespace=~\"$NAMESPACE\"}) or count by (instance) (label_replace(probe_success{kubernetes_namespace=~\"$NAMESPACE\"}, \"namespace\", \"$1\", \"kubernetes_namespace\", \"(.*)\")) or count by (instance) (label_replace(probe_success{exported_namespace=~\"$NAMESPACE\"}, \"namespace\", \"$1\", \"exported_namespace\", \"(.*)\")))",
+          "refId": "PrometheusVariableQueryEditor-VariableQuery"
+        },
+        "refresh": 1,
+        "regex": "/instance=\"([^\"]+)\"/",
+        "sort": 4,
+        "type": "query"
+      },
+      {
+        "baseFilters": [],
+        "datasource": {
+          "type": "prometheus",
+          "uid": "${DATASOURCE}"
+        },
+        "filters": [],
+        "name": "Filters",
+        "type": "adhoc"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-24h",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "browser",
+  "title": "HTTP probes adm-it-pub Sites",
+  "uid": "754f750f-a523-4f1d-9ae4-ba9f10872d21",
+  "version": 8
+}

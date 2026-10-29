@@ -1,0 +1,24 @@
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImageUpdateAutomation
+metadata:
+  name: shared
+spec:
+  git:
+    checkout:
+      ref:
+        branch: main
+    push:
+      branch: main
+    commit:
+      author:
+        name: fluxcdbot
+        email: fluxcdbot@noreply.uib.no
+      messageTemplate: '{{ .AutomationObject }}: {{range .Changed.Changes}}{{print .OldValue}} -> {{println .NewValue}}{{end}}'
+  interval: 1m0s
+  sourceRef:
+    kind: GitRepository
+    name: adm-it-pub
+    namespace: adm-it-pub
+  update:
+    strategy: Setters
+    path: ${rail_cluster}/shared

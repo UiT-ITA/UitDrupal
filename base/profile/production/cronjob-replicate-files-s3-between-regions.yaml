@@ -1,0 +1,148 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: ${app_name}-replicate-files-s3-between-regions
+spec:
+  schedule: "10-59/15 * * * *"
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 1
+  concurrencyPolicy: Forbid
+  suspend: ${suspend_replicate_files:=true}
+  jobTemplate:
+    spec:
+      backoffLimit: 0
+      template:
+        metadata:
+          labels:
+            app: ${app_name}-sync-files
+        spec:
+          restartPolicy: Never
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 33
+            runAsGroup: 33
+            fsGroup: 33
+            fsGroupChangePolicy: "OnRootMismatch"
+          imagePullSecrets:
+            - name: gitapp-adm-it-pub-systembruker
+          initContainers:
+            - name: ${app_name}-sync-files-down
+              image: git.app.uib.no:4567/itpublic/dockerimages/awscli/amazon/aws-cli:2.36.18
+              command:
+                - /bin/sh
+                - -c
+                - "/sync-s3-script/script.sh $SOURCE_S3 /files"
+              securityContext:
+                allowPrivilegeEscalation: false
+                capabilities:
+                  drop:
+                    - ALL
+                seccompProfile:
+                  type: RuntimeDefault
+              resources:
+                requests:
+                  memory: "2Gi"
+                  cpu: "1"
+                limits:
+                  cpu: "1"
+                  memory: "2Gi"
+              volumeMounts:
+                - name: aws-s3-config
+                  mountPath: /tmp/.aws/config
+                  subPath: config
+                - name: files
+                  mountPath: /files
+                - name: sync-s3-script
+                  mountPath: /sync-s3-script
+                  readOnly: true
+              env:
+                - name: AWS_CONFIG_FILE
+                  value: /tmp/.aws/config
+                - name: SOURCE_S3
+                  value: ${self_file_s3}
+                - name: AWS_ENDPOINT_URL
+                  value: ${self_file_s3_endpoint}
+                - name: DELETE
+                  value: "false"
+                - name: AWS_REGION
+                  value: None
+                - name: AWS_REQUEST_CHECKSUM_CALCULATION
+                  value: when_required
+                - name: AWS_RESPONSE_CHECKSUM_VALIDATION
+                  value: when_required
+                - name: AWS_ACCESS_KEY_ID
+                  valueFrom:
+                    secretKeyRef:
+                      name: ${app_name}-prod-s3-secret
+                      key: access
+                - name: AWS_SECRET_ACCESS_KEY
+                  valueFrom:
+                    secretKeyRef:
+                      name: ${app_name}-prod-s3-secret
+                      key: secret
+          containers:
+            - name: ${app_name}-sync-files
+              image: git.app.uib.no:4567/itpublic/dockerimages/awscli/amazon/aws-cli:2.36.18
+              command:
+                - /bin/sh
+                - -c
+                - "/sync-s3-script/script.sh /files $SELF_S3"
+              securityContext:
+                allowPrivilegeEscalation: false
+                capabilities:
+                  drop:
+                    - ALL
+                seccompProfile:
+                  type: RuntimeDefault
+              resources:
+                requests:
+                  memory: "2Gi"
+                  cpu: "1"
+                limits:
+                  cpu: "1"
+                  memory: "2Gi"
+              volumeMounts:
+                - name: aws-s3-config
+                  mountPath: /tmp/.aws/config
+                  subPath: config
+                - name: files
+                  mountPath: /files
+                - name: sync-s3-script
+                  mountPath: /sync-s3-script
+                  readOnly: true
+              env:
+                - name: AWS_CONFIG_FILE
+                  value: /tmp/.aws/config
+                - name: SELF_S3
+                  value: ${destination_file_s3}
+                - name: AWS_ENDPOINT_URL
+                  value: ${destination_file_s3_endpoint}
+                - name: DELETE
+                  value: "false"
+                - name: AWS_REGION
+                  value: None
+                - name: AWS_REQUEST_CHECKSUM_CALCULATION
+                  value: when_required
+                - name: AWS_RESPONSE_CHECKSUM_VALIDATION
+                  value: when_required
+                - name: AWS_ACCESS_KEY_ID
+                  valueFrom:
+                    secretKeyRef:
+                      name: ${app_name}-prod-s3-secret
+                      key: access
+                - name: AWS_SECRET_ACCESS_KEY
+                  valueFrom:
+                    secretKeyRef:
+                      name: ${app_name}-prod-s3-secret
+                      key: secret
+          volumes:
+            - name: files
+              emptyDir: {}
+            - name: aws-s3-config
+              configMap:
+                name: aws-s3-config
+                defaultMode: 0644
+            - name: sync-s3-script
+              configMap:
+                name: sync-s3-script
+                defaultMode: 0755

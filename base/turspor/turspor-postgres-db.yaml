@@ -1,0 +1,36 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: turspor-postgres-db
+spec:
+  instances: 3
+  monitoring:
+    enablePodMonitor: true
+  bootstrap:
+    initdb:
+      database: turspor-postgres-db
+      owner: turspor-postgres-db
+      secret:
+        name: turspor-db-secret
+  managed:
+    roles:
+      - name: turspor-postegres-db
+
+  storage:
+    size: 16Gi
+
+  postgresql:
+    parameters:
+      shared_buffers: "256MB"
+
+  resources:
+    requests:
+      memory: "2Gi"
+      cpu: 2
+    limits:
+      memory: "2Gi"
+      cpu: 2
+  # plugins:
+  #   - name: barman-cloud.cloudnative-pg.io
+  #     isWALArchiver: true
+  #     parameters:

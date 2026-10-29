@@ -1,0 +1,12 @@
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImagePolicy
+metadata:
+  name: profile-sandbox-php-fpm-image-policy
+spec:
+  imageRepositoryRef:
+    name: profile-php-fpm-image-repository
+  filterTags:
+    pattern: '^sandbox-[0-9]+$'
+  policy:
+    alphabetical:
+      order: asc

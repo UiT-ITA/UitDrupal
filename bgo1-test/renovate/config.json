@@ -1,0 +1,28 @@
+{
+    "repositories": [
+        "itpublic/dockerimages/buildkit-rootless",
+        "itpublic/dockerimages/dependency-track",
+        "itpublic/dockerimages/nginx-alpine-unprivileged",
+        "itpublic/dockerimages/php-fpm-base-unprivileged",
+        "itpublic/dockerimages/renovate",
+        "itpublic/dockerimages/solr",
+        "itpublic/dockerimages/valkey-unprivileged",
+        "itpublic/dockerimages/varnish-unprivileged",
+        "itpublic/dockerimages/zookeeper",
+        "it/site/grind.no",
+        "it/site/start.uib.no",
+        "it/site/profile.uib.no",
+        "it/site/w4.uib.no",
+        "uib-ub/skeivtarkiv/drupal"
+    ],
+    "onboarding": true,
+    "onboardingConfig": {
+        "extends": [
+          "config:recommended",
+          ":preserveSemverRanges",
+          "local>it/utils/renovate-config:drupal"
+        ],
+        "dependencyDashboard": false,
+        "prConcurrentLimit": 10
+    }
+}

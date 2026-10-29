@@ -1,0 +1,35 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: ${app_name}-drupal-run-cron
+spec:
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            app: ${app_name}-drupal
+        spec:
+          containers:
+          - name: ${app_name}-drupal
+            env:
+            # Migration db env vars
+            - name: MARIADB_HOST
+              value: ${app_name}-mariadb
+            - name: MARIADB_PORT
+              value: "3306"
+            - name:  MARIADB_DATABASE
+              valueFrom:
+                secretKeyRef:
+                  name: ${app_name}-mariadb-secret
+                  key: database
+            - name: MARIADB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: ${app_name}-mariadb-secret
+                  key: username
+            - name: MARIADB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: ${app_name}-mariadb-secret
+                  key: password

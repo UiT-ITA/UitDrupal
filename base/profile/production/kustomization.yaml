@@ -1,0 +1,28 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ../base
+  - ./secrets
+  - cron-job-backup-developer-database.yaml
+  # - cron-job-backup-files.yaml
+  # - cronjob-sync-assets-to-s3.yaml
+  - cronjob-sync-files-to-s3.yaml
+  - cronjob-replicate-files-s3-between-regions.yaml
+  - cronjob-replicate-postgres-s3-between-regions.yaml
+  - objectstore.yaml
+  - scheduled-backup.yaml
+patches:
+  - path: patches/cluster-db-pg.yaml
+configMapGenerator:
+  - name: aws-s3-config
+    files:
+      - config=aws-s3-config
+  - name: backup-files-php-config
+    files:
+      - 999-backup-files-php.ini=backup-files-php.ini
+  - name: upload-s3-script
+    files:
+      - script.sh=../../../scripts/upload-s3/upload-s3.sh
+  - name: sync-s3-script
+    files:
+      - script.sh=../../../scripts/sync-s3/sync-s3.sh

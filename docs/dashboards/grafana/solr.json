@@ -1,0 +1,3712 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "datasource",
+          "uid": "grafana"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "description": "Default dashboard for Solr Exporter",
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": 4642,
+  "links": [
+    {
+      "icon": "external link",
+      "tags": [],
+      "title": "Solr project",
+      "type": "link",
+      "url": "https://solr.apache.org/"
+    },
+    {
+      "icon": "external link",
+      "tags": [],
+      "title": "Solr Prometheus documentation",
+      "type": "link",
+      "url": "https://solr.apache.org/guide/monitoring-solr-with-prometheus-and-grafana.html"
+    }
+  ],
+  "panels": [
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 64,
+      "panels": [],
+      "title": "Solr Cluster",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DATASOURCE}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 2,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "decimals": 0,
+          "mappings": [],
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Total nodes"
+            },
+            "properties": [
+              {
+                "id": "custom.drawStyle",
+                "value": "line"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Live nodes"
+            },
+            "properties": [
+              {
+                "id": "custom.drawStyle",
+                "value": "bars"
+              },
+              {
+                "id": "custom.fillOpacity",
+                "value": 100
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#37872D",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.lineWidth",
+                "value": 0
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 6,
+        "x": 0,
+        "y": 1
+      },
+      "id": 62,
+      "options": {
+        "alertThreshold": true,
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.0.3",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DATASOURCE}"
+          },
+          "expr": "count(count by (node_name) (solr_collections_replica_state{namespace=~\"$NAMESPACE\"} == 1))",
+          "format": "time_series",
+          "instant": false,
+          "interval": "",
+          "legendFormat": "Live nodes",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DATASOURCE}"
+          },
+          "expr": "count(count by (node_name) (solr_collections_replica_state{namespace=~\"$NAMESPACE\"}))",
+          "hide": false,
+          "interval": "",
+          "intervalFactor": 1,
+          "legendFormat": "Total nodes",
+          "refId": "B"
+        }
+      ],
+      "title": "Number of live nodes",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "uid": "${DATASOURCE}"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 2,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "decimals": 0,
+          "mappings": [],
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Ensemble size"
+            },
+            "properties": [
+              {
+                "id": "custom.drawStyle",
+                "value": "line"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Healthy nodes"
+            },
+            "properties": [
+              {
+                "id": "custom.drawStyle",
+                "value": "bars"
+              },
+              {
+                "id": "custom.fillOpacity",
+                "value": 100
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#5794F2",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.lineWidth",
+                "value": 0
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 6,
+        "x": 6,
+        "y": 1
+      },
+      "id": 221,
+      "options": {
+        "alertThreshold": true,
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.0.3",
+      "targets": [
+        {
+          "datasource": {
+            "uid": "${DATASOURCE}"
+          },
+          "exemplar": true,
+          "expr": "count(solr_zookeeper_nodestatus{namespace=~\"$NAMESPACE\"} == 1)",
+          "format": "time_series",
+          "instant": false,
+          "interval": "",
+          "legendFormat": "Healthy nodes",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "uid": "${DATASOURCE}"
+          },
+          "exemplar": true,
+          "expr": "solr_zookeeper_ensemble_size{namespace=~\"$NAMESPACE\"}",
+          "hide": false,
+          "interval": "",
+          "intervalFactor": 1,
+          "legendFormat": "Ensemble size",
+          "refId": "B"
+        }
+      ],
+      "title": "Zookeepers",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DATASOURCE}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "Leaders",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "bars",
+            "fillOpacity": 100,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "normal"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "decimals": 0,
+          "mappings": [],
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byValue",
+              "options": {
+                "op": "gte",
+                "reducer": "allIsZero",
+                "value": 0
+              }
+            },
+            "properties": [
+              {
+                "id": "custom.hideFrom",
+                "value": {
+                  "legend": true,
+                  "tooltip": true,
+                  "viz": false
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byValue",
+              "options": {
+                "op": "gte",
+                "reducer": "allIsNull",
+                "value": 0
+              }
+            },
+            "properties": [
+              {
+                "id": "custom.hideFrom",
+                "value": {
+                  "legend": true,
+                  "tooltip": true,
+                  "viz": false
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 1
+      },
+      "id": 68,
+      "options": {
+        "alertThreshold": true,
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.0.3",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DATASOURCE}"
+          },
+          "expr": "solr_collections_shard_leader{namespace=~\"$NAMESPACE\",base_url=~\"$base_url\",collection=~\"$collection\",shard=~\"$shard\",replica=~\"$replica\",core=~\"$core\"}",
+          "interval": "",
+          "legendFormat": "{{collection}} {{shard}} {{replica}} ({{node_name}})",
+          "refId": "A"
+        }
+      ],
+      "title": "Shard leaders",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DATASOURCE}"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 3,
+        "x": 0,
+        "y": 9
+      },
+      "id": 74,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.0.3",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DATASOURCE}"
+          },
+          "expr": "count(count by (collection) (solr_collections_replica_state{namespace=~\"$NAMESPACE\",base_url=~\"$base_url\",collection=~\"$collection\",shard=~\"$shard\",replica=~\"$replica\",core=~\"$core\"}))",
+          "interval": "",
+          "legendFormat": "",
+          "refId": "A"
+        }
+      ],
+      "title": "Number of collections",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DATASOURCE}"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 9,
+        "x": 3,
+        "y": 9
+      },
+      "id": 70,
+      "options": {
+        "minVizHeight": 75,
+        "minVizWidth": 75,
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true,
+        "sizing": "auto"
+      },
+      "pluginVersion": "12.0.3",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DATASOURCE}"
+          },
+          "expr": "count(solr_collections_replica_state{namespace=~\"$NAMESPACE\",base_url=~\"$base_url\",collection=~\"$collection\",shard=~\"$shard\",replica=~\"$replica\",core=~\"$core\"})",
+          "interval": "",
+          "legendFormat": "Total replicas",
+          "refId": "B"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DATASOURCE}"
+          },
+          "expr": "count(solr_collections_replica_state{namespace=~\"$NAMESPACE\",base_url=~\"$base_url\",collection=~\"$collection\",shard=~\"$shard\",replica=~\"$replica\",core=~\"$core\"} == 1) OR on() vector(0)",
+          "interval": "",
+          "legendFormat": "Active",
+          "refId": "D"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DATASOURCE}"
+          },
+          "expr": "count(solr_collections_replica_state{namespace=~\"$NAMESPACE\",state=\"down\",base_url=~\"$base_url\",collection=~\"$collection\",shard=~\"$shard\",replica=~\"$replica\",core=~\"$core\"}) OR on() vector(0)",
+          "interval": "",
+          "legendFormat": "Down",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DATASOURCE}"
+          },
+          "expr": "count(solr_collections_replica_state{namespace=~\"$NAMESPACE\",state=\"recovering\",base_url=~\"$base_url\",collection=~\"$collection\",shard=~\"$shard\",replica=~\"$replica\",core=~\"$core\"}) OR on() vector(0)",
+          "interval": "",
+          "legendFormat": "Recovering",
+          "refId": "C"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DATASOURCE}"
+          },
+          "expr": "count(solr_collections_replica_state{namespace=~\"$NAMESPACE\",state=\"recovery_failed\",base_url=~\"$base_url\",collection=~\"$collection\",shard=~\"$shard\",replica=~\"$replica\",core=~\"$core\"}) OR on() vector(0)",
+          "interval": "",
+          "legendFormat": "Recovery failed",
+          "refId": "E"
+        }
+      ],
+      "title": "Current replica state",
+      "type": "gauge"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DATASOURCE}"
+      },
+      "description": "Active replicas have value 0. Non-active replicas will show stacked in the graph.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "Non-active states",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "normal"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "decimals": 0,
+          "mappings": [],
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 9
+      },
+      "id": 72,
+      "options": {
+        "alertThreshold": true,
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.0.3",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DATASOURCE}"
+          },
+          "expr": "1 - solr_collections_replica_state{namespace=~\"$NAMESPACE\",base_url=~\"$base_url\",collection=~\"$collection\",shard=~\"$shard\",replica=~\"$replica\",core=~\"$core\"}",
+          "interval": "",
+          "legendFormat": "{{collection}} {{shard}} {{replica}} ({{node_name}})={{state}}",
+          "refId": "A"
+        }
+      ],
+      "title": "Replica state history",
+      "type": "timeseries"
+    },
+    {
+      "collapsed": true,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 17
+      },
+      "id": 211,
+      "panels": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DATASOURCE}"
+          },
+          "description": "Distributed QPS 1-min rate  aggregated by collection, roughly the current QPS across all nodes per collection",
+          "fieldConfig": {
+            "defaults": {
+              "custom": {},
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green"
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              }
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 8,
+            "x": 0,
+            "y": 18
+          },
+          "id": 201,
+          "options": {
+            "alertThreshold": true
+          },
+          "pluginVersion": "7.3.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${DATASOURCE}"
+              },
+              "expr": "sum by (collection) (solr_metrics_core_query_1minRate{namespace=~\"$NAMESPACE\",base_url=~\"$base_url\",collection=~\"$collection\",shard=~\"$shard\",replica=~\"$replica\",core=~\"$core\",searchHandler=~\"$searchHandler\"})",
+              "interval": "",
+              "legendFormat": "{{collection}}",
+              "refId": "A"
+            }
+          ],
+          "title": "Total QPS (by collection)",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DATASOURCE}"
+          },
+          "description": "Distributed QPS 1-min rate aggregated by base_url (Solr node)",
+          "fieldConfig": {
+            "defaults": {
+              "custom": {},
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green"
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              }
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 8,
+            "x": 8,
+            "y": 18
+          },
+          "id": 202,
+          "options": {
+            "alertThreshold": true
+          },
+          "pluginVersion": "7.3.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${DATASOURCE}"
+              },
+              "expr": "sum by (base_url) (solr_metrics_core_query_1minRate{namespace=~\"$NAMESPACE\",base_url=~\"$base_url\",collection=~\"$collection\",shard=~\"$shard\",replica=~\"$replica\",core=~\"$core\",searchHandler=~\"$searchHandler\"})",
+              "interval": "",
+              "intervalFactor": 2,
+              "legendFormat": "{{base_url}}",
+              "refId": "A"
+            }
+          ],
+          "title": "Total QPS (by node)",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DATASOURCE}"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "custom": {}
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 8,
+            "x": 16,
+            "y": 18
+          },
+          "id": 206,
+          "options": {
+            "alertThreshold": true
+          },
+          "pluginVersion": "7.3.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${DATASOURCE}"
+              },
+              "expr": "solr_metrics_core_query_p95_ms{namespace=~\"$NAMESPACE\",base_url=~\"$base_url\",collection=~\"$collection\",shard=~\"$shard\",replica=~\"$replica\",core=~\"$core\",searchHandler=~\"$searchHandler\"}",
+              "format": "time_series",
+              "interval": "",
+              "intervalFactor": 2,
+              "legendFormat": "{{base_url}}  {{core}}  {{searchHandler}}",
+              "refId": "A"
+            }
+          ],
+          "title": "Distributed Query Time per Core (p95 ms)",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DATASOURCE}"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "custom": {}
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 8,
+            "x": 0,
+            "y": 25
+          },
+          "id": 204,
+          "options": {
+            "alertThreshold": true
+          },
+          "pluginVersion": "7.3.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${DATASOURCE}"
+              },
+              "expr": "solr_metrics_core_query_5minRate{namespace=~\"$NAMESPACE\",base_url=~\"$base_url\",collection=~\"$collection\",shard=~\"$shard\",replica=~\"$replica\",core=~\"$core\",searchHandler=~\"$searchHandler\"}",
+              "format": "time_series",
+              "interval": "",
+              "intervalFactor": 2,
+              "legendFormat": "{{base_url}}  {{core}}  {{searchHandler}}",
+              "refId": "A"
+            }
+          ],
+          "title": "Distributed QPS per Core (5-min rate)",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DATASOURCE}"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "custom": {}
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 8,
+            "x": 8,
+            "y": 25
+          },
+          "id": 205,
+          "options": {
+            "alertThreshold": true
+          },
+          "pluginVersion": "7.3.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${DATASOURCE}"
+              },
+              "expr": "solr_metrics_core_query_p99_ms{namespace=~\"$NAMESPACE\",base_url=~\"$base_url\",collection=~\"$collection\",shard=~\"$shard\",replica=~\"$replica\",core=~\"$core\",searchHandler=~\"$searchHandler\"}",
+              "format": "time_series",
+              "interval": "",
+              "intervalFactor": 2,
+              "legendFormat": "{{base_url}}  {{core}}  {{searchHandler}}",
+              "refId": "A"
+            }
+          ],
+          "title": "Distributed Query Time per Core (p99 ms)",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DATASOURCE}"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "custom": {}
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 8,
+            "x": 16,
+            "y": 25
+          },
+          "id": 203,
+          "options": {
+            "alertThreshold": true
+          },
+          "pluginVersion": "7.3.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${DATASOURCE}"
+              },
+              "expr": "solr_metrics_core_query_1minRate{namespace=~\"$NAMESPACE\",base_url=~\"$base_url\",collection=~\"$collection\",shard=~\"$shard\",replica=~\"$replica\",core=~\"$core\",searchHandler=~\"$searchHandler\"}",
+              "format": "time_series",
+              "instant": false,
+              "interval": "",
+              "intervalFactor": 3,
+              "legendFormat": "{{base_url}}  {{core}}  {{searchHandler}}",
+              "refId": "A"
+            }
+          ],
+          "title": "Distributed QPS per Core (1-min rate)",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DATASOURCE}"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "custom": {}
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 8,
+            "x": 0,
+            "y": 32
+          },
+          "id": 207,
+          "options": {
+            "alertThreshold": true
+          },
+          "pluginVersion": "7.3.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${DATASOURCE}"
+              },
+              "expr": "solr_metrics_core_query_p75_ms{namespace=~\"$NAMESPACE\",base_url=~\"$base_url\",collection=~\"$collection\",shard=~\"$shard\",replica=~\"$replica\",core=~\"$core\",searchHandler=~\"$searchHandler\"}",
+              "format": "time_series",
+              "interval": "",
+              "intervalFactor": 2,
+              "legendFormat": "{{base_url}}  {{core}}  {{searchHandler}}",
+              "refId": "A"
+            }
+          ],
+          "title": "Distributed Query Time per Core (p75 ms)",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DATASOURCE}"
+          },
+          "description": "Helps identify if a core is receiving more traffic than other cores, possibly indicating unbalanced load.",
+          "fieldConfig": {
+            "defaults": {
+              "custom": {}
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 8,
+            "x": 8,
+            "y": 32
+          },
+          "id": 218,
+          "options": {
+            "alertThreshold": true
+          },
+          "pluginVersion": "7.3.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${DATASOURCE}"
+              },
+              "expr": "increase(solr_metrics_core_query_local_count{namespace=~\"$NAMESPACE\",base_url=~\"$base_url\",collection=~\"$collection\",shard=~\"$shard\",replica=~\"$replica\",core=~\"$core\",searchHandler=~\"$searchHandler\"}[1m])",
+              "format": "time_series",
+              "instant": false,
+              "interval": "",
+              "intervalFactor": 3,
+              "legendFormat": "{{base_url}}/{{core}}{{searchHandler}}",
+              "refId": "A"
+            }
+          ],
+          "title": "Local Query Count per Core",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DATASOURCE}"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "custom": {}
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 8,
+            "x": 16,
+            "y": 32
+          },
+          "id": 219,
+          "options": {
+            "alertThreshold": true
+          },
+          "pluginVersion": "7.3.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${DATASOURCE}"
+              },
+              "expr": "solr_metrics_core_query_local_1minRate{namespace=~\"$NAMESPACE\",base_url=~\"$base_url\",collection=~\"$collection\",shard=~\"$shard\",replica=~\"$replica\",core=~\"$core\",searchHandler=~\"$searchHandler\"}",
+              "format": "time_series",
+              "instant": false,
+              "interval": "",
+              "intervalFactor": 3,
+              "legendFormat": "{{base_url}}/{{core}}{{searchHandler}}",
+              "refId": "A"
+            }
+          ],
+          "title": "Local QPS per Core (1-min rate)",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DATASOURCE}"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "custom": {}
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 8,
+            "x": 0,
+            "y": 39
+          },
+          "id": 217,
+          "options": {
+            "alertThreshold": true
+          },
+          "pluginVersion": "7.3.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${DATASOURCE}"
+              },
+              "expr": "solr_metrics_core_query_local_p95_ms{namespace=~\"$NAMESPACE\",base_url=~\"$base_url\",collection=~\"$collection\",shard=~\"$shard\",replica=~\"$replica\",core=~\"$core\",searchHandler=~\"$searchHandler\"}",
+              "format": "time_series",
+              "interval": "",
+              "intervalFactor": 3,
+              "legendFormat": "{{base_url}}/{{core}}{{searchHandler}}",
+              "refId": "A"
+            }
+          ],
+          "title": "Local Query Time per Core (p95 ms)",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DATASOURCE}"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "custom": {}
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 8,
+            "x": 8,
+            "y": 39
+          },
+          "id": 210,
+          "options": {
+            "alertThreshold": true
+          },
+          "pluginVersion": "7.3.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${DATASOURCE}"
+              },
+              "expr": "solr_metrics_core_query_client_errors_1minRate{namespace=~\"$NAMESPACE\",base_url=~\"$base_url\",collection=~\"$collection\",shard=~\"$shard\",replica=~\"$replica\",core=~\"$core\",searchHandler=~\"$searchHandler\"}",
+              "format": "time_series",
+              "interval": "",
+              "intervalFactor": 2,
+              "legendFormat": "{{base_url}}  {{core}}  {{searchHandler}}",
+              "refId": "A"
+            }
+          ],
+          "title": "Query Client Errors per Core (1-min rate)",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DATASOURCE}"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "custom": {}
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 8,
+            "x": 16,
+            "y": 39
+          },
+          "id": 209,
+          "options": {
+            "alertThreshold": true
+          },
+          "pluginVersion": "7.3.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${DATASOURCE}"
+              },
+              "expr": "solr_metrics_core_query_errors_1minRate{namespace=~\"$NAMESPACE\",base_url=~\"$base_url\",collection=~\"$collection\",shard=~\"$shard\",replica=~\"$replica\",core=~\"$core\",searchHandler=~\"$searchHandler\"}",
+              "format": "time_series",
+              "interval": "",
+              "intervalFactor": 2,
+              "legendFormat": "{{base_url}}  {{core}}  {{searchHandler}}",
+              "refId": "A"
+            }
+          ],
+          "title": "Query Errors per Core (1-min rate)",
+          "type": "timeseries"
+        }
+      ],
+      "title": "Query Metrics",
+      "type": "row"
+    },
+    {
+      "collapsed": true,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 18
+      },
+      "id": 212,
+      "panels": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DATASOURCE}"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "custom": {}
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 12,
+            "x": 0,
+            "y": 19
+          },
+          "id": 2,
+          "options": {
+            "alertThreshold": true
+          },
+          "pluginVersion": "7.3.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${DATASOURCE}"
+              },
+              "expr": "increase(solr_metrics_jetty_requests_total{namespace=~\"$NAMESPACE\",base_url=~\"$base_url\"}[1m])",
+              "format": "time_series",
+              "intervalFactor": 2,
+              "legendFormat": "{{base_url}} {{method}}",
+              "refId": "A"
+            }
+          ],
+          "title": "Requests",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DATASOURCE}"
+          },
+          "description": "",
+          "fieldConfig": {
+            "defaults": {
+              "custom": {}
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 12,
+            "x": 12,
+            "y": 19
+          },
+          "id": 1,
+          "options": {
+            "alertThreshold": true
+          },
+          "pluginVersion": "7.3.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${DATASOURCE}"
+              },
+              "expr": "increase(solr_metrics_jetty_response_total{namespace=~\"$NAMESPACE\",base_url=~\"$base_url\"}[1m])",
+              "format": "time_series",
+              "intervalFactor": 2,
+              "legendFormat": "{{base_url}} {{status}}",
+              "refId": "A",
+              "step": 40
+            }
+          ],
+          "title": "Response",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DATASOURCE}"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "custom": {}
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 24,
+            "x": 0,
+            "y": 26
+          },
+          "id": 55,
+          "options": {
+            "alertThreshold": true
+          },
+          "pluginVersion": "7.3.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${DATASOURCE}"
+              },
+              "expr": "increase(solr_metrics_jetty_dispatches_total{namespace=~\"$NAMESPACE\",base_url=~\"$base_url\"}[1m])",
+              "format": "time_series",
+              "intervalFactor": 2,
+              "legendFormat": "{{base_url}}",
+              "refId": "A"
+            }
+          ],
+          "title": "Dispatches",
+          "type": "timeseries"
+        }
+      ],
+      "title": "Jetty Metrics",
+      "type": "row"
+    },
+    {
+      "collapsed": true,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 19
+      },
+      "id": 213,
+      "panels": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DATASOURCE}"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "custom": {}
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 12,
+            "x": 0,
+            "y": 20
+          },
+          "id": 3,
+          "options": {
+            "alertThreshold": true
+          },
+          "pluginVersion": "7.3.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${DATASOURCE}"
+              },
+              "expr": "solr_metrics_jvm_buffers{namespace=~\"$NAMESPACE\",base_url=~\"$base_url\"}",
+              "format": "time_series",
+              "intervalFactor": 2,
+              "legendFormat": "{{base_url}} {{pool}}",
+              "refId": "A"
+            }
+          ],
+          "title": "Buffers",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DATASOURCE}"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "custom": {}
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 12,
+            "x": 12,
+            "y": 20
+          },
+          "id": 4,
+          "options": {
+            "alertThreshold": true
+          },
+          "pluginVersion": "7.3.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${DATASOURCE}"
+              },
+              "expr": "solr_metrics_jvm_buffers_bytes{namespace=~\"$NAMESPACE\",base_url=~\"$base_url\"}",
+              "format": "time_series",
+              "intervalFactor": 2,
+              "legendFormat": "{{base_url}} {{pool}} {{item}}",
+              "refId": "A"
+            }
+          ],
+          "title": "Buffer Size",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DATASOURCE}"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "custom": {}
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 12,
+            "x": 0,
+            "y": 27
+          },
+          "id": 5,
+          "options": {
+            "alertThreshold": true
+          },
+          "pluginVersion": "7.3.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${DATASOURCE}"
+              },
+              "expr": "increase(solr_metrics_jvm_gc_total{namespace=~\"$NAMESPACE\",base_url=~\"$base_url\"}[1m])",
+              "format": "time_series",
+              "intervalFactor": 2,
+              "legendFormat": "{{base_url}} {{item}}",
+              "refId": "A"
+            }
+          ],
+          "title": "GC Count",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DATASOURCE}"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "custom": {}
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 12,
+            "x": 12,
+            "y": 27
+          },
+          "id": 6,
+          "options": {
+            "alertThreshold": true
+          },
+          "pluginVersion": "7.3.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${DATASOURCE}"
+              },
+              "expr": "increase(solr_metrics_jvm_gc_seconds_total{namespace=~\"$NAMESPACE\",base_url=~\"$base_url\"}[1m])",
+              "format": "time_series",
+              "intervalFactor": 2,
+              "legendFormat": "{{base_url}} {{item}}",
+              "refId": "A"
+            }
+          ],
+          "title": "GC Time",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DATASOURCE}"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "custom": {}
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 12,
+            "x": 0,
+            "y": 34
+          },
+          "id": 7,
+          "options": {
+            "alertThreshold": true
+          },
+          "pluginVersion": "7.3.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${DATASOURCE}"
+              },
+              "expr": "solr_metrics_jvm_memory_heap_bytes{namespace=~\"$NAMESPACE\",base_url=~\"$base_url\"}",
+              "format": "time_series",
+              "intervalFactor": 2,
+              "legendFormat": "{{base_url}} {{item}}",
+              "refId": "A"
+            }
+          ],
+          "title": "Heap Size",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DATASOURCE}"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "custom": {}
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 12,
+            "x": 12,
+            "y": 34
+          },
+          "id": 8,
+          "options": {
+            "alertThreshold": true
+          },
+          "pluginVersion": "7.3.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${DATASOURCE}"
+              },
+              "expr": "solr_metrics_jvm_memory_non_heap_bytes{namespace=~\"$NAMESPACE\",base_url=~\"$base_url\"}",
+              "format": "time_series",
+              "intervalFactor": 2,
+              "legendFormat": "{{base_url}} {{item}}",
+              "refId": "A"
+            }
+          ],
+          "title": "Non-Heap Size",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DATASOURCE}"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "custom": {}
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 12,
+            "x": 0,
+            "y": 41
+          },
+          "id": 9,
+          "options": {
+            "alertThreshold": true
+          },
+          "pluginVersion": "7.3.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${DATASOURCE}"
+              },
+              "expr": "solr_metrics_jvm_memory_pools_bytes{namespace=~\"$NAMESPACE\",base_url=~\"$base_url\"}",
+              "format": "time_series",
+              "intervalFactor": 2,
+              "legendFormat": "{{base_url}} {{space}} {{item}}",
+              "refId": "A"
+            }
+          ],
+          "title": "Pool Size",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DATASOURCE}"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "custom": {}
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 12,
+            "x": 12,
+            "y": 41
+          },
+          "id": 10,
+          "options": {
+            "alertThreshold": true
+          },
+          "pluginVersion": "7.3.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${DATASOURCE}"
+              },
+              "expr": "solr_metrics_jvm_memory_bytes{namespace=~\"$NAMESPACE\",base_url=~\"$base_url\"}",
+              "format": "time_series",
+              "intervalFactor": 2,
+              "legendFormat": "{{base_url}} {{item}}",
+              "refId": "A"
+            }
+          ],
+          "title": "Memory Size",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DATASOURCE}"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "custom": {}
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 24,
+            "x": 0,
+            "y": 48
+          },
+          "id": 16,
+          "options": {
+            "alertThreshold": true
+          },
+          "pluginVersion": "7.3.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${DATASOURCE}"
+              },
+              "expr": "solr_metrics_jvm_threads{namespace=~\"$NAMESPACE\",base_url=~\"$base_url\"}",
+              "format": "time_series",
+              "intervalFactor": 2,
+              "legendFormat": "{{base_url}} {{item}}",
+              "refId": "A"
+            }
+          ],
+          "title": "Threads",
+          "type": "timeseries"
+        }
+      ],
+      "title": "JVM Metrics",
+      "type": "row"
+    },
+    {
+      "collapsed": true,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 20
+      },
+      "id": 214,
+      "panels": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DATASOURCE}"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "custom": {}
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 12,
+            "x": 0,
+            "y": 21
+          },
+          "id": 11,
+          "options": {
+            "alertThreshold": true
+          },
+          "pluginVersion": "7.3.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${DATASOURCE}"
+              },
+              "expr": "solr_metrics_jvm_os_memory_bytes{namespace=~\"$NAMESPACE\",base_url=~\"$base_url\"}",
+              "format": "time_series",
+              "intervalFactor": 2,
+              "legendFormat": "{{base_url}} {{item}}",
+              "refId": "A"
+            }
+          ],
+          "title": "Memory Size",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DATASOURCE}"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "custom": {}
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 12,
+            "x": 12,
+            "y": 21
+          },
+          "id": 12,
+          "options": {
+            "alertThreshold": true
+          },
+          "pluginVersion": "7.3.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${DATASOURCE}"
+              },
+              "expr": "solr_metrics_jvm_os_file_descriptors{namespace=~\"$NAMESPACE\",base_url=~\"$base_url\"}",
+              "format": "time_series",
+              "intervalFactor": 2,
+              "legendFormat": "{{base_url}} {{item}}",
+              "refId": "A"
+            }
+          ],
+          "title": "File Descriptors",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DATASOURCE}"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "custom": {}
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 12,
+            "x": 0,
+            "y": 28
+          },
+          "id": 13,
+          "options": {
+            "alertThreshold": true
+          },
+          "pluginVersion": "7.3.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${DATASOURCE}"
+              },
+              "expr": "solr_metrics_jvm_os_cpu_load{namespace=~\"$NAMESPACE\",base_url=~\"$base_url\"}",
+              "format": "time_series",
+              "intervalFactor": 2,
+              "legendFormat": "{{base_url}} {{item}}",
+              "refId": "A"
+            }
+          ],
+          "title": "CPU Load",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DATASOURCE}"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "custom": {}
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 12,
+            "x": 12,
+            "y": 28
+          },
+          "id": 14,
+          "options": {
+            "alertThreshold": true
+          },
+          "pluginVersion": "7.3.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${DATASOURCE}"
+              },
+              "expr": "increase(solr_metrics_jvm_os_cpu_time_seconds{namespace=~\"$NAMESPACE\",base_url=~\"$base_url\"}[1m])",
+              "format": "time_series",
+              "interval": "",
+              "intervalFactor": 2,
+              "legendFormat": "{{base_url}} {{item}}",
+              "refId": "A"
+            }
+          ],
+          "title": "CPU Time",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DATASOURCE}"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "custom": {}
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 24,
+            "x": 0,
+            "y": 35
+          },
+          "id": 15,
+          "options": {
+            "alertThreshold": true
+          },
+          "pluginVersion": "7.3.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${DATASOURCE}"
+              },
+              "expr": "solr_metrics_jvm_os_load_average{namespace=~\"$NAMESPACE\",base_url=~\"$base_url\"}",
+              "format": "time_series",
+              "intervalFactor": 2,
+              "legendFormat": "{{base_url}} {{item}}",
+              "refId": "A"
+            }
+          ],
+          "title": "Load Average",
+          "type": "timeseries"
+        }
+      ],
+      "title": "OS Metrics",
+      "type": "row"
+    },
+    {
+      "collapsed": true,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 21
+      },
+      "id": 215,
+      "panels": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DATASOURCE}"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "custom": {}
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 12,
+            "x": 0,
+            "y": 22
+          },
+          "id": 19,
+          "options": {
+            "alertThreshold": true
+          },
+          "pluginVersion": "7.3.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${DATASOURCE}"
+              },
+              "expr": "solr_metrics_node_requests_total{namespace=~\"$NAMESPACE\",base_url=~\"$base_url\"}",
+              "format": "time_series",
+              "interval": "",
+              "intervalFactor": 2,
+              "legendFormat": "{{base_url}} {{handler}}",
+              "refId": "A"
+            }
+          ],
+          "title": "Requests",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DATASOURCE}"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "custom": {}
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 12,
+            "x": 12,
+            "y": 22
+          },
+          "id": 22,
+          "options": {
+            "alertThreshold": true
+          },
+          "pluginVersion": "7.3.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${DATASOURCE}"
+              },
+              "expr": "increase(solr_metrics_node_time_seconds_total{namespace=~\"$NAMESPACE\",base_url=~\"$base_url\"}[1m])",
+              "format": "time_series",
+              "interval": "",
+              "intervalFactor": 2,
+              "legendFormat": "{{base_url}}{{handler}}",
+              "refId": "A"
+            }
+          ],
+          "title": "Request Time",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DATASOURCE}"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "custom": {}
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 12,
+            "x": 0,
+            "y": 29
+          },
+          "id": 17,
+          "options": {
+            "alertThreshold": true
+          },
+          "pluginVersion": "7.3.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${DATASOURCE}"
+              },
+              "expr": "increase(solr_metrics_node_client_errors_total{namespace=~\"$NAMESPACE\",base_url=~\"$base_url\"}[1m])",
+              "format": "time_series",
+              "interval": "",
+              "intervalFactor": 2,
+              "legendFormat": "{{base_url}}{{handler}}",
+              "refId": "A"
+            }
+          ],
+          "title": "Client Errors",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DATASOURCE}"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "custom": {}
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 12,
+            "x": 12,
+            "y": 29
+          },
+          "id": 20,
+          "options": {
+            "alertThreshold": true
+          },
+          "pluginVersion": "7.3.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${DATASOURCE}"
+              },
+              "expr": "increase(solr_metrics_node_server_errors_total{namespace=~\"$NAMESPACE\",base_url=~\"$base_url\"}[1m])",
+              "format": "time_series",
+              "intervalFactor": 2,
+              "legendFormat": "{{base_url}}{{handler}}",
+              "refId": "A"
+            }
+          ],
+          "title": "Server Errors",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DATASOURCE}"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "custom": {}
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 12,
+            "x": 0,
+            "y": 36
+          },
+          "id": 18,
+          "options": {
+            "alertThreshold": true
+          },
+          "pluginVersion": "7.3.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${DATASOURCE}"
+              },
+              "expr": "increase(solr_metrics_node_errors_total{namespace=~\"$NAMESPACE\",base_url=~\"$base_url\"}[1m])",
+              "format": "time_series",
+              "intervalFactor": 2,
+              "legendFormat": "{{base_url}}{{handler}}",
+              "refId": "A"
+            }
+          ],
+          "title": "Errors",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DATASOURCE}"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "custom": {}
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 12,
+            "x": 12,
+            "y": 36
+          },
+          "id": 21,
+          "options": {
+            "alertThreshold": true
+          },
+          "pluginVersion": "7.3.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${DATASOURCE}"
+              },
+              "expr": "increase(solr_metrics_node_timeouts_total{namespace=~\"$NAMESPACE\",base_url=~\"$base_url\"}[1m])",
+              "format": "time_series",
+              "intervalFactor": 2,
+              "legendFormat": "{{base_url}}{{handler}}",
+              "refId": "A"
+            }
+          ],
+          "title": "Timeouts",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DATASOURCE}"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "custom": {}
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 12,
+            "x": 0,
+            "y": 43
+          },
+          "id": 23,
+          "options": {
+            "alertThreshold": true
+          },
+          "pluginVersion": "7.3.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${DATASOURCE}"
+              },
+              "expr": "solr_metrics_node_cores{namespace=~\"$NAMESPACE\",base_url=~\"$base_url\"}",
+              "format": "time_series",
+              "intervalFactor": 2,
+              "legendFormat": "{{base_url}} {{item}}",
+              "refId": "A"
+            }
+          ],
+          "title": "Cores",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DATASOURCE}"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "custom": {}
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 12,
+            "x": 12,
+            "y": 43
+          },
+          "id": 24,
+          "options": {
+            "alertThreshold": true
+          },
+          "pluginVersion": "7.3.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${DATASOURCE}"
+              },
+              "expr": "solr_metrics_node_core_root_fs_bytes{namespace=~\"$NAMESPACE\",base_url=~\"$base_url\"}",
+              "format": "time_series",
+              "intervalFactor": 2,
+              "legendFormat": "{{base_url}} {{item}}",
+              "refId": "A"
+            }
+          ],
+          "title": "Core Root File System",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DATASOURCE}"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "custom": {}
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 12,
+            "x": 0,
+            "y": 50
+          },
+          "id": 25,
+          "options": {
+            "alertThreshold": true
+          },
+          "pluginVersion": "7.3.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${DATASOURCE}"
+              },
+              "expr": "solr_metrics_node_thread_pool_completed_total{namespace=~\"$NAMESPACE\",base_url=~\"$base_url\"}",
+              "format": "time_series",
+              "interval": "",
+              "intervalFactor": 2,
+              "legendFormat": "{{base_url}} {{handler}} {{executor}}",
+              "refId": "A"
+            }
+          ],
+          "title": "Thread Pool Completed",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DATASOURCE}"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "custom": {}
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 12,
+            "x": 12,
+            "y": 50
+          },
+          "id": 26,
+          "options": {
+            "alertThreshold": true
+          },
+          "pluginVersion": "7.3.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${DATASOURCE}"
+              },
+              "expr": "solr_metrics_node_thread_pool_submitted_total{namespace=~\"$NAMESPACE\",base_url=~\"$base_url\"}",
+              "format": "time_series",
+              "interval": "",
+              "intervalFactor": 2,
+              "legendFormat": "{{base_url}} {{handler}} {{executor}}",
+              "refId": "A"
+            }
+          ],
+          "title": "Thread Pool Submitted",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DATASOURCE}"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "custom": {}
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 24,
+            "x": 0,
+            "y": 57
+          },
+          "id": 27,
+          "options": {
+            "alertThreshold": true
+          },
+          "pluginVersion": "7.3.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${DATASOURCE}"
+              },
+              "expr": "solr_metrics_node_thread_pool_running{namespace=~\"$NAMESPACE\",base_url=~\"$base_url\"}",
+              "format": "time_series",
+              "interval": "",
+              "intervalFactor": 2,
+              "legendFormat": "{{base_url}} {{handler}} {{executor}}",
+              "refId": "A"
+            }
+          ],
+          "title": "Thread Pool Running",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DATASOURCE}"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "custom": {}
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 16,
+            "x": 0,
+            "y": 64
+          },
+          "id": 28,
+          "options": {
+            "alertThreshold": true
+          },
+          "pluginVersion": "7.3.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${DATASOURCE}"
+              },
+              "expr": "solr_metrics_node_connections{namespace=~\"$NAMESPACE\",base_url=~\"$base_url\"}",
+              "format": "time_series",
+              "intervalFactor": 2,
+              "legendFormat": "{{base_url}} {{handler}} {{item}}",
+              "refId": "A"
+            }
+          ],
+          "title": "Connections",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DATASOURCE}"
+          },
+          "description": "Number of leaders on each node",
+          "fieldConfig": {
+            "defaults": {
+              "custom": {},
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green"
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              }
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 8,
+            "x": 16,
+            "y": 64
+          },
+          "id": 220,
+          "options": {
+            "alertThreshold": true
+          },
+          "pluginVersion": "7.3.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${DATASOURCE}"
+              },
+              "expr": "sum by (base_url) (solr_collections_shard_leader{namespace=~\"$NAMESPACE\",base_url=~\"$base_url\",collection=~\"$collection\",shard=~\"$shard\",replica=~\"$replica\",core=~\"$core\"})",
+              "interval": "",
+              "intervalFactor": 2,
+              "legendFormat": "{{base_url}}",
+              "refId": "A"
+            }
+          ],
+          "title": "Leader Count (by node)",
+          "type": "timeseries"
+        }
+      ],
+      "title": "Node Metrics",
+      "type": "row"
+    },
+    {
+      "collapsed": true,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 22
+      },
+      "id": 216,
+      "panels": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DATASOURCE}"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "custom": {}
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 12,
+            "x": 0,
+            "y": 23
+          },
+          "id": 31,
+          "options": {
+            "alertThreshold": true
+          },
+          "pluginVersion": "7.3.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${DATASOURCE}"
+              },
+              "expr": "increase(solr_metrics_core_requests_total{namespace=~\"$NAMESPACE\",base_url=~\"$base_url\",collection=~\"$collection\",shard=~\"$shard\",replica=~\"$replica\",core=~\"$core\"}[1m])",
+              "format": "time_series",
+              "interval": "",
+              "intervalFactor": 2,
+              "legendFormat": "{{base_url}}/{{core}}{{handler}}",
+              "refId": "A"
+            }
+          ],
+          "title": "Requests",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DATASOURCE}"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "custom": {}
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 12,
+            "x": 12,
+            "y": 23
+          },
+          "id": 34,
+          "options": {
+            "alertThreshold": true
+          },
+          "pluginVersion": "7.3.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${DATASOURCE}"
+              },
+              "expr": "increase(solr_metrics_core_time_seconds_total{namespace=~\"$NAMESPACE\",base_url=~\"$base_url\",collection=~\"$collection\",shard=~\"$shard\",replica=~\"$replica\",core=~\"$core\"}[1m])",
+              "format": "time_series",
+              "interval": "",
+              "intervalFactor": 2,
+              "legendFormat": "{{base_url}}/{{core}}{{handler}}",
+              "refId": "A"
+            }
+          ],
+          "title": "Request Time",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DATASOURCE}"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "custom": {}
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 12,
+            "x": 0,
+            "y": 30
+          },
+          "id": 29,
+          "options": {
+            "alertThreshold": true
+          },
+          "pluginVersion": "7.3.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${DATASOURCE}"
+              },
+              "expr": "increase(solr_metrics_core_client_errors_total{namespace=~\"$NAMESPACE\",base_url=~\"$base_url\",collection=~\"$collection\",shard=~\"$shard\",replica=~\"$replica\",core=~\"$core\"}[1m])",
+              "format": "time_series",
+              "intervalFactor": 2,
+              "legendFormat": "{{base_url}}/{{core}}{{handler}}",
+              "refId": "A"
+            }
+          ],
+          "title": "Client Errors",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DATASOURCE}"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "custom": {}
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 12,
+            "x": 12,
+            "y": 30
+          },
+          "id": 32,
+          "options": {
+            "alertThreshold": true
+          },
+          "pluginVersion": "7.3.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${DATASOURCE}"
+              },
+              "expr": "increase(solr_metrics_core_server_errors_total{namespace=~\"$NAMESPACE\",base_url=~\"$base_url\",collection=~\"$collection\",shard=~\"$shard\",replica=~\"$replica\",core=~\"$core\"}[1m])",
+              "format": "time_series",
+              "intervalFactor": 2,
+              "legendFormat": "{{base_url}}/{{core}}{{handler}}",
+              "refId": "A"
+            }
+          ],
+          "title": "Server Errors",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DATASOURCE}"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "custom": {}
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 12,
+            "x": 0,
+            "y": 37
+          },
+          "id": 30,
+          "options": {
+            "alertThreshold": true
+          },
+          "pluginVersion": "7.3.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${DATASOURCE}"
+              },
+              "expr": "increase(solr_metrics_core_errors_total{namespace=~\"$NAMESPACE\",base_url=~\"$base_url\",collection=~\"$collection\",shard=~\"$shard\",replica=~\"$replica\",core=~\"$core\"}[1m])",
+              "format": "time_series",
+              "intervalFactor": 2,
+              "legendFormat": "{{base_url}}/{{core}}{{handler}}",
+              "refId": "A"
+            }
+          ],
+          "title": "Errors",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DATASOURCE}"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "custom": {}
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 12,
+            "x": 12,
+            "y": 37
+          },
+          "id": 33,
+          "options": {
+            "alertThreshold": true
+          },
+          "pluginVersion": "7.3.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${DATASOURCE}"
+              },
+              "expr": "increase(solr_metrics_core_timeouts_total{namespace=~\"$NAMESPACE\",base_url=~\"$base_url\",collection=~\"$collection\",shard=~\"$shard\",replica=~\"$replica\",core=~\"$core\"}[1m])",
+              "format": "time_series",
+              "intervalFactor": 2,
+              "legendFormat": "{{base_url}}/{{core}}{{handler}}",
+              "refId": "A"
+            }
+          ],
+          "title": "Timeouts",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DATASOURCE}"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "custom": {}
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 12,
+            "x": 0,
+            "y": 44
+          },
+          "id": 35,
+          "options": {
+            "alertThreshold": true
+          },
+          "pluginVersion": "7.3.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${DATASOURCE}"
+              },
+              "expr": "solr_metrics_core_searcher_cache_ratio{namespace=~\"$NAMESPACE\",base_url=~\"$base_url\",collection=~\"$collection\",shard=~\"$shard\",replica=~\"$replica\",core=~\"$core\"}",
+              "format": "time_series",
+              "interval": "",
+              "intervalFactor": 2,
+              "legendFormat": "{{base_url}}/{{core}} {{type}} {{item}}",
+              "refId": "A"
+            }
+          ],
+          "title": "Searcher Cache Hit Ratio",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DATASOURCE}"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "custom": {}
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 12,
+            "x": 12,
+            "y": 44
+          },
+          "id": 36,
+          "options": {
+            "alertThreshold": true
+          },
+          "pluginVersion": "7.3.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${DATASOURCE}"
+              },
+              "expr": "solr_metrics_core_searcher_cache{namespace=~\"$NAMESPACE\",base_url=~\"$base_url\",collection=~\"$collection\",shard=~\"$shard\",replica=~\"$replica\",core=~\"$core\"}",
+              "format": "time_series",
+              "interval": "",
+              "intervalFactor": 2,
+              "legendFormat": "{{base_url}}/{{core}} {{type}} {{item}}",
+              "refId": "A"
+            }
+          ],
+          "title": "Searcher Cache",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DATASOURCE}"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "custom": {}
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 12,
+            "x": 0,
+            "y": 51
+          },
+          "id": 37,
+          "options": {
+            "alertThreshold": true
+          },
+          "pluginVersion": "7.3.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${DATASOURCE}"
+              },
+              "expr": "solr_metrics_core_searcher_warmup_time_seconds{namespace=~\"$NAMESPACE\",base_url=~\"$base_url\",collection=~\"$collection\",shard=~\"$shard\",replica=~\"$replica\",core=~\"$core\"}",
+              "format": "time_series",
+              "intervalFactor": 2,
+              "legendFormat": "{{base_url}}/{{core}} {{type}}",
+              "refId": "A"
+            }
+          ],
+          "title": "Searcher Warm Up Time",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DATASOURCE}"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "custom": {}
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 12,
+            "x": 12,
+            "y": 51
+          },
+          "id": 38,
+          "options": {
+            "alertThreshold": true
+          },
+          "pluginVersion": "7.3.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${DATASOURCE}"
+              },
+              "expr": "increase(solr_metrics_core_searcher_cumulative_cache_total{namespace=~\"$NAMESPACE\",base_url=~\"$base_url\",collection=~\"$collection\",shard=~\"$shard\",replica=~\"$replica\",core=~\"$core\"}[1m])",
+              "format": "time_series",
+              "intervalFactor": 2,
+              "legendFormat": "{{base_url}}/{{core}} {{type}} {{item}}",
+              "refId": "A"
+            }
+          ],
+          "title": "Searcher Cumulative Cache",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DATASOURCE}"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "custom": {}
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 12,
+            "x": 0,
+            "y": 58
+          },
+          "id": 39,
+          "options": {
+            "alertThreshold": true
+          },
+          "pluginVersion": "7.3.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${DATASOURCE}"
+              },
+              "expr": "solr_metrics_core_fs_bytes{namespace=~\"$NAMESPACE\",base_url=~\"$base_url\",collection=~\"$collection\",shard=~\"$shard\",replica=~\"$replica\",core=~\"$core\"}",
+              "format": "time_series",
+              "intervalFactor": 2,
+              "legendFormat": "{{base_url}}/{{core}}",
+              "refId": "A"
+            }
+          ],
+          "title": "File System",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DATASOURCE}"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "custom": {}
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 12,
+            "x": 12,
+            "y": 58
+          },
+          "id": 40,
+          "options": {
+            "alertThreshold": true
+          },
+          "pluginVersion": "7.3.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${DATASOURCE}"
+              },
+              "expr": "solr_metrics_core_index_size_bytes{namespace=~\"$NAMESPACE\",base_url=~\"$base_url\",collection=~\"$collection\",shard=~\"$shard\",replica=~\"$replica\",core=~\"$core\"}",
+              "format": "time_series",
+              "intervalFactor": 2,
+              "legendFormat": "{{base_url}}/{{core}}",
+              "refId": "A"
+            }
+          ],
+          "title": "Index Size",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DATASOURCE}"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "custom": {}
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 24,
+            "x": 0,
+            "y": 65
+          },
+          "id": 41,
+          "options": {
+            "alertThreshold": true
+          },
+          "pluginVersion": "7.3.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${DATASOURCE}"
+              },
+              "expr": "solr_metrics_core_searcher_documents{namespace=~\"$NAMESPACE\",base_url=~\"$base_url\",collection=~\"$collection\",shard=~\"$shard\",replica=~\"$replica\",core=~\"$core\"}",
+              "format": "time_series",
+              "intervalFactor": 2,
+              "legendFormat": "{{base_url}}/{{core}} {{item}}",
+              "refId": "A"
+            }
+          ],
+          "title": "Searcher Documents",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DATASOURCE}"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "custom": {}
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 12,
+            "x": 0,
+            "y": 72
+          },
+          "id": 42,
+          "options": {
+            "alertThreshold": true
+          },
+          "pluginVersion": "7.3.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${DATASOURCE}"
+              },
+              "expr": "increase(solr_metrics_core_update_handler_adds_total{namespace=~\"$NAMESPACE\",base_url=~\"$base_url\",collection=~\"$collection\",shard=~\"$shard\",replica=~\"$replica\",core=~\"$core\"}[1m])",
+              "format": "time_series",
+              "interval": "",
+              "intervalFactor": 2,
+              "legendFormat": "{{base_url}}/{{core}}",
+              "refId": "A"
+            }
+          ],
+          "title": "Update Handler Adds (cumulative)",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DATASOURCE}"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "custom": {}
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 12,
+            "x": 12,
+            "y": 72
+          },
+          "id": 46,
+          "options": {
+            "alertThreshold": true
+          },
+          "pluginVersion": "7.3.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${DATASOURCE}"
+              },
+              "expr": "solr_metrics_core_update_handler_pending_docs{namespace=~\"$NAMESPACE\",base_url=~\"$base_url\",collection=~\"$collection\",shard=~\"$shard\",replica=~\"$replica\",core=~\"$core\"}",
+              "format": "time_series",
+              "intervalFactor": 2,
+              "legendFormat": "{{base_url}}/{{core}}",
+              "refId": "A"
+            }
+          ],
+          "title": "Pending Docs",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DATASOURCE}"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "custom": {}
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 8,
+            "x": 0,
+            "y": 79
+          },
+          "id": 43,
+          "options": {
+            "alertThreshold": true
+          },
+          "pluginVersion": "7.3.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${DATASOURCE}"
+              },
+              "expr": "increase(solr_metrics_core_update_handler_deletes_by_id_total{namespace=~\"$NAMESPACE\",base_url=~\"$base_url\",collection=~\"$collection\",shard=~\"$shard\",replica=~\"$replica\",core=~\"$core\"}[1m])",
+              "format": "time_series",
+              "intervalFactor": 2,
+              "legendFormat": "{{base_url}}/{{core}}",
+              "refId": "A"
+            }
+          ],
+          "title": "Update Handler Deletes By ID",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DATASOURCE}"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "custom": {}
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 8,
+            "x": 8,
+            "y": 79
+          },
+          "id": 44,
+          "options": {
+            "alertThreshold": true
+          },
+          "pluginVersion": "7.3.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${DATASOURCE}"
+              },
+              "expr": "increase(solr_metrics_core_update_handler_deletes_by_query_total{namespace=~\"$NAMESPACE\",base_url=~\"$base_url\",collection=~\"$collection\",shard=~\"$shard\",replica=~\"$replica\",core=~\"$core\"}[1m])",
+              "format": "time_series",
+              "intervalFactor": 2,
+              "legendFormat": "{{base_url}}/{{core}}",
+              "refId": "A"
+            }
+          ],
+          "title": "Update Handler Deletes By Query",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DATASOURCE}"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "custom": {}
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 8,
+            "x": 16,
+            "y": 79
+          },
+          "id": 47,
+          "options": {
+            "alertThreshold": true
+          },
+          "pluginVersion": "7.3.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${DATASOURCE}"
+              },
+              "expr": "increase(solr_metrics_core_update_handler_expunge_deletes_total{namespace=~\"$NAMESPACE\",base_url=~\"$base_url\",collection=~\"$collection\",shard=~\"$shard\",replica=~\"$replica\",core=~\"$core\"}[1m])",
+              "format": "time_series",
+              "intervalFactor": 2,
+              "legendFormat": "{{base_url}}/{{core}}",
+              "refId": "A"
+            }
+          ],
+          "title": "Update Handler Expunge Deletes",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DATASOURCE}"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "custom": {}
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 12,
+            "x": 0,
+            "y": 86
+          },
+          "id": 48,
+          "options": {
+            "alertThreshold": true
+          },
+          "pluginVersion": "7.3.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${DATASOURCE}"
+              },
+              "expr": "increase(solr_metrics_core_update_handler_merges_total{namespace=~\"$NAMESPACE\",base_url=~\"$base_url\",collection=~\"$collection\",shard=~\"$shard\",replica=~\"$replica\",core=~\"$core\"}[1m])",
+              "format": "time_series",
+              "intervalFactor": 2,
+              "legendFormat": "{{base_url}}/{{core}}",
+              "refId": "A"
+            }
+          ],
+          "title": "Update Handler Merges",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DATASOURCE}"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "custom": {}
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 12,
+            "x": 12,
+            "y": 86
+          },
+          "id": 52,
+          "options": {
+            "alertThreshold": true
+          },
+          "pluginVersion": "7.3.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${DATASOURCE}"
+              },
+              "expr": "increase(solr_metrics_core_update_handler_splits_total{namespace=~\"$NAMESPACE\",base_url=~\"$base_url\",collection=~\"$collection\",shard=~\"$shard\",replica=~\"$replica\",core=~\"$core\"}[1m])",
+              "format": "time_series",
+              "intervalFactor": 2,
+              "legendFormat": "{{base_url}}/{{core}}",
+              "refId": "A"
+            }
+          ],
+          "title": "Update Handler Splits",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DATASOURCE}"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "custom": {}
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 12,
+            "x": 0,
+            "y": 93
+          },
+          "id": 49,
+          "options": {
+            "alertThreshold": true
+          },
+          "pluginVersion": "7.3.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${DATASOURCE}"
+              },
+              "expr": "increase(solr_metrics_core_update_handler_optimizes_total{namespace=~\"$NAMESPACE\",base_url=~\"$base_url\",collection=~\"$collection\",shard=~\"$shard\",replica=~\"$replica\",core=~\"$core\"}[1m])",
+              "format": "time_series",
+              "intervalFactor": 2,
+              "legendFormat": "{{base_url}}/{{core}}",
+              "refId": "A"
+            }
+          ],
+          "title": "Update Handler Optimizes",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DATASOURCE}"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "custom": {}
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 12,
+            "x": 12,
+            "y": 93
+          },
+          "id": 50,
+          "options": {
+            "alertThreshold": true
+          },
+          "pluginVersion": "7.3.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${DATASOURCE}"
+              },
+              "expr": "increase(solr_metrics_core_update_handler_rollbacks_total{namespace=~\"$NAMESPACE\",base_url=~\"$base_url\",collection=~\"$collection\",shard=~\"$shard\",replica=~\"$replica\",core=~\"$core\"}[1m])",
+              "format": "time_series",
+              "intervalFactor": 2,
+              "legendFormat": "{{base_url}}/{{core}}",
+              "refId": "A"
+            }
+          ],
+          "title": "Update Handler Rollbacks",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DATASOURCE}"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "custom": {}
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 8,
+            "x": 0,
+            "y": 100
+          },
+          "id": 51,
+          "options": {
+            "alertThreshold": true
+          },
+          "pluginVersion": "7.3.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${DATASOURCE}"
+              },
+              "expr": "increase(solr_metrics_core_update_handler_soft_auto_commits_total{namespace=~\"$NAMESPACE\",base_url=~\"$base_url\",collection=~\"$collection\",shard=~\"$shard\",replica=~\"$replica\",core=~\"$core\"}[1m])",
+              "format": "time_series",
+              "interval": "",
+              "intervalFactor": 2,
+              "legendFormat": "{{base_url}}/{{core}}",
+              "refId": "A"
+            }
+          ],
+          "title": "Update Handler Soft Auto Commits",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DATASOURCE}"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "custom": {}
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 8,
+            "x": 8,
+            "y": 100
+          },
+          "id": 53,
+          "options": {
+            "alertThreshold": true
+          },
+          "pluginVersion": "7.3.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${DATASOURCE}"
+              },
+              "expr": "increase(solr_metrics_core_update_handler_auto_commits_total{namespace=~\"$NAMESPACE\",base_url=~\"$base_url\",collection=~\"$collection\",shard=~\"$shard\",replica=~\"$replica\",core=~\"$core\"}[1m])",
+              "format": "time_series",
+              "interval": "",
+              "intervalFactor": 2,
+              "legendFormat": "{{base_url}}/{{core}}",
+              "refId": "A"
+            }
+          ],
+          "title": "Update Handler Auto Commits",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DATASOURCE}"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "custom": {}
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 8,
+            "x": 16,
+            "y": 100
+          },
+          "id": 54,
+          "options": {
+            "alertThreshold": true
+          },
+          "pluginVersion": "7.3.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${DATASOURCE}"
+              },
+              "expr": "increase(solr_metrics_core_update_handler_commits_total{namespace=~\"$NAMESPACE\",base_url=~\"$base_url\",collection=~\"$collection\",shard=~\"$shard\",replica=~\"$replica\",core=~\"$core\"}[1m])",
+              "format": "time_series",
+              "interval": "",
+              "intervalFactor": 2,
+              "legendFormat": "{{base_url}}/{{core}}",
+              "refId": "A"
+            }
+          ],
+          "title": "Update Handler Commits",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DATASOURCE}"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "custom": {}
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 24,
+            "x": 0,
+            "y": 107
+          },
+          "id": 45,
+          "options": {
+            "alertThreshold": true
+          },
+          "pluginVersion": "7.3.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${DATASOURCE}"
+              },
+              "expr": "increase(solr_metrics_core_update_handler_errors_total{namespace=~\"$NAMESPACE\",base_url=~\"$base_url\",collection=~\"$collection\",shard=~\"$shard\",replica=~\"$replica\",core=~\"$core\"}[1m])",
+              "format": "time_series",
+              "interval": "",
+              "intervalFactor": 2,
+              "legendFormat": "{{base_url}}/{{core}}",
+              "refId": "A"
+            }
+          ],
+          "title": "Update Handler Errors",
+          "type": "timeseries"
+        }
+      ],
+      "title": "Core Metrics",
+      "type": "row"
+    }
+  ],
+  "preload": false,
+  "refresh": "30s",
+  "schemaVersion": 41,
+  "tags": [],
+  "templating": {
+    "list": [
+      {
+        "current": {
+          "text": [
+            "All"
+          ],
+          "value": [
+            "$__all"
+          ]
+        },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "${DATASOURCE}"
+        },
+        "definition": "label_values(solr_ping, namespace)",
+        "includeAll": true,
+        "label": "namespace",
+        "multi": true,
+        "name": "NAMESPACE",
+        "options": [],
+        "query": {
+          "qryType": 1,
+          "query": "label_values(solr_ping, namespace)",
+          "refId": "PrometheusVariableQueryEditor-VariableQuery"
+        },
+        "refresh": 1,
+        "regex": "",
+        "type": "query"
+      },
+      {
+        "allValue": ".*",
+        "current": {
+          "text": "All",
+          "value": "$__all"
+        },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "${DATASOURCE}"
+        },
+        "definition": "",
+        "includeAll": true,
+        "multi": true,
+        "name": "zk_host",
+        "options": [],
+        "query": "label_values(solr_ping{namespace=~\"$NAMESPACE\",zk_host=~\".+\"},zk_host)",
+        "refresh": 1,
+        "regex": "/(.+)/",
+        "sort": 1,
+        "type": "query"
+      },
+      {
+        "allValue": ".*",
+        "current": {
+          "text": "All",
+          "value": "$__all"
+        },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "${DATASOURCE}"
+        },
+        "definition": "",
+        "includeAll": true,
+        "multi": true,
+        "name": "base_url",
+        "options": [],
+        "query": "label_values(solr_ping{namespace=~\"$NAMESPACE\",base_url=~\".+\"},base_url)",
+        "refresh": 1,
+        "regex": "/(.+)/",
+        "sort": 1,
+        "type": "query"
+      },
+      {
+        "allValue": ".*",
+        "current": {
+          "text": "All",
+          "value": "$__all"
+        },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "${DATASOURCE}"
+        },
+        "definition": "",
+        "includeAll": true,
+        "multi": true,
+        "name": "collection",
+        "options": [],
+        "query": "label_values(solr_collections_shard_state{namespace=~\"$NAMESPACE\",zk_host=~\"$zk_host\",collection=~\".+\"},collection)",
+        "refresh": 1,
+        "regex": "/(.+)/",
+        "sort": 1,
+        "type": "query"
+      },
+      {
+        "allValue": ".*",
+        "current": {
+          "text": "All",
+          "value": "$__all"
+        },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "${DATASOURCE}"
+        },
+        "definition": "",
+        "includeAll": true,
+        "multi": true,
+        "name": "shard",
+        "options": [],
+        "query": "label_values(solr_collections_shard_state{namespace=~\"$NAMESPACE\",zk_host=~\"$zk_host\",collection=~\"$collection\",shard=~\".+\"},shard)",
+        "refresh": 1,
+        "regex": "/(.+)/",
+        "sort": 1,
+        "type": "query"
+      },
+      {
+        "allValue": ".*",
+        "current": {
+          "text": "All",
+          "value": "$__all"
+        },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "${DATASOURCE}"
+        },
+        "definition": "",
+        "includeAll": true,
+        "multi": true,
+        "name": "replica",
+        "options": [],
+        "query": "label_values(solr_collections_replica_state{namespace=~\"$NAMESPACE\",zk_host=~\"$zk_host\",collection=~\"$collection\",shard=~\"$shard\",replica=~\".+\"},replica)",
+        "refresh": 1,
+        "regex": "/(.+)/",
+        "sort": 1,
+        "type": "query"
+      },
+      {
+        "allValue": ".*",
+        "current": {
+          "text": "All",
+          "value": "$__all"
+        },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "${DATASOURCE}"
+        },
+        "definition": "",
+        "includeAll": true,
+        "multi": true,
+        "name": "core",
+        "options": [],
+        "query": "label_values(solr_collections_replica_state{namespace=~\"$NAMESPACE\",zk_host=~\"$zk_host\",collection=~\"$collection\",shard=~\"$shard\",replica=~\"$replica\"},core)",
+        "refresh": 1,
+        "regex": "/(.+)/",
+        "sort": 1,
+        "type": "query"
+      },
+      {
+        "allValue": ".*",
+        "current": {
+          "text": "All",
+          "value": "$__all"
+        },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "${DATASOURCE}"
+        },
+        "definition": "label_values(solr_metrics_core_query_errors_1minRate{namespace=~\"$NAMESPACE\",zk_host=~\"$zk_host\",collection=~\"$collection\",shard=~\"$shard\",replica=~\"$replica\"},searchHandler)",
+        "includeAll": true,
+        "multi": true,
+        "name": "searchHandler",
+        "options": [],
+        "query": "label_values(solr_metrics_core_query_errors_1minRate{namespace=~\"$NAMESPACE\",zk_host=~\"$zk_host\",collection=~\"$collection\",shard=~\"$shard\",replica=~\"$replica\"},searchHandler)",
+        "refresh": 1,
+        "regex": "/(.+)/",
+        "sort": 1,
+        "type": "query"
+      },
+      {
+        "current": {
+          "text": "prom-adm-it-pub",
+          "value": "beyjkc3oy7z7ka"
+        },
+        "label": "Datasource",
+        "name": "DATASOURCE",
+        "options": [],
+        "query": "prometheus",
+        "refresh": 1,
+        "regex": "",
+        "type": "datasource"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-15m",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "browser",
+  "title": "Solr Dashboard",
+  "uid": "yt5eXHbMz5",
+  "version": 1
+}

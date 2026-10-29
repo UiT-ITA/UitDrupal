@@ -1,0 +1,134 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: ${app_name}-replicate-postgres-s3-between-regions
+spec:
+  schedule: "10-59/15 * * * *"
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 1
+  concurrencyPolicy: Forbid
+  suspend: ${suspend_replicate_postgres:=true}
+  jobTemplate:
+    spec:
+      backoffLimit: 0
+      template:
+        metadata:
+          labels:
+            app: ${app_name}-sync-postgres
+        spec:
+          restartPolicy: Never
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 33
+            runAsGroup: 33
+            fsGroup: 33
+            fsGroupChangePolicy: "OnRootMismatch"
+          imagePullSecrets:
+            - name: gitapp-adm-it-pub-systembruker
+          initContainers:
+            - name: ${app_name}-sync-postgres-down
+              image: git.app.uib.no:4567/itpublic/dockerimages/awscli/amazon/aws-cli:2.33.7
+              command:
+                - /bin/sh
+                - -c
+                - "/sync-s3-script/script.sh $SOURCE_S3 /postgres"
+              securityContext:
+                allowPrivilegeEscalation: false
+                capabilities:
+                  drop:
+                    - ALL
+                seccompProfile:
+                  type: RuntimeDefault
+              resources:
+                requests:
+                  memory: "2Gi"
+                  cpu: "1"
+                limits:
+                  cpu: "1"
+                  memory: "2Gi"
+              volumeMounts:
+                - name: postgres
+                  mountPath: /postgres
+                - name: sync-s3-script
+                  mountPath: /sync-s3-script
+                  readOnly: true
+              env:
+                - name: SOURCE_S3
+                  value: ${self_postgres_s3}
+                - name: AWS_ENDPOINT_URL
+                  value: ${self_postgres_s3_endpoint}
+                - name: DELETE
+                  value: "false"
+                - name: AWS_REGION
+                  value: None
+                - name: AWS_REQUEST_CHECKSUM_CALCULATION
+                  value: when_required
+                - name: AWS_RESPONSE_CHECKSUM_VALIDATION
+                  value: when_required
+                - name: AWS_ACCESS_KEY_ID
+                  valueFrom:
+                    secretKeyRef:
+                      name: ${app_name}-prod-s3-secret
+                      key: access
+                - name: AWS_SECRET_ACCESS_KEY
+                  valueFrom:
+                    secretKeyRef:
+                      name: ${app_name}-prod-s3-secret
+                      key: secret
+          containers:
+            - name: ${app_name}-sync-postgres
+              image: git.app.uib.no:4567/itpublic/dockerimages/awscli/amazon/aws-cli:2.33.7
+              command:
+                - /bin/sh
+                - -c
+                - "/sync-s3-script/script.sh /postgres $SELF_S3"
+              securityContext:
+                allowPrivilegeEscalation: false
+                capabilities:
+                  drop:
+                    - ALL
+                seccompProfile:
+                  type: RuntimeDefault
+              resources:
+                requests:
+                  memory: "2Gi"
+                  cpu: "1"
+                limits:
+                  cpu: "1"
+                  memory: "2Gi"
+              volumeMounts:
+                - name: postgres
+                  mountPath: /postgres
+                - name: sync-s3-script
+                  mountPath: /sync-s3-script
+                  readOnly: true
+              env:
+                - name: SELF_S3
+                  value: ${destination_postgres_s3}
+                - name: AWS_ENDPOINT_URL
+                  value: ${destination_postgres_s3_endpoint}
+                - name: DELETE
+                  value: "false"
+                - name: AWS_REGION
+                  value: None
+                - name: AWS_REQUEST_CHECKSUM_CALCULATION
+                  value: when_required
+                - name: AWS_RESPONSE_CHECKSUM_VALIDATION
+                  value: when_required
+                - name: AWS_ACCESS_KEY_ID
+                  valueFrom:
+                    secretKeyRef:
+                      name: ${app_name}-prod-s3-secret
+                      key: access
+                - name: AWS_SECRET_ACCESS_KEY
+                  valueFrom:
+                    secretKeyRef:
+                      name: ${app_name}-prod-s3-secret
+                      key: secret
+          volumes:
+            - name: postgres
+              emptyDir: {}
+            - name: sync-s3-script
+              configMap:
+                name: sync-s3-script
+                defaultMode: 0755

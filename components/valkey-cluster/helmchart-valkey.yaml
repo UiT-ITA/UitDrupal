@@ -1,0 +1,101 @@
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: valkey
+spec:
+  interval: 5m0s
+  url: https://valkey.io/valkey-helm
+
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: valkey
+spec:
+  interval: 5m0s
+  chart:
+    spec:
+      chart: valkey
+      version: "0.9.*"
+      sourceRef:
+        kind: HelmRepository
+        name: valkey
+      interval: 5m0s
+  values:
+    fullnameOverride: "valkey"
+    service:
+      name: "valkey"
+    imagePullSecrets: ["${image_pull_secret_name}"]
+    image:
+      registry: git.app.uib.no:4567/itpublic/dockerimages
+      repository: valkey-unprivileged
+      tag: 9.0.6
+    resources:
+      requests:
+        memory: "128Mi"
+        cpu: "100m"
+      limits:
+        memory: "512Mi"
+        cpu: "500m"
+    affinity:
+      podAntiAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+                - key: app.kubernetes.io/instance
+                  operator: In
+                  values:
+                    - valkey
+            topologyKey: kubernetes.io/hostname
+    # volatile-rlu is requested by the Drupal Redis module as it needs some cache keys
+    # to stay persistent. Default case is allkeys-lru
+    # Create an overlay to patch the config you need
+    valkeyConfig: |
+      port 6379
+      bind 0.0.0.0
+      appendonly yes
+      maxmemory 400mb
+      maxmemory-policy volatile-lru
+    securityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+          - ALL
+      readOnlyRootFilesystem: true
+      runAsNonRoot: true
+      runAsUser: 100
+    podSecurityContext:
+      runAsUser: 100
+      runAsGroup: 101
+      fsGroup: 101
+      seccompProfile:
+        type: RuntimeDefault
+    replica:
+      enabled: true
+      minReplicasToWrite: 1
+      minReplicasMaxLag: 10
+      persistence:
+        size: 5Gi
+        accessModes: ["ReadWriteOnce"]
+      podDisruptionBudget:
+        enabled: true
+        maxUnavailable: 1 # Allow at most 1 pod to be unavailable
+    networkPolicy:
+      podSelector:
+        matchLabels:
+          app: valkey
+      policyTypes:
+        - Ingress
+      ingress:
+        - from:
+            - podSelector: {}
+          ports:
+            - port: 6379
+              protocol: TCP
+    auth:
+      enabled: true
+      usersExistingSecret: ${app_name}-valkey-secret
+      aclUsers:
+        default:
+          permissions: "~* &* +@all"
+          passwordKey: "password"

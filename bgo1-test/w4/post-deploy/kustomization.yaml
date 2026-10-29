@@ -1,0 +1,9 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ../../../base/w4/test/post-deploy
+images:
+  # Image name used in the post deploy Job
+  - name: PATCH_PHP_FPM_IMAGE
+    newName: git.app.uib.no:4567/it/site/w4.uib.no/w4-php-fpm
+    newTag: rail-test-16652 # {"$imagepolicy": "adm-it-pub:w4-test-php-fpm-image-policy:tag"}

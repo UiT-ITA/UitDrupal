@@ -1,0 +1,32 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ../../base/git-pull-secrets
+  - ../../components/nginx
+patches:
+  - path: patches/ingress.yaml
+  - path: patches/patch-deployment-nginx-resources.yaml
+  - path: patches/patch-deployment-nginx-redirect-configs.yaml
+images:
+  - name: PATCH_NGINX_IMAGE
+    newName: git.app.uib.no:4567/itpublic/dockerimages/nginx-alpine-unprivileged
+    newTag: 1.31.8 # {"$imagepolicy": "adm-it-pub:nginx-alpine-unprivileged-image-policy:tag"}
+  - name: PATCH_VARNISH_IMAGE
+    newName: git.app.uib.no:4567/itpublic/dockerimages/varnish-unprivileged
+    newTag: 6.0.18 # {"$imagepolicy": "adm-it-pub:varnish-6.0-image-policy:tag"}
+  - name: PATCH_VALKEY_IMAGE
+    newName: git.app.uib.no:4567/itpublic/dockerimages/valkey-unprivileged
+    newTag: 9.0.6 # {"$imagepolicy": "adm-it-pub:valkey-9.0-image-policy:tag"}
+configMapGenerator:
+  - name: nginx-default-conf
+    files:
+      - default.conf=nginx-vhosts/default.conf
+  - name: universitetsmuseet.no
+    files:
+      - universitetsmuseet.no.conf=nginx-vhosts/universitetsmuseet.no.conf
+  - name: w4.bgo1.prod.rail.uib.no
+    files:
+      - w4.bgo1.prod.rail.uib.no.conf=nginx-vhosts/w4.bgo1.prod.rail.uib.no.conf
+  - name: www.kringom.no
+    files:
+      - www.kringom.no.conf=nginx-vhosts/www.kringom.no.conf

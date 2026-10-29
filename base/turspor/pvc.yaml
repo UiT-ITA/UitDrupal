@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: turspor-wp-uploads-pvc
+  namespace: adm-it-pub-turspor     # Change if your deployment runs in another namespace
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi      # Adjust size as needed
+  storageClassName: standard   # Change to your cluster's storage class name

@@ -1,0 +1,22 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ../../../base/git-pull-secrets
+  - ../../../components/drupal11
+  - ../../../components/postgres
+  - ../../../components/valkey-cluster
+  - secret-profile-test-s3.yaml
+patches:
+  - path: patches/patch-deployment-php-fpm-env.yaml
+  - path: patches/patch-deployment-php-fpm-opcache.yaml
+  - path: patches/patch-deployment-php-fpm-resources.yaml
+  - path: patches/patch-cron-job-drush-cron-env.yaml
+  - path: patches/patch-cron-job-drush-cron-resources.yaml
+images:
+  - name: PATCH_VALKEY_IMAGE
+    newName: git.app.uib.no:4567/itpublic/dockerimages/valkey-unprivileged
+    newTag: 9.0.6 # {"$imagepolicy": "adm-it-pub:valkey-9.0-image-policy:tag"}
+configMapGenerator:
+  - name: opcache-config
+    files:
+      - zzz-php-opcache.ini=opcache.ini

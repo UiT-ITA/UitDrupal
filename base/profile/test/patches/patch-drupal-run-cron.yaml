@@ -1,0 +1,7 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: ${app_name}-drupal-run-cron
+spec:
+  # Do not run between 4-5 to avoid interference with db-restore
+  schedule: "*/15 0-3,5-23 * * *"

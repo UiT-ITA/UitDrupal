@@ -1,0 +1,11 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: ${app_name}-drupal-run-cron
+spec:
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          securityContext:
+            fsGroupChangePolicy: "OnRootMismatch"

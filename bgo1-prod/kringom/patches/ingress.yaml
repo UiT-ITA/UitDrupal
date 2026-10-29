@@ -1,0 +1,38 @@
+# TODO: Improve this patch
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ${app_name}-nginx
+  annotations:
+    nginx.ingress.kubernetes.io/limit-rps: "10"
+    nginx.ingress.kubernetes.io/limit-burst-multiplier: "3"
+    nginx.ingress.kubernetes.io/limit-req-status-code: "429"
+    nginx.ingress.kubernetes.io/whitelist-source-range:
+    nginx.ingress.kubernetes.io/denylist-source-range: >-
+      91.110.0.0/17,
+      150.5.128.0/17,
+      163.7.0.0/17,
+      187.42.0.0/17,
+      45.78.192.0/18,
+      101.47.0.0/18,
+      101.47.128.0/18,
+      145.223.128.0/18,
+      163.7.192.0/18,
+      216.19.0.0/18
+
+spec:
+  rules:
+  - host: kringom.no
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: varnish-cache
+            port:
+              number: 6081
+  tls:
+  - hosts:
+    - kringom.no
+    secretName: ${app_name}.${rail_region}.${rail_env}.rail.uib.no-tls

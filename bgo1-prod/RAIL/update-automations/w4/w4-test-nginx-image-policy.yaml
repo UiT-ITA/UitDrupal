@@ -1,0 +1,12 @@
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImagePolicy
+metadata:
+  name: w4-test-nginx-image-policy
+spec:
+  imageRepositoryRef:
+    name: w4-nginx-image-repository
+  filterTags:
+    pattern: '^rail-test-[0-9]+$'
+  policy:
+    alphabetical:
+      order: asc

@@ -1,0 +1,28 @@
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: ck8s-user-demo-network-policy
+  #namespace: training-#
+spec:
+  podSelector:
+    matchLabels:
+      app: ck8s-user-demo
+  policyTypes:
+    - Ingress
+    - Egress
+  egress:
+    # Allow dns resolution
+    - ports:
+        - port: 53
+          protocol: UDP
+        - port: 53
+          protocol: TCP
+  ingress:
+    - ports:
+        - port: http
+          protocol: TCP
+        - port: 3000
+          protocol: TCP
+      from:
+        - ipBlock:
+            cidr: 0.0.0.0/0

@@ -1,0 +1,13 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: ${app_name}-zookeeper
+  labels:
+    app: ${app_name}-zookeeper
+spec:
+  selector:
+    matchLabels:
+      app: ${app_name}-zookeeper
+  endpoints:
+    - port: client
+      path: /metrics

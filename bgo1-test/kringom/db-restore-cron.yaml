@@ -1,0 +1,165 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: ${app_name}-db-restore-cron
+spec:
+  schedule: "35 2 * * *"
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 1
+  concurrencyPolicy: Replace
+  suspend: false
+  jobTemplate:
+    spec:
+      backoffLimit: 0
+      template:
+        metadata:
+          labels:
+            app: ${app_name}-db-restore-cron
+        spec:
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 33
+            runAsGroup: 33
+            fsGroup: 33
+          imagePullSecrets:
+            - name: gitapp-adm-it-pub-systembruker
+          initContainers:
+            - name: download-today-s3-script
+              image: git.app.uib.no:4567/itpublic/dockerimages/awscli/amazon/aws-cli:2.33.7
+              command:
+                - /bin/sh
+                - -c
+                - "/download-today-s3/script.sh $S3_PATH $OUTPUT_PATH"
+              volumeMounts:
+                - mountPath: /database-dump
+                  name: database-dump
+                - mountPath: /download-today-s3
+                  name: download-today-s3
+                  readOnly: true
+              securityContext:
+                allowPrivilegeEscalation: false
+                capabilities:
+                  drop:
+                    - ALL
+              resources:
+                requests:
+                  memory: "512Mi"
+                  cpu: "500m"
+                limits:
+                  memory: "512Mi"
+              env:
+                - name: OUTPUT_PATH
+                  value: /database-dump/kringom-backup.dump
+                - name: S3_PATH
+                  value: bgo1-prod/kringom/developer-database/developer-database-{DAY_OF_WEEK}.dump
+                - name: S3_BUCKET
+                  value: kringom.no
+                - name: AWS_REGION
+                  value: None
+                - name: AWS_ACCESS_KEY_ID
+                  valueFrom:
+                    secretKeyRef:
+                      name: ${app_name}-test-s3
+                      key: access
+                - name: AWS_SECRET_ACCESS_KEY
+                  valueFrom:
+                    secretKeyRef:
+                      name: ${app_name}-test-s3
+                      key: secret
+                - name: AWS_ENDPOINT_URL
+                  value: https://object.api.bgo.nrec.no
+          containers:
+            - name: drush-run-query
+              image: PATCH_PHP_FPM_IMAGE
+              command:
+                [
+                  "/restore-pg-db/script.sh",
+                  "/database-dump/kringom-backup.dump",
+                ]
+              securityContext:
+                allowPrivilegeEscalation: false
+                capabilities:
+                  drop:
+                    - ALL
+              resources:
+                requests:
+                  memory: "1Gi"
+                  cpu: "500m"
+                limits:
+                  memory: "1Gi"
+              volumeMounts:
+                - name: phpfpm-config
+                  mountPath: /usr/local/etc/php-fpm.d/zz-docker.conf
+                  subPath: zz-docker.conf
+                - name: php-config
+                  mountPath: /usr/local/etc/php/conf.d/99-php-fpm.ini
+                  subPath: 99-php-fpm.ini
+                - mountPath: /var/www/html/web/sites/default/files
+                  name: files
+                  readOnly: false
+                - name: assets
+                  mountPath: /var/www/html/web/sites/default/assets
+                  readOnly: false
+                - name: tmp
+                  mountPath: /tmp
+                  readOnly: false
+                - mountPath: /database-dump
+                  name: database-dump
+                - mountPath: /restore-pg-db
+                  name: restore-pg-db
+                  readOnly: true
+              env:
+                # TODO: Move to overlay
+                - name: DRUPAL_UIB_ENV
+                  value: test
+                - name: DRUPAL_DATABASE_HOST
+                  value: ${app_name}-db-rw
+                - name: DRUPAL_DATABASE_PREFIX
+                  value: ""
+                - name: DRUPAL_DATABASE_NAME
+                  value: ${app_name}
+                - name: DRUPAL_DATABASE_USERNAME
+                  valueFrom:
+                    secretKeyRef:
+                      name: ${app_name}-db-secret
+                      key: username
+                - name: DRUPAL_DATABASE_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: ${app_name}-db-secret
+                      key: password
+                - name: PGPASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: ${app_name}-db-secret
+                      key: password
+                - name: VALKEY_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: ${app_name}-valkey-secret
+                      key: password
+          volumes:
+            - name: phpfpm-config
+              configMap:
+                name: phpfpm-config
+            - name: php-config
+              configMap:
+                name: php-config
+            - name: files
+              persistentVolumeClaim:
+                claimName: ${app_name}-files
+            - name: assets
+              emptyDir: {}
+            - name: tmp
+              emptyDir: {}
+            - name: database-dump
+              emptyDir: {}
+            - name: download-today-s3
+              configMap:
+                name: download-today-s3-script
+                defaultMode: 0755
+            - name: restore-pg-db
+              configMap:
+                name: restore-pg-db-script
+                defaultMode: 0755
+          restartPolicy: Never

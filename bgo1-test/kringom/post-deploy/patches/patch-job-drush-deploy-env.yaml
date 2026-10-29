@@ -1,0 +1,16 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: ${app_name}-drupal-deploy-job
+spec:
+  template:
+    spec:
+      containers:
+        - name: ${app_name}-drupal-deploy-job
+          env:
+            # Valkey authentication
+            - name: VALKEY_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: ${app_name}-valkey-secret
+                  key: password

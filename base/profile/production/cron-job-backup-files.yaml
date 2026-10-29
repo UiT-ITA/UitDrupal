@@ -1,0 +1,106 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: ${app_name}-backup-files-cron
+spec:
+  schedule: "0 1 * * *"
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 1
+  concurrencyPolicy: Replace
+  jobTemplate:
+    spec:
+      backoffLimit: 0
+      template:
+        metadata:
+          labels:
+            app: ${app_name}-backup-files-cron
+        spec:
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 33
+            runAsGroup: 33
+            fsGroup: 33
+          imagePullSecrets:
+            - name: gitapp-adm-it-pub-systembruker
+          initContainers:
+            - name: archive-files
+              image: PATCH_PHP_FPM_IMAGE
+              command:
+                - /bin/bash
+                - -c
+                - "tar -zcf /dump/files.tar.gz /var/www/html/web/sites/default/files"
+              securityContext:
+                allowPrivilegeEscalation: false
+                capabilities:
+                  drop:
+                    - ALL
+              resources:
+                requests:
+                  memory: "8Gi"
+                  cpu: "1"
+                limits:
+                  memory: "8Gi"
+              volumeMounts:
+                - mountPath: /var/www/html/web/sites/default/files
+                  name: files
+                  readOnly: true
+                - mountPath: /dump
+                  name: dump
+          containers:
+            - name: upload-files-to-s3
+              image: git.app.uib.no:4567/itpublic/dockerimages/awscli/amazon/aws-cli:2.33.7
+              command:
+                - /bin/sh
+                - -c
+                - "/upload-s3-script/script.sh ${rail_cluster}/${backup_name}/backup/files/{DAY_OF_MONTH}.tar.gz /dump/files.tar.gz"
+              volumeMounts:
+                - mountPath: /dump
+                  name: dump
+                - mountPath: /upload-s3-script
+                  name: upload-s3-script
+                  readOnly: true
+              securityContext:
+                allowPrivilegeEscalation: false
+                capabilities:
+                  drop:
+                    - ALL
+              resources:
+                requests:
+                  memory: "8Gi"
+                  cpu: "1"
+                limits:
+                  memory: "8Gi"
+              env:
+                - name: SCRIPT
+                  value: upload-s3
+                - name: S3_BUCKET
+                  value: profile.uib.no
+                - name: AWS_REGION
+                  value: None
+                - name: AWS_REQUEST_CHECKSUM_CALCULATION
+                  value: when_required
+                - name: AWS_RESPONSE_CHECKSUM_VALIDATION
+                  value: when_required
+                - name: AWS_ACCESS_KEY_ID
+                  valueFrom:
+                    secretKeyRef:
+                      name: ${app_name}-prod-s3-secret
+                      key: access
+                - name: AWS_SECRET_ACCESS_KEY
+                  valueFrom:
+                    secretKeyRef:
+                      name: ${app_name}-prod-s3-secret
+                      key: secret
+                - name: AWS_ENDPOINT_URL
+                  value: https://object.api.bgo.nrec.no
+          volumes:
+            - name: files
+              persistentVolumeClaim:
+                claimName: ${app_name}-files
+            - name: dump
+              emptyDir: {}
+            - name: upload-s3-script
+              configMap:
+                name: upload-s3-script
+                defaultMode: 0755
+          restartPolicy: Never

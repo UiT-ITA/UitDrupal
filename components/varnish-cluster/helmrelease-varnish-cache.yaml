@@ -1,0 +1,90 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: varnish-cache
+spec:
+  interval: 5m
+  releaseName: varnish-cache
+  chartRef:
+    kind: OCIRepository
+    name: varnish-cache
+  valuesFrom:
+    - kind: ConfigMap
+      name: varnish-helm-values
+      valuesKey: values.yaml
+  postRenderers:
+    - kustomize:
+        patches:
+          - target:
+              group: apps
+              version: v1
+              kind: StatefulSet
+              name: varnish-cache
+            patch: |
+              - op: add
+                path: /spec/podManagementPolicy
+                value: Parallel
+          - target:
+              group: ""
+              version: v1
+              kind: Service
+              name: varnish-cache
+            patch: |
+              - op: add
+                path: /metadata/labels/app
+                value: varnish-cache
+              - op: add
+                path: /spec/publishNotReadyAddresses
+                value: true
+              - op: add
+                path: /spec/ports/-
+                value:
+                  name: metrics
+                  port: 9273
+                  protocol: TCP
+                  targetPort: 9273
+          - target:
+              group: apps
+              version: v1
+              kind: StatefulSet
+              name: varnish-cache
+            patch: |
+              apiVersion: apps/v1
+              kind: StatefulSet
+              metadata:
+                name: varnish-cache
+              spec:
+                template:
+                  spec:
+                    containers:
+                      - name: varnish-cache-ncsa
+                        volumeMounts:
+                          - name: varnish-workdir
+                            mountPath: /var/lib/varnish
+                        command:
+                          - sh
+                          - -ec
+                          - |
+                            INSTANCE="$(hostname)"
+                            until varnishstat -n "$INSTANCE" -1 >/dev/null 2>&1; do
+                              echo "Waiting for varnishd VSM..."
+                              sleep 2
+                            done
+                            exec varnishncsa -n "$INSTANCE" -c -F '{"ts":"%{%Y-%m-%dT%H:%M:%S+00:00}t","client_ip":"%h","x_forwarded_for":"%{X-Forwarded-For}i","method":"%m","host":"%{Host}i","url":"%U%q","protocol":"%H","status":%s,"bytes":%b,"cache_tags":"%{Cache-Tags}i","referer":"%{Referer}i","user_agent":"%{User-agent}i"}'
+                        readinessProbe:
+                          exec:
+                            command:
+                              - sh
+                              - -ec
+                              - |
+                                INSTANCE="$(hostname)"
+                                varnishstat -n "$INSTANCE" -1 >/dev/null
+                        livenessProbe:
+                          exec:
+                            command:
+                              - sh
+                              - -ec
+                              - |
+                                INSTANCE="$(hostname)"
+                                varnishstat -n "$INSTANCE" -1 >/dev/null

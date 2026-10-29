@@ -1,0 +1,12 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: ${app_name}-php-fpm
+  labels:
+    app: ${app_name}-php-fpm
+spec:
+  selector:
+    matchLabels:
+      app: ${app_name}-php-fpm
+  endpoints:
+    - port: metrics

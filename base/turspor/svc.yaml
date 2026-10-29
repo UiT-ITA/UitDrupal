@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: turspor
+spec:
+  selector:
+    app.kubernetes.io/name: nginx
+    app.kubernetes.io/instance: turspor
+  ports:
+  - name: http
+    port: 80
+    targetPort: http
+    protocol: TCP

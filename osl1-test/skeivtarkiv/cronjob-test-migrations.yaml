@@ -1,0 +1,133 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: ${app_name}-test-migrations
+spec:
+  schedule: "0 2 * * *"
+  timezone: UTC
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 1
+  concurrencyPolicy: Forbid
+  suspend: false
+  jobTemplate:
+    spec:
+      backoffLimit: 0
+      template:
+        spec:
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 33
+            runAsGroup: 33
+            fsGroup: 33
+            fsGroupChangePolicy: "OnRootMismatch"
+          imagePullSecrets:
+            - name: ${image_pull_secret_name}
+          containers:
+            - name: ${app_name}-test-migrations
+              image: PATCH_PHP_FPM_IMAGE
+              command:
+                - /bin/bash
+                - -c
+                - scripts/test-migrations.sh
+              ports:
+                - name: fastcgi
+                  containerPort: 9000
+              env:
+                - name: DRUPAL_UIB_ENV
+                  value: test
+                - name: DRUPAL_DATABASE_HOST
+                  value: ${app_name}-db-rw
+                - name: DRUPAL_DATABASE_PREFIX
+                  value: ""
+                - name: DRUPAL_DATABASE_NAME
+                  value: ${app_name}
+                - name: DRUPAL_DATABASE_USERNAME
+                  valueFrom:
+                    secretKeyRef:
+                      name: ${app_name}-db-secret
+                      key: username
+                - name: DRUPAL_DATABASE_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: ${app_name}-db-secret
+                      key: password
+                - name: PGPASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: ${app_name}-db-secret
+                      key: password
+                # Migration db env vars
+                - name: MARIADB_HOST
+                  value: ${app_name}-mariadb
+                - name: MARIADB_PORT
+                  value: "3306"
+                - name:  MARIADB_DATABASE
+                  valueFrom:
+                    secretKeyRef:
+                      name: ${app_name}-mariadb-secret
+                      key: database
+                - name: MARIADB_USERNAME
+                  valueFrom:
+                    secretKeyRef:
+                      name: ${app_name}-mariadb-secret
+                      key: username
+                - name: MARIADB_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: ${app_name}-mariadb-secret
+                      key: password
+              volumeMounts:
+                - mountPath: /var/www/html/web/sites/default/assets
+                  name: assets
+                  readOnly: false
+                - mountPath: /var/www/html/web/sites/default/files
+                  name: files
+                  readOnly: false
+                - name: tmp
+                  mountPath: /tmp
+                  readOnly: false
+                - name: phpfpm-config
+                  mountPath: /usr/local/etc/php-fpm.d/zz-docker.conf
+                  subPath: zz-docker.conf
+                - name: php-config
+                  mountPath: /usr/local/etc/php/conf.d/99-php-fpm.ini
+                  subPath: 99-php-fpm.ini
+                - name: php-config-overrides
+                  mountPath: /usr/local/etc/php/conf.d/zzz-php-fpm.ini
+                  subPath: zzz-php-fpm.ini
+                  readOnly: true
+              resources:
+                requests:
+                  memory: "128Mi"
+                  cpu: "500m"
+              # Prevent escalation attacks
+              securityContext:
+                allowPrivilegeEscalation: false
+                capabilities:
+                  drop:
+                    - ALL
+                seccompProfile:
+                  type: RuntimeDefault
+                runAsNonRoot: true
+                runAsUser: 33
+                runAsGroup: 33
+                fsGroup: 33
+                fsGroupChangePolicy: "OnRootMismatch"
+          volumes:
+            - name: assets
+              emptyDir: {}
+            - name: files
+              persistentVolumeClaim:
+                claimName: ${app_name}-files
+            - name: tmp
+              emptyDir: {}
+            - name: phpfpm-config
+              configMap:
+                name: phpfpm-config
+            - name: php-config
+              configMap:
+                name: php-config
+            - name: php-config-overrides
+              configMap:
+                name: php-config-overrides
+          restartPolicy: Never

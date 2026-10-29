@@ -1,0 +1,6 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: ${app_name}-sync-courses
+spec:
+  suspend: true

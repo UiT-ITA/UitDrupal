@@ -1,0 +1,78 @@
+# TODO: Improve this patch
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ${app_name}-nginx
+  annotations:
+    nginx.ingress.kubernetes.io/whitelist-source-range:
+spec:
+  rules:
+    - host: universitetsmuseet.no
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: ${app_name}-nginx
+                port:
+                  number: 80
+    - host: universitymuseum.no
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: ${app_name}-nginx
+                port:
+                  number: 80
+    - host: www.universitetsmuseet.no
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: ${app_name}-nginx
+                port:
+                  number: 80
+    - host: www.universitymuseum.no
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: ${app_name}-nginx
+                port:
+                  number: 80
+    - host: w4.bgo1.prod.rail.uib.no
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: ${app_name}-nginx
+                port:
+                  number: 80
+    - host: www.kringom.no
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: ${app_name}-nginx
+                port:
+                  number: 80
+  tls:
+    - hosts:
+        - universitetsmuseet.no
+        - universitymuseum.no
+        - www.universitetsmuseet.no
+        - www.universitymuseum.no
+        - w4.bgo1.prod.rail.uib.no
+        - www.kringom.no
+      secretName: ${app_name}.${rail_region}.${rail_env}.rail.uib.no-tls

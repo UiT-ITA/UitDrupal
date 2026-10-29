@@ -1,0 +1,136 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: ${app_name}-drupal-run-cron
+spec:
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            app: ${app_name}-drupal
+        spec:
+          containers:
+          - name: ${app_name}-drupal
+            env:
+            # Application configuration
+            - name: DRUPAL_TRUSTED_HOST_PATTERNS
+              value: ${drupal_trusted_host_patterns}
+            - name: DRUPAL_UIB_ENV
+              value: ${drupal_env}
+            - name: DRUPAL_UIB_FILE_ASSETS_PATH
+              value: sites/default/assets
+            - name: DRUPAL_UIB_W4_URI
+              value: ${drupal_w4_uri}
+            - name: DRUPAL_UIB_PROFILE_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: ${app_name}-profile-api-secret
+                  key: secret
+
+            # Database connection
+            - name: DRUPAL_DATABASE_HOST
+              value: ${app_name}-db-rw
+            - name: DRUPAL_DATABASE_PREFIX
+              value: ""
+            - name: DRUPAL_DATABASE_NAME
+              value: ${app_name}
+            - name: DRUPAL_DATABASE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: ${app_name}-db-secret
+                  key: username
+            - name: DRUPAL_DATABASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: ${app_name}-db-secret
+                  key: password
+
+            # Feide authentication
+            - name: DRUPAL_UIB_FEIDE_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: ${app_name}-feide-secret
+                  key: client_id
+            - name: DRUPAL_UIB_FEIDE_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: ${app_name}-feide-secret
+                  key: client_secret
+
+            # SCIM authentication
+            - name: DRUPAL_UIB_SCIM_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: ${app_name}-scim-secret
+                  key: secret
+
+            # DFO authentication
+            - name: DRUPAL_UIB_DFO_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: ${app_name}-dfo-secret
+                  key: secret
+
+            # INFO authentication
+            - name: DRUPAL_UIB_INFO_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: ${app_name}-info-secret
+                  key: secret
+
+            # ORGREG authentication
+            - name: DRUPAL_UIB_ORGREG_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: ${app_name}-orgreg-secret
+                  key: secret
+
+            # CRISTIN authentication
+            - name: DRUPAL_UIB_CRISTIN_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: ${app_name}-cristin-secret
+                  key: secret
+
+            # NVA authentication
+            - name: NVA_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: ${app_name}-nva-secret
+                  key: secret
+
+            # RabbitMQ authentication
+            - name: DRUPAL_UIB_RABBITMQ_PERSON_PROFILE_VHOST
+              valueFrom:
+                secretKeyRef:
+                  name: ${app_name}-rabbitmq-secret
+                  key: vhost
+            - name: DRUPAL_UIB_RABBITMQ_PERSON_PROFILE_USER
+              valueFrom:
+                secretKeyRef:
+                  name: ${app_name}-rabbitmq-secret
+                  key: username
+            - name: DRUPAL_UIB_RABBITMQ_PERSON_PROFILE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: ${app_name}-rabbitmq-secret
+                  key: password
+            - name: DRUPAL_UIB_RABBITMQ_PERSON_PROFILE_ROUTING
+              valueFrom:
+                secretKeyRef:
+                  name: ${app_name}-rabbitmq-secret
+                  key: routing
+            - name: DRUPAL_UIB_RABBITMQ_PERSON_PROFILE_EXCHANGE
+              valueFrom:
+                secretKeyRef:
+                  name: ${app_name}-rabbitmq-secret
+                  key: exchange
+
+            # Valkey authentication
+            - name: VALKEY_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: ${app_name}-valkey-secret
+                  key: password
+

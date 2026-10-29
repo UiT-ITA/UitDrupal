@@ -1,0 +1,56 @@
+# TODO: Improve this patch
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ${app_name}-nginx
+  annotations:
+    nginx.ingress.kubernetes.io/whitelist-source-range:
+spec:
+  rules:
+    - host: uib.no
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: varnish-cache
+                port:
+                  number: 6081
+    - host: w4.uib.no
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: varnish-cache
+                port:
+                  number: 6081
+    - host: wwww.uib.no
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: varnish-cache
+                port:
+                  number: 6081
+    - host: www4.uib.no
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: varnish-cache
+                port:
+                  number: 6081
+  tls:
+    - hosts:
+        - uib.no
+        - w4.uib.no
+        - www.uib.no
+        - www4.uib.no
+      secretName: ${app_name}.${rail_region}.${rail_env}.rail.uib.no-tls

@@ -1,0 +1,11 @@
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImagePolicy
+metadata:
+  name: zookeeper-image-policy
+spec:
+  imageRepositoryRef:
+    name: zookeeper-image-repository
+  digestReflectionPolicy: IfNotPresent
+  policy:
+    semver:
+      range: 3.x

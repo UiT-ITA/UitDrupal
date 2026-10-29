@@ -1,0 +1,35 @@
+# TODO: Improve this patch
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ${app_name}-nginx
+spec:
+  rules:
+  # TODO: Should possibly not be app name, but fair default?
+  - host: ${app_name}.${rail_region}.${rail_env}.rail.uib.no
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: ${app_name}-nginx
+            port:
+              number: 80
+  - host: profile-sandbox-s3.test.uib.no
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: ${app_name}-nginx
+            port:
+              number: 80
+  tls:
+  - hosts:
+    - ${app_name}.${rail_region}.${rail_env}.rail.uib.no
+    secretName: ${app_name}.${rail_region}.${rail_env}.rail.uib.no-tls
+  - hosts:
+    - profile-sandbox-s3.test.uib.no
+    secretName: profile-sandbox-s3.test.uib.no-tls

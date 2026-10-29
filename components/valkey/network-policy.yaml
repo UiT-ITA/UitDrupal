@@ -1,0 +1,16 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: ${app_name}-valkey
+spec:
+  podSelector:
+    matchLabels:
+      app: ${app_name}-valkey
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - podSelector: {}
+      ports:
+        - port: 6379
+          protocol: TCP

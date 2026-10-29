@@ -1,0 +1,68 @@
+# NOTE: Kept for reference, but requires change to restore-files when potential production move
+# apiVersion: batch/v1
+# kind: CronJob
+# metadata:
+#   name: ${app_name}-drupal-files-backup-cron
+# spec:
+#   schedule: "5 2 * * *"
+#   successfulJobsHistoryLimit: 1
+#   failedJobsHistoryLimit: 1
+#   concurrencyPolicy: Replace
+#   jobTemplate:
+#     spec:
+#       backoffLimit: 0
+#       template:
+#         spec:
+#           securityContext:
+#             runAsNonRoot: true
+#             runAsUser: 33
+#             runAsGroup: 33
+#             fsGroup: 33
+#           imagePullSecrets:
+#             - name: gitapp-adm-it-pub-systembruker
+#           containers:
+#             - name: backup
+#               image: git.app.uib.no:4567/robin.grundvag1/mariadb-s3-backup:0.2.5
+#               securityContext:
+#                 allowPrivilegeEscalation: false
+#                 capabilities:
+#                   drop:
+#                     - ALL
+#               resources:
+#                 requests:
+#                   memory: "256M"
+#                   cpu: "250m"
+#                 limits:
+#                   memory: "256M"
+#               env:
+#                 - name: SCRIPT
+#                   value: directory-s3-backup
+#                 - name: BACKUP_DIRECTORY
+#                   value: /files
+#                 - name: S3_BUCKET
+#                   value: skeivtarkiv.no
+#                 - name: S3_FILE_NAME
+#                   value: skeivtarkiv-backups/test/files/files-{DAY_OF_WEEK}.tar.gz
+#                 - name: AWS_REGION
+#                   value: None
+#                 - name: AWS_ACCESS_KEY_ID
+#                   valueFrom:
+#                     secretKeyRef:
+#                       name: ${app_name}-drupal-s3-secret
+#                       key: access
+#                 - name: AWS_SECRET_ACCESS_KEY
+#                   valueFrom:
+#                     secretKeyRef:
+#                       name: ${app_name}-drupal-s3-secret
+#                       key: secret
+#                 - name: AWS_ENDPOINT_URL
+#                   value: https://object.api.bgo.nrec.no
+#               volumeMounts:
+#                 - name: files
+#                   mountPath: /files
+#                   readOnly: true
+#           restartPolicy: Never
+#           volumes:
+#             - name: files
+#               persistentVolumeClaim:
+#                 claimName: ${app_name}-files

@@ -1,0 +1,25 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ../base
+  - ./secrets
+  # - db-restore-cron.yaml
+  - cronjob-sync-files-to-s3.yaml
+  - cronjob-replicate-files-s3-between-regions.yaml
+  - cronjob-sync-assets-to-s3.yaml
+  - cronjob-replicate-assets-s3-between-regions.yaml
+  - objectstore-bgo-prod.yaml
+  - objectstore-osl-prod.yaml
+  - scheduled-backup.yaml
+patches:
+  - path: patches/patch-run-cron-jobs.yaml
+configMapGenerator:
+  - name: download-today-s3-script
+    files:
+      - script.sh=../../../scripts/download-today-s3/download-today-s3.sh
+  - name: restore-pg-db-script
+    files:
+      - script.sh=scripts/restore-pg-db.sh
+  - name: sync-s3-script
+    files:
+      - script.sh=../../../scripts/sync-s3/sync-s3.sh

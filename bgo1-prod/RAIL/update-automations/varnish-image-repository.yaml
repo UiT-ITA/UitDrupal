@@ -1,0 +1,9 @@
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImageRepository
+metadata:
+  name: varnish-image-repository
+spec:
+  image: git.app.uib.no:4567/itpublic/dockerimages/varnish-unprivileged
+  interval: 1m
+  secretRef:
+    name: gitapp-adm-it-pub-registry-read-rail

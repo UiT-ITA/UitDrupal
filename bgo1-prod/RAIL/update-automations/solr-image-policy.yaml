@@ -1,0 +1,11 @@
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImagePolicy
+metadata:
+  name: solr-image-policy
+spec:
+  imageRepositoryRef:
+    name: solr-image-repository
+  digestReflectionPolicy: IfNotPresent
+  policy:
+    semver:
+      range: 9.x

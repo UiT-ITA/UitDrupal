@@ -1,0 +1,12 @@
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImagePolicy
+metadata:
+  name: profile-next-major-nginx-image-policy
+spec:
+  imageRepositoryRef:
+    name: profile-nginx-image-repository
+  filterTags:
+    pattern: '^next-major-[0-9]+$'
+  policy:
+    alphabetical:
+      order: asc

@@ -1,0 +1,13 @@
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImagePolicy
+metadata:
+  name: kringom-test-php-fpm-image-policy
+spec:
+  imageRepositoryRef:
+    name: kringom-php-fpm-image-repository
+  filterTags:
+    pattern: "^test-(?P<build>[0-9]+)$"
+    extract: "$build"
+  policy:
+    numerical:
+      order: asc

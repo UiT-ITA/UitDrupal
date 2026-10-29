@@ -1,0 +1,24 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ../../base/profile/production
+  - probe.yaml
+  - secret-db.yaml
+  - secret-rabbitmq.yaml
+  - secret-valkey.yaml
+  # - ./restore-db # Uncomment to enable db-restore functionality
+  # - ./restore-files # Uncomment to enable file-restore functionality
+patches:
+  - path: patches/ingress.yaml
+    # Patch for database restore must live here as it references the database cluster and it seems it is not possible to reference a cluster in a different kustomization.
+    # - path: restore-db/patches/db-restore.yaml # Uncomment to enable db-restore functionality
+replicas:
+  - name: ${app_name}-php-fpm
+    count: 2
+images:
+  - name: PATCH_NGINX_IMAGE
+    newName: git.app.uib.no:4567/it/site/profile.uib.no/profile-nginx # {"$imagepolicy": "adm-it-pub:profile-prod-nginx-image-policy:name"}
+    newTag: "129.7" # {"$imagepolicy": "adm-it-pub:profile-prod-nginx-image-policy:tag"}
+  - name: PATCH_PHP_FPM_IMAGE
+    newName: git.app.uib.no:4567/it/site/profile.uib.no/profile-php-fpm # {"$imagepolicy": "adm-it-pub:profile-prod-php-fpm-image-policy:name"}
+    newTag: "129.7" # {"$imagepolicy": "adm-it-pub:profile-prod-php-fpm-image-policy:tag"}

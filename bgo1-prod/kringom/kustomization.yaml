@@ -1,0 +1,70 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ../../base/uib-drupal-site
+  - ../../components/solr-cloud
+  - ../../components/varnish-cluster
+  - cronjob-backup-developer-database.yaml
+  - cronjob-sync-assets-to-s3.yaml
+  - cronjob-sync-files-to-s3.yaml
+  - objectstore-bgo-prod.yaml
+  - probe.yaml
+  - scheduled-backup.yaml
+  - secret-db.yaml
+  - secret-kringom-s3.yaml
+  - secret-solr-auth.yaml
+  - secret-varnish-secret.yaml
+replicas:
+  - name: ${app_name}-nginx
+    count: 2
+  - name: ${app_name}-php-fpm
+    count: 4
+images:
+  - name: PATCH_NGINX_IMAGE
+    newName: git.app.uib.no:4567/it/site/grind.no/kringom-nginx # {"$imagepolicy": "adm-it-pub:kringom-nginx-image-policy:name"}
+    newTag: "1.17" # {"$imagepolicy": "adm-it-pub:kringom-nginx-image-policy:tag"}
+  - name: PATCH_PHP_FPM_IMAGE
+    newName: git.app.uib.no:4567/it/site/grind.no/kringom-php-fpm # {"$imagepolicy": "adm-it-pub:kringom-php-fpm-image-policy:name"}
+    newTag: "1.17" # {"$imagepolicy": "adm-it-pub:kringom-php-fpm-image-policy:tag"}
+  - name: PATCH_SOLR_IMAGE
+    newName: git.app.uib.no:4567/itpublic/dockerimages/solr/solr # {"$imagepolicy": "adm-it-pub:solr-image-policy:name"}
+    newTag: "9.10.1" # {"$imagepolicy": "adm-it-pub:solr-image-policy:tag"}
+  - name: PATCH_ZOOKEEPER_IMAGE
+    newName: git.app.uib.no:4567/itpublic/dockerimages/zookeeper/zookeeper # {"$imagepolicy": "adm-it-pub:zookeeper-image-policy:name"}
+    newTag: "3.9.6" # {"$imagepolicy": "adm-it-pub:zookeeper-image-policy:tag"}
+patches:
+  - path: patches/ingress.yaml
+  - path: patches/patch-cluster-db-pg.yaml
+  - path: patches/patch-cron-job-drush-cron-env.yaml
+  - path: patches/patch-cron-job-drush-cron-schedule.yaml
+  - path: patches/patch-deployment-nginx-assets.yaml
+  - path: patches/patch-deployment-nginx-resources.yaml
+  - path: patches/patch-deployment-php-fpm-assets.yaml
+  - path: patches/patch-deployment-php-fpm-env.yaml
+  - path: patches/patch-deployment-php-fpm-opcache.yaml
+  - path: patches/patch-deployment-php-fpm-resources.yaml
+  - path: patches/patch-pvc-files.yaml
+configMapGenerator:
+  - name: backup-files-php-config
+    files:
+      - 999-backup-files-php.ini=backup-files-php.ini
+  - name: upload-s3-script
+    files:
+      - script.sh=../../scripts/upload-s3/upload-s3.sh
+  - name: download-today-s3-script
+    files:
+      - script.sh=../../scripts/download-today-s3/download-today-s3.sh
+  - name: restore-pg-db-script
+    files:
+      - script.sh=scripts/restore-pg-db.sh
+  - name: opcache-config
+    files:
+      - zzz-php-opcache.ini=opcache.ini
+  - name: sync-s3-script
+    files:
+      - script.sh=../../scripts/sync-s3/sync-s3.sh
+  - name: ${app_name}-varnish-config
+    options:
+      disableNameSuffixHash: true
+    files:
+      - default.vcl=drupal-varnish-cluster.vcl

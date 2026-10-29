@@ -1,0 +1,21 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: ${app_name}-db
+spec:
+  imageName: ghcr.io/cloudnative-pg/postgresql:17-minimal-trixie
+  plugins:
+    - name: barman-cloud.cloudnative-pg.io
+      isWALArchiver: true
+      parameters:
+        barmanObjectName: kringom-bgo1-db-store
+  resources:
+    requests:
+      cpu: "3"
+      memory: "2Gi"
+    limits:
+      cpu: "3"
+      memory: "2Gi"
+  postgresql:
+    parameters:
+      shared_buffers: "512MB"

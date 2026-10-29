@@ -1,0 +1,16 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: ${app_name}-drupal-deploy-job
+spec:
+  template:
+    spec:
+      volumes:
+        - name: assets
+          persistentVolumeClaim:
+            claimName: ${app_name}-assets
+      containers:
+        - name: ${app_name}-drupal-deploy-job
+          volumeMounts:
+            - mountPath: /var/www/html/web/sites/default/assets
+              name: assets

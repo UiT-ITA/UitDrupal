@@ -1,0 +1,109 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: turspor-db-backup
+  namespace: adm-it-pub-turspor
+spec:
+  schedule: "0 2 * * *"
+  successfulJobsHistoryLimit: 3   # Keep the last 3 successful jobs
+  failedJobsHistoryLimit: 1       # Keep the last failed job (if any)
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          imagePullSecrets:
+          - name: gitapp-adm-it-pub-systembruker
+          containers:
+            - name: turspor-mariadb
+              #image: git.app.uib.no:4567/itpublic/dockerimages/mariadb-unprivileged/mariadb:uib-11
+              image: git.app.uib.no:4567/helge.opedal/mariadb-s3cmd/mariadb-s3cmd:prod
+              imagePullPolicy: Always
+              env:
+                - name: DB_USER
+                  valueFrom:
+                    secretKeyRef:
+                      name: turspor-mariadb-secret
+                      key: db_user
+                - name: DB_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: turspor-mariadb-secret
+                      key: db_password
+                - name: DB_HOST
+                  valueFrom:
+                    secretKeyRef:
+                      name: turspor-mariadb-secret
+                      key: db_host
+                - name:  DB_DATABASE
+                  valueFrom:
+                    secretKeyRef:
+                     name: turspor-mariadb-secret
+                     key: db_name
+                - name: MYSQL_ROOT_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: turspor-mariadb-secret
+                      key: root_password
+                - name: OS_USERNAME
+                  valueFrom:
+                    secretKeyRef:
+                      name: turspor-swift-secret
+                      key: OS_USERNAME
+                - name: OS_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: turspor-swift-secret
+                      key: OS_PASSWORD
+                - name: OS_AUTH_URL
+                  valueFrom:
+                    secretKeyRef:
+                      name: turspor-swift-secret
+                      key: OS_AUTH_URL
+                - name: OS_PROJECT_NAME
+                  valueFrom:
+                    secretKeyRef:
+                      name: turspor-swift-secret
+                      key: OS_PROJECT_NAME
+                - name: OS_USER_DOMAIN_NAME
+                  valueFrom:
+                    secretKeyRef:
+                      name: turspor-swift-secret
+                      key: OS_USER_DOMAIN_NAME
+                - name: OS_PROJECT_DOMAIN_NAME
+                  valueFrom:
+                    secretKeyRef:
+                      name: turspor-swift-secret
+                      key: OS_PROJECT_DOMAIN_NAME
+                - name: OS_REGION_NAME
+                  valueFrom:
+                    secretKeyRef:
+                      name: turspor-swift-secret
+                      key: OS_REGION_NAME
+                - name: OS_INTERFACE
+                  valueFrom:
+                    secretKeyRef:
+                      name: turspor-swift-secret
+                      key: OS_INTERFACE
+                - name: OS_NO_CACHE
+                  valueFrom:
+                    secretKeyRef:
+                      name: turspor-swift-secret
+                      key: OS_NO_CACHE
+                - name: OS_IDENTITY_API_VERSION
+                  valueFrom:
+                    secretKeyRef:
+                      name: turspor-swift-secret
+                      key: OS_IDENTITY_API_VERSION
+              securityContext:
+                allowPrivilegeEscalation: false  # Prevent privilege escalation
+                capabilities:
+                  drop: ["ALL"]  # Drop all unnecessary capabilities
+                runAsNonRoot: true  # Ensure the container runs as non-root
+                runAsUser: 1001
+                seccompProfile:
+                  type: RuntimeDefault  # Use the default seccomp profile for security
+              resources:
+                requests:
+                  memory: "512Mi"  # Adjust the memory request as needed
+                  cpu: "500m"  # Adjust the CPU request as needed
+          restartPolicy: Never

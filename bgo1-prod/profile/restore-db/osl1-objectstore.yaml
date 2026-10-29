@@ -1,0 +1,28 @@
+apiVersion: barmancloud.cnpg.io/v1
+kind: ObjectStore
+metadata:
+  name: osl1-objectstore
+spec:
+  # This will ensure that barman retains at least one backup older than 30 days
+  retentionPolicy: "30d"
+  configuration:
+    endpointURL: https://object.api.bgo.nrec.no
+    destinationPath: s3://profile.uib.no/osl1-prod/profile/backup
+    s3Credentials:
+      accessKeyId:
+        name: ${app_name}-prod-s3-secret
+        key: access
+      secretAccessKey:
+        name: ${app_name}-prod-s3-secret
+        key: secret
+    wal:
+      compression: zstd
+      maxParallel: 8
+    data:
+      compression: bzip2
+  instanceSidecarConfiguration:
+    env:
+      - name: AWS_REQUEST_CHECKSUM_CALCULATION
+        value: when_required
+      - name: AWS_RESPONSE_CHECKSUM_VALIDATION
+        value: when_required

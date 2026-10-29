@@ -1,0 +1,30 @@
+apiVersion: hnc.x-k8s.io/v1alpha2
+kind: SubnamespaceAnchor
+metadata:
+  name: adm-it-pub-corviz
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: adm-it-pub-corviz
+spec:
+  sourceRef:
+    kind: GitRepository
+    name: adm-it-pub
+  path: ${rail_cluster}/corviz
+  targetNamespace: adm-it-pub-corviz
+  prune: true
+  wait: true
+  interval: 30m0s
+  retryInterval: 2m0s
+  timeout: 3m0s
+  decryption:
+    provider: sops
+    secretRef:
+      name: sops-gpg
+  postBuild:
+    substitute:
+      rail_cluster: ${rail_cluster}
+      rail_env: ${rail_env}
+      rail_region: ${rail_region}
+

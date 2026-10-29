@@ -1,0 +1,22 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: ${app_name}-db
+spec:
+  # Never run with only 1 instance as it might lock a node.
+  # Preferred to run with at least 2 instances.
+  instances: 2
+  monitoring:
+    enablePodMonitor: true
+  bootstrap:
+    initdb:
+      database: ${app_name}
+      owner: ${app_name}
+      secret:
+        name: ${app_name}-db-secret
+  storage:
+    size: 16Gi
+
+  postgresql:
+    parameters:
+      shared_buffers: "256MB"

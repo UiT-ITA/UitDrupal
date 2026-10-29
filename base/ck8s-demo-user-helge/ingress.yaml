@@ -1,0 +1,26 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ck8s-user-demo-training-ingress
+  namespace: adm-it-pub-helge-ck8-demo
+  annotations:
+    cert-manager.io/cluster-issuer: sectigo-clusterwide # Change to your issuer
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/whitelist-source-range: 129.177.0.0/16,2001:700:200::/48
+spec:
+  ingressClassName: "nginx"
+  rules:
+    - host: ck8s-user-demo-helge.osl1.test.rail.uib.no
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: ck8s-user-demo
+                port:
+                  number: 3000
+  tls:
+    - hosts:
+        - ck8s-user-demo-helge.osl1.test.rail.uib.no
+      secretName: ck8s-user-demo-training-tls

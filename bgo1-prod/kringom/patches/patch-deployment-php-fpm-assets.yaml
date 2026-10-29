@@ -1,0 +1,13 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ${app_name}-php-fpm
+spec:
+  template:
+    spec:
+      volumes:
+        - name: assets
+          emptyDir:
+            $patch: delete
+          persistentVolumeClaim:
+            claimName: ${app_name}-assets

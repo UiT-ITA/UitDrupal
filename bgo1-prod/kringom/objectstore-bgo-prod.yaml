@@ -1,0 +1,27 @@
+apiVersion: barmancloud.cnpg.io/v1
+kind: ObjectStore
+metadata:
+  name: kringom-bgo1-db-store
+spec:
+  # This will ensure that barman retains at least one backup older than 30 days
+  retentionPolicy: "30d"
+  configuration:
+    endpointURL: https://object.api.bgo.nrec.no
+    destinationPath: s3://kringom.no/bgo1-prod/kringom/postgres
+    s3Credentials:
+      accessKeyId:
+        name: ${app_name}-s3
+        key: access
+      secretAccessKey:
+        name: ${app_name}-s3
+        key: secret
+    wal:
+      compression: zstd
+    data:
+      compression: bzip2
+  instanceSidecarConfiguration:
+    env:
+      - name: AWS_REQUEST_CHECKSUM_CALCULATION
+        value: when_required
+      - name: AWS_RESPONSE_CHECKSUM_VALIDATION
+        value: when_required

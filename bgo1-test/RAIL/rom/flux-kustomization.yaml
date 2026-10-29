@@ -1,0 +1,24 @@
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: adm-it-pub-rom
+spec:
+  sourceRef:
+    kind: GitRepository
+    name: adm-it-pub
+  path: bgo1-test/rom
+  targetNamespace: adm-it-pub-rom
+  prune: true
+  wait: true
+  interval: 30m0s
+  retryInterval: 2m0s
+  timeout: 3m0s
+  decryption:
+    provider: sops
+    secretRef:
+      name: sops-gpg
+  postBuild:
+    substitute:
+      rail_env: ${rail_env}
+      rail_region: ${rail_region}
+      rail_cluster: ${rail_cluster}

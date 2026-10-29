@@ -1,0 +1,12 @@
+creation_rules:
+  - path_regex: .*values.yaml$
+    pgp: >-
+      8FBE185B729E5225E312C259D2EBEC8CCACDA017
+  - path_regex: ".*\\.yaml"
+    encrypted_regex: ^(data|stringData)$
+    pgp: >-
+      8FBE185B729E5225E312C259D2EBEC8CCACDA017
+  - path_regex: ".*\\.json"
+    encrypted_regex: ^(auths|data|stringData)$
+    pgp: >-
+      8FBE185B729E5225E312C259D2EBEC8CCACDA017

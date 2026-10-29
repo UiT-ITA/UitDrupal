@@ -1,0 +1,39 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ../../base/w4/production
+  # Temporary file sync from on-prem prod down to rail prod
+  # - cronjob-sync-on-prem-production-files.yaml
+  - cron-job-backup-developer-database.yaml
+  - probe.yaml
+  - secret-db.yaml
+  - secret-rabbitmq.yaml
+  - secret-valkey.yaml
+  - secret-varnish-secret.yaml
+replicas:
+  - name: ${app_name}-nginx
+    count: 2
+  - name: ${app_name}-php-fpm
+    count: 6
+patches:
+  - path: patches/ingress.yaml
+  - path: patches/cluster-db-pg.yaml
+  - path: patches/files-size.yaml
+  - path: patches/patch-cronjob-sync-courses.yaml
+  - path: patches/patch-cronjob-sync-study-programs.yaml
+images:
+  # Image name used in base and overlays must be the same for image replacement to work
+  - name: PATCH_NGINX_IMAGE
+    newName: git.app.uib.no:4567/it/site/w4.uib.no/w4-nginx
+    newTag: "129.7" # {"$imagepolicy": "adm-it-pub:w4-prod-nginx-image-policy:tag"}
+  # Image name used in base and overlays must be the same for image replacement to work
+  - name: PATCH_PHP_FPM_IMAGE
+    newName: git.app.uib.no:4567/it/site/w4.uib.no/w4-php-fpm
+    newTag: "129.7" # {"$imagepolicy": "adm-it-pub:w4-prod-php-fpm-image-policy:tag"}
+configMapGenerator:
+  - name: backup-files-php-config
+    files:
+      - 999-backup-files-php.ini=backup-files-php.ini
+  - name: upload-s3-script
+    files:
+      - script.sh=../../scripts/upload-s3/upload-s3.sh

@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ${app_name}-php-fpm
+spec:
+  template:
+    metadata:
+      labels:
+        app: ${app_name}-php-fpm
+    spec:
+      containers:
+        - name: ${app_name}-php-fpm
+          volumeMounts:
+            - mountPath: /var/www/html/web/sites/default/assets
+              name: assets
+              readOnly: ${phpfpm_pvm_readonly:=false}
+            - mountPath: /var/www/html/web/sites/default/files
+              name: files
+              readOnly: ${phpfpm_pvm_readonly:=false}
+            - name: tmp
+              mountPath: /tmp
+              readOnly: false
+            - name: phpfpm-config
+              mountPath: /usr/local/etc/php-fpm.d/zz-docker.conf
+              subPath: zz-docker.conf
+            - name: php-config
+              mountPath: /usr/local/etc/php/conf.d/99-php-fpm.ini
+              subPath: 99-php-fpm.ini
+      volumes:
+        - name: assets
+          persistentVolumeClaim:
+            claimName: ${app_name}-assets
+        - name: files
+          persistentVolumeClaim:
+            claimName: ${app_name}-files
+        - name: tmp
+          emptyDir: {}
+        - name: phpfpm-config
+          configMap:
+            name: phpfpm-config
+        - name: php-config
+          configMap:
+            name: php-config

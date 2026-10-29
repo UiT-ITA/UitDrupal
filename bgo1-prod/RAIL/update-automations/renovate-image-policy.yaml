@@ -1,0 +1,11 @@
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImagePolicy
+metadata:
+  name: renovate-image-policy
+spec:
+  imageRepositoryRef:
+    name: renovate-image-repository
+  digestReflectionPolicy: IfNotPresent
+  policy:
+    semver:
+      range: 43.x.x

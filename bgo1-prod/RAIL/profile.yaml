@@ -1,0 +1,135 @@
+apiVersion: hnc.x-k8s.io/v1alpha2
+kind: SubnamespaceAnchor
+metadata:
+  name: adm-it-pub-profile
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: adm-it-pub-profile
+spec:
+  sourceRef:
+    kind: GitRepository
+    name: adm-it-pub
+  path: ${rail_cluster}/profile
+  targetNamespace: adm-it-pub-profile
+  prune: true
+  wait: true
+  interval: 30m0s
+  retryInterval: 2m0s
+  timeout: 3m0s
+  decryption:
+    provider: sops
+    secretRef:
+      name: sops-gpg
+  postBuild:
+    substitute:
+      app_name: profile
+      image_pull_secret_name: gitapp-adm-it-pub-systembruker
+      rail_cluster: bgo1-prod
+      rail_env: prod
+      rail_region: bgo1
+      drupal_trusted_host_patterns: '^profile\.bgo1\.prod\.rail\.uib\.no$'
+      drupal_env: prod
+      drupal_w4_uri: https://uib.no
+      backup_name: profile
+
+      # Files S3: this region’s bucket/prefix for Drupal "files"
+      self_file_s3: s3://profile.uib.no/bgo1-prod/profile/files
+      # Files S3: endpoint for this region’s object store
+      self_file_s3_endpoint: https://object.api.bgo.nrec.no
+      # Files S3: destination bucket/prefix to write tol when replicating into this region
+      destination_file_s3: s3://profile.uib.no/bgo1-prod/profile/files
+      # Files S3: endpoint for the destination region’s object store
+      destination_file_s3_endpoint: https://object.api.osl.nrec.no
+
+      # Assets S3: this region’s bucket/prefix for "assets"
+      self_assets_s3: s3://profile.uib.no/bgo1-prod/profile/assets
+      # Assets S3: endpoint for this region’s object store
+      self_assets_s3_endpoint: https://object.api.bgo.nrec.no
+      # Assets S3: destination bucket/prefix to write to when replicating into this region
+      destination_assets_s3: s3://profile.uib.no/bgo1-prod/profile/assets
+      # Assets S3: endpoint for the destination region’s object store
+      destination_assets_s3_endpoint: https://object.api.osl.nrec.no
+
+      # Postgres S3: this region’s bucket/prefix for Drupal "postgres"
+      self_postgres_s3: s3://profile.uib.no/bgo1-prod/profile/postgres
+      # Postgres S3: endpoint for this region’s object store
+      self_postgres_s3_endpoint: https://object.api.bgo.nrec.no
+      # Postgres S3: destination bucket/prefix to write to when replicating into this region
+      destination_postgres_s3: s3://profile.uib.no/bgo1-prod/profile/postgres
+      # Postgres S3: endpoint for the destination region’s object store
+      destination_postgres_s3_endpoint: https://object.api.osl.nrec.no
+
+      # Files: pause local to S3 sync (replicas should be "true" to avoid overwriting)
+      suspend_sync_files: "false"
+      suspend_replicate_files: "false"
+      suspend_replicate_postgres: "false"
+
+---
+# post deploy
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: adm-it-pub-profile-post-deploy
+spec:
+  dependsOn:
+    - name: adm-it-pub-profile
+  sourceRef:
+    kind: GitRepository
+    name: adm-it-pub
+  path: ${rail_cluster}/profile/post-deploy
+  targetNamespace: adm-it-pub-profile
+  prune: true
+  wait: true
+  force: true
+  interval: 30m0s
+  retryInterval: 2m0s
+  timeout: 3m0s
+  decryption:
+    provider: sops
+    secretRef:
+      name: sops-gpg
+  postBuild:
+    substitute:
+      app_name: profile
+      image_pull_secret_name: gitapp-adm-it-pub-systembruker
+      rail_cluster: bgo1-prod
+      rail_env: prod
+      rail_region: bgo1
+      drupal_trusted_host_patterns: '^profile\.bgo1\.prod\.rail\.uib\.no$'
+      drupal_env: prod
+      drupal_w4_uri: https://uib.no
+      backup_name: profile
+
+      # Files S3: this region’s bucket/prefix for Drupal "files"
+      self_file_s3: s3://profile.uib.no/bgo1-prod/profile/files
+      # Files S3: endpoint for this region’s object store
+      self_file_s3_endpoint: https://object.api.bgo.nrec.no
+      # Files S3: destination bucket/prefix to write to when replicating into this region
+      destination_file_s3: s3://profile.uib.no/osl1-prod/profile/files
+      # Files S3: endpoint for the destination region’s object store
+      destination_file_s3_endpoint: https://object.api.osl.nrec.no
+
+      # Assets S3: this region’s bucket/prefix for "assets"
+      self_assets_s3: s3://profile.uib.no/bgo1-prod/profile/assets
+      # Assets S3: endpoint for this region’s object store
+      self_assets_s3_endpoint: https://object.api.bgo.nrec.no
+      # Assets S3: destination bucket/prefix to write to when replicating into this region
+      destination_assets_s3: s3://profile.uib.no/osl1-prod/profile/assets
+      # Assets S3: endpoint for the destination region’s object store
+      destination_assets_s3_endpoint: https://object.api.osl.nrec.no
+
+      # Postgres S3: this region’s bucket/prefix for Drupal "postgres"
+      self_postgres_s3: s3://profile.uib.no/bgo1-prod/profile/postgres
+      # Postgres S3: endpoint for this region’s object store
+      self_postgres_s3_endpoint: https://object.api.bgo.nrec.no
+      # Postgres S3: destination bucket/prefix to write to when replicating into this region
+      destination_postgres_s3: s3://profile.uib.no/osl1-prod/profile/postgres
+      # Postgres S3: endpoint for the destination region’s object store
+      destination_postgres_s3_endpoint: https://object.api.osl.nrec.no
+
+      # Files: pause local to S3 sync (replicas should be "true" to avoid overwriting)
+      suspend_sync_files: "false"
+      suspend_replicate_files: "false"
+      suspend_replicate_postgres: "false"

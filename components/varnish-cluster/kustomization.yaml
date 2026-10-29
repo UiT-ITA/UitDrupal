@@ -1,0 +1,7 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - configmap-varnish-helm-values.yaml
+  - helmrelease-varnish-cache.yaml
+  - ocirepository-varnish-cache.yaml
+  - service-monitor.yaml

@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: ${app_name}-valkey
+spec:
+  serviceName: ${app_name}-valkey
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ${app_name}-valkey
+  template:
+    metadata:
+      labels:
+        app: ${app_name}-valkey
+    spec:
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 1000
+      containers:
+        - name: valkey
+          image: PATCH_VALKEY_IMAGE
+          command:
+            - sh
+            - -c
+            - 'valkey-server /etc/valkey/valkey.conf --requirepass "$VALKEY_PASSWORD"'
+          env:
+            - name: VALKEY_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: ${app_name}-valkey-secret
+                  key: password
+          ports:
+            - name: client
+              containerPort: 6379
+          volumeMounts:
+            - name: data
+              mountPath: /data
+            - name: config
+              mountPath: /etc/valkey
+              readOnly: true
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+      volumes:
+        - name: config
+          configMap:
+            name: valkey
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 5Gi

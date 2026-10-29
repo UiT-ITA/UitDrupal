@@ -1,0 +1,9 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ${app_name}-php-fpm
+spec:
+  template:
+    spec:
+      securityContext:
+        fsGroupChangePolicy: "OnRootMismatch"

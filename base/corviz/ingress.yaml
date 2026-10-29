@@ -1,0 +1,46 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: corviz
+  annotations:
+    cert-manager.io/cluster-issuer: harica
+    cert-manager.io/private-key-algorithm: ECDSA
+    cert-manager.io/usages: "digital signature"
+    #nginx.ingress.kubernetes.io/whitelist-source-range: 129.177.0.0/16,2001:700:200::/48
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: corviz.${rail_region}.${rail_env}.rail.uib.no
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: corviz
+                port:
+                  name: http
+    - host: corviz.${rail_env}.uib.no
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: corviz
+                port:
+                  name: http
+    - host: corviz.h.uib.no
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: corviz
+                port:
+                  name: http
+  tls:
+    - hosts:
+        - corviz.${rail_region}.${rail_env}.rail.uib.no
+      secretName: corviz.${rail_region}.${rail_env}.rail.uib.no-tls

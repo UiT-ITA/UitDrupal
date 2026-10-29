@@ -1,0 +1,11 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ../../../base/profile/test/post-deploy
+images:
+  - name: PATCH_NGINX_IMAGE
+    newName: git.app.uib.no:4567/it/site/profile.uib.no/profile-nginx # {"$imagepolicy": "adm-it-pub:profile-next-major-nginx-image-policy:name"}
+    newTag: next-major-2461 # {"$imagepolicy": "adm-it-pub:profile-next-major-nginx-image-policy:tag"}
+  - name: PATCH_PHP_FPM_IMAGE
+    newName: git.app.uib.no:4567/it/site/profile.uib.no/profile-php-fpm # {"$imagepolicy": "adm-it-pub:profile-next-major-php-fpm-image-policy:name"}
+    newTag: next-major-2461 # {"$imagepolicy": "adm-it-pub:profile-next-major-php-fpm-image-policy:tag"}

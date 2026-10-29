@@ -1,0 +1,19 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ../../base/profile/sandbox
+  - secret-rabbitmq.yaml
+  - secret-db.yaml
+  - secret-valkey.yaml
+patches:
+  - path: patches/ingress.yaml
+replicas:
+  - name: ${app_name}-php-fpm
+    count: 1
+images:
+  - name: PATCH_NGINX_IMAGE
+    newName: git.app.uib.no:4567/it/site/profile.uib.no/profile-nginx # {"$imagepolicy": "adm-it-pub:profile-sandbox-nginx-image-policy:name"}
+    newTag: sandbox-2580 # {"$imagepolicy": "adm-it-pub:profile-sandbox-nginx-image-policy:tag"}
+  - name: PATCH_PHP_FPM_IMAGE
+    newName: git.app.uib.no:4567/it/site/profile.uib.no/profile-php-fpm # {"$imagepolicy": "adm-it-pub:profile-sandbox-php-fpm-image-policy:name"}
+    newTag: sandbox-2580 # {"$imagepolicy": "adm-it-pub:profile-sandbox-php-fpm-image-policy:tag"}

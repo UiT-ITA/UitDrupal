@@ -1,0 +1,13 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources: 
+  - ../../../base/profile/sandbox/post-deploy
+patches:
+  - path: patches/drupal-image-deploy.yaml
+images:
+- name: PATCH_NGINX_IMAGE
+  newName: git.app.uib.no:4567/it/site/profile.uib.no/profile-nginx # {"$imagepolicy": "adm-it-pub:profile-sandbox-s3-nginx-image-policy:name"}
+  newTag: sandbox-s3-2031 # {"$imagepolicy": "adm-it-pub:profile-sandbox-s3-nginx-image-policy:tag"}
+- name: PATCH_PHP_FPM_IMAGE
+  newName: git.app.uib.no:4567/it/site/profile.uib.no/profile-php-fpm # {"$imagepolicy": "adm-it-pub:profile-sandbox-s3-php-fpm-image-policy:name"}
+  newTag: sandbox-s3-2031 # {"$imagepolicy": "adm-it-pub:profile-sandbox-s3-php-fpm-image-policy:tag"}

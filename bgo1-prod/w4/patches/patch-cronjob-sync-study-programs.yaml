@@ -1,0 +1,7 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: ${app_name}-sync-study-programs
+spec:
+  suspend: true
+  

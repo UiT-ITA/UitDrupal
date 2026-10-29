@@ -1,0 +1,9 @@
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImageRepository
+metadata:
+  name: profile-php-fpm-image-repository
+spec:
+  image: git.app.uib.no:4567/it/site/profile.uib.no/profile-php-fpm
+  interval: 1m
+  secretRef:
+    name: gitapp-adm-it-pub-registry-read-rail

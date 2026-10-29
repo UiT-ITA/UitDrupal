@@ -1,0 +1,159 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: ${app_name}-solr
+spec:
+  serviceName: solr-headless
+  replicas: ${solr_replicas:=1}
+  selector:
+    matchLabels:
+      app: ${app_name}-solr
+      app.kubernetes.io/name: ${app_name}-solr
+      app.kubernetes.io/instance: ${app_name}-solr
+  template:
+    metadata:
+      labels:
+        app: ${app_name}-solr
+        app.kubernetes.io/name: ${app_name}-solr
+        app.kubernetes.io/instance: ${app_name}-solr
+    spec:
+      securityContext:
+        fsGroup: 8983
+        runAsNonRoot: true
+        runAsGroup: 8983
+        runAsUser: 8983
+      imagePullSecrets:
+        - name: ${image_pull_secret_name}
+      containers:
+        - name: solr
+          image: PATCH_SOLR_IMAGE
+          imagePullPolicy: IfNotPresent
+          command:
+            - solr-foreground
+            - -c
+            - -z
+            # Solr cannot follow ZooKeeper's dynamic ensemble config, so every peer is listed explicitly
+            - ${app_name}-zookeeper-0.zookeeper-hs:2181,${app_name}-zookeeper-1.zookeeper-hs:2181,${app_name}-zookeeper-2.zookeeper-hs:2181
+          env:
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            # Address the node publishes to ZooKeeper for other nodes to reach it
+            - name: SOLR_HOST
+              value: $(POD_NAME).solr-headless
+            - name: SOLR_HEAP
+              value: 512m
+            - name: SOLR_ZK_AUTH_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: ${solr_auth_secret_name}
+                  key: password
+            - name: SOLR_ZK_CREDS_AND_ACLS
+              value: >-
+                -DzkACLProvider=org.apache.solr.common.cloud.DigestZkACLProvider
+                -DzkCredentialsProvider=org.apache.solr.common.cloud.DigestZkCredentialsProvider
+                -DzkCredentialsInjector=org.apache.solr.common.cloud.VMParamsZkCredentialsInjector
+                -DzkDigestUsername=solr
+                -DzkDigestPassword=$(SOLR_ZK_AUTH_PASSWORD)
+                -DzkDigestReadonlyUsername=solr
+                -DzkDigestReadonlyPassword=$(SOLR_ZK_AUTH_PASSWORD)
+            - name: SOLR_OPTS
+              valueFrom:
+                configMapKeyRef:
+                  name: ${app_name}-solr-env
+                  key: SOLR_OPTS
+            - name: SOLR_MODULES
+              value: "extraction,langid,ltr,analysis-extras"
+          ports:
+            - name: http
+              containerPort: 8983
+          resources:
+            requests:
+              cpu: 100m
+              memory: 512Mi
+            limits:
+              cpu: 500m
+              memory: 1Gi
+          # Prevent escalation attacks
+          securityContext:
+            readOnlyRootFilesystem: true
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            seccompProfile:
+              type: RuntimeDefault
+          volumeMounts:
+            - name: solr-data
+              mountPath: /var/solr/data
+            - name: solr-log4j2
+              mountPath: /var/solr/log4j2.xml
+              subPath: log4j2.xml
+              readOnly: true
+            - name: tmp
+              mountPath: /tmp
+        - name: solr-exporter
+          image: PATCH_SOLR_IMAGE
+          imagePullPolicy: IfNotPresent
+          command:
+            - /opt/solr/contrib/prometheus-exporter/bin/solr-exporter
+          args:
+            - -p
+            - "9983"
+            - --zk-host
+            - ${app_name}-zookeeper-0.zookeeper-hs:2181,${app_name}-zookeeper-1.zookeeper-hs:2181,${app_name}-zookeeper-2.zookeeper-hs:2181
+            - --config-file
+            - /opt/solr/contrib/prometheus-exporter/conf/solr-exporter-config.xml
+          env:
+            - name: SOLR_ZK_AUTH_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: ${solr_auth_secret_name}
+                  key: password
+            - name: SOLR_ZK_CREDS_AND_ACLS
+              value: >-
+                -DzkCredentialsProvider=org.apache.solr.common.cloud.DigestZkCredentialsProvider
+                -DzkCredentialsInjector=org.apache.solr.common.cloud.VMParamsZkCredentialsInjector
+                -DzkDigestUsername=solr
+                -DzkDigestPassword=$(SOLR_ZK_AUTH_PASSWORD)
+                -DzkDigestReadonlyUsername=solr
+                -DzkDigestReadonlyPassword=$(SOLR_ZK_AUTH_PASSWORD)
+            - name: SOLR_OPTS
+              value: $(SOLR_ZK_CREDS_AND_ACLS)
+            - name: JAVA_OPTS
+              value: $(SOLR_ZK_CREDS_AND_ACLS)
+          ports:
+            - name: metrics
+              containerPort: 9983
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              cpu: 500m
+              memory: 1Gi
+          securityContext:
+            readOnlyRootFilesystem: true
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            seccompProfile:
+              type: RuntimeDefault
+      volumes:
+        - name: solr-log4j2
+          configMap:
+            name: solr-log4j2
+        - name: tmp
+          emptyDir: {}
+  volumeClaimTemplates:
+    - metadata:
+        name: solr-data
+      spec:
+        storageClassName: rook-ceph-block
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 1Gi

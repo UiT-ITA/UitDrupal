@@ -1,0 +1,17 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ${app_name}-php-fpm
+spec:
+  template:
+    metadata:
+      labels:
+        app: ${app_name}-php-fpm
+    spec:
+      containers:
+        - name: ${app_name}-php-fpm
+          env:
+            - name: RAIL_SMTP_RELAY_HOST
+              value: "smtp.${rail_region}.${rail_env}.rail.uhdc.no."
+            - name: RAIL_SMTP_RELAY_PORT
+              value: "25"

@@ -1,0 +1,47 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: turspor
+  annotations:
+    nginx.ingress.kubernetes.io/use-forwarded-headers: "true"
+    cert-manager.io/cluster-issuer: harica
+    cert-manager.io/private-key-algorithm: ECDSA
+    cert-manager.io/usages: "digital signature"
+    #nginx.ingress.kubernetes.io/whitelist-source-range: 129.177.0.0/16,2001:700:200::/48
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: turspor.${rail_region}.${rail_env}.rail.uib.no
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: turspor
+                port:
+                  name: http
+    - host: turspor.${rail_env}.uib.no
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: turspor
+                port:
+                  name: http
+    - host: turspor.h.uib.no
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: turspor
+                port:
+                  name: http
+  tls:
+    - hosts:
+        - turspor.${rail_region}.${rail_env}.rail.uib.no
+      secretName: turspor.${rail_region}.${rail_env}.rail.uib.no-tls

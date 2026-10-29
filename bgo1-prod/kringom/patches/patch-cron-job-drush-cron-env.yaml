@@ -1,0 +1,21 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: ${app_name}-drupal-run-cron
+spec:
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            app: ${app_name}-drupal
+        spec:
+          containers:
+          - name: ${app_name}-drupal
+            env:
+            # Solr connection
+            - name: DRUPAL_UIB_SOLR_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: ${solr_auth_secret_name}
+                  key: password

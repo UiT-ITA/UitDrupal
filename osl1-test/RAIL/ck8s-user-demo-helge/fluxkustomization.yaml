@@ -1,0 +1,30 @@
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: adm-it-pub-helge-ck8-demo
+  namespace: adm-it-pub
+spec:
+  interval: 30m0s
+  path: base/ck8s-demo-user-helge/
+  prune: true
+  retryInterval: 2m0s
+  sourceRef:
+    kind: GitRepository
+    name: adm-it-pub
+  targetNamespace: adm-it-pub-helge-ck8-demo
+  timeout: 3m0s
+  wait: true
+  decryption:
+    provider: sops
+    secretRef:
+      name: sops-gpg
+  patches:
+    - patch: |-
+        - op: replace
+          path: /spec/rules/0/host
+          value: rail-course-helge.osl1.test.rail.uib.no
+        - op: replace
+          path: /spec/tls/0/hosts/0
+          value: rail-course-helge.osl1.test.rail.uib.no
+      target:
+        kind: Ingress

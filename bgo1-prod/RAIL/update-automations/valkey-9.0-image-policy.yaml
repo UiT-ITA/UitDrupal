@@ -1,0 +1,11 @@
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImagePolicy
+metadata:
+  name: valkey-9.0-image-policy
+spec:
+  imageRepositoryRef:
+    name: valkey-image-repository
+  digestReflectionPolicy: IfNotPresent
+  policy:
+    semver:
+      range: 9.0.x

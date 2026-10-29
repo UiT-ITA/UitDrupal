@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: turspor-mariadb-statefulset
+spec:
+  serviceName: turspor-mariadb
+  replicas: 1
+  selector:
+    matchLabels:
+      app: turspor-mariadb
+  template:
+    metadata:
+      labels:
+        app: turspor-mariadb
+    spec:
+      volumes:
+        - name: turspor-mariadb-storage
+          persistentVolumeClaim:
+            claimName: turspor-mariadb-pvc
+      securityContext:
+        runAsUser: 999  # User ID
+        runAsGroup: 999  # Group ID
+        #fsGroup: 2000  # File system group ID
+      containers:
+        - name: turspor-mariadb
+          image: git.app.uib.no:4567/itpublic/dockerimages/mariadb-unprivileged/mariadb:uib-11
+          env:
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: turspor-mariadb-secret
+                  key: db_user
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: turspor-mariadb-secret
+                  key: db_password
+            - name: DB_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: turspor-mariadb-secret
+                  key: db_host
+            - name:  DB_DATABASE
+              valueFrom:
+                secretKeyRef:
+                  name: turspor-mariadb-secret
+                  key: db_name
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom: 
+                secretKeyRef:
+                  name: turspor-mariadb-secret
+                  key: root_password
+          ports:
+            - containerPort: 3306
+          volumeMounts:
+            - mountPath: /var/lib/mysql
+              name: turspor-mariadb-storage

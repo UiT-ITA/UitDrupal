@@ -1,0 +1,248 @@
+###
+# Patch the job-drush-deploy.yaml file to add the environment variables.
+###
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: ${app_name}-drupal-deploy-job
+spec:
+  template:
+    spec:
+      containers:
+        - name: ${app_name}-drupal-deploy-job
+          env:
+            # Application configuration
+            - name: DRUPAL_TRUSTED_HOST_PATTERNS
+              value: ${drupal_trusted_host_patterns}
+            - name: DRUPAL_UIB_ENV
+              value: ${drupal_env}
+            - name: DRUPAL_UIB_FILE_ASSETS_PATH
+              value: sites/default/assets
+            - name: DRUPAL_UIB_W4_URI
+              value: "https://uib.no"
+
+            # Database connection
+            - name: DRUPAL_DATABASE_HOST
+              value: ${app_name}-db-rw
+            - name: DRUPAL_DATABASE_PREFIX
+              value: ""
+            - name: DRUPAL_DATABASE_NAME
+              value: ${app_name}
+            - name: DRUPAL_DATABASE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: ${app_name}-db-secret
+                  key: username
+            - name: DRUPAL_DATABASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: ${app_name}-db-secret
+                  key: password
+
+            # CRISTIN authentication
+            - name: DRUPAL_UIB_CRISTIN_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: ${app_name}-cristin-secret
+                  key: secret
+
+            - name: DRUPAL_UIB_CRISTIN_URI_BASE
+              valueFrom:
+                secretKeyRef:
+                  name: ${app_name}-cristin-secret
+                  key: uri_base
+
+            # DFO authentication
+            - name: DRUPAL_UIB_DFO_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: ${app_name}-dfo-secret
+                  key: secret
+
+            - name: DRUPAL_UIB_DFO_URI_BASE
+              valueFrom:
+                secretKeyRef:
+                  name: ${app_name}-dfo-secret
+                  key: uri_base
+
+            # Feide authentication
+            - name: DRUPAL_UIB_FEIDE_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: ${app_name}-feide-secret
+                  key: client_id
+            - name: DRUPAL_UIB_FEIDE_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: ${app_name}-feide-secret
+                  key: client_secret
+
+            # FS API authentication - base_uri set in in module config (uib_fs_connector)
+            - name: DRUPAL_UIB_FS_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: ${app_name}-fs-api-secret
+                  key: secret
+
+            # FS FD API authentication - base_uri set in in module config (uib_fs_connector)
+            - name: DRUPAL_UIB_FS_FD_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: ${app_name}-fs-fd-api-secret
+                  key: secret
+
+            # FS GraphQL API authentication
+            - name: DRUPAL_UIB_FSGRAPHQL_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: ${app_name}-fs-graphql-secret
+                  key: secret
+
+            - name: DRUPAL_UIB_FSGRAPHQL_URI_BASE
+              valueFrom:
+                secretKeyRef:
+                  name: ${app_name}-fs-graphql-secret
+                  key: uri_base
+
+            # FS TP WS API authentication - base_uri set in in module config (uib_fs_connector)
+            - name: DRUPAL_UIB_TP_WS_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: ${app_name}-tp-ws-api-secret
+                  key: secret
+
+            # FS WS API authentication - base_uri set in in module config (uib_fs_connector)
+            - name: DRUPAL_UIB_FS_WS_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: ${app_name}-fs-ws-api-secret
+                  key: secret
+
+            # GREG authentication
+            - name: DRUPAL_UIB_GREG_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: ${app_name}-greg-secret
+                  key: secret
+
+            - name: DRUPAL_UIB_GREG_URI_BASE
+              valueFrom:
+                secretKeyRef:
+                  name: ${app_name}-greg-secret
+                  key: uri_base
+
+            # INFO authentication
+            - name: DRUPAL_UIB_INFO_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: ${app_name}-info-secret
+                  key: secret
+
+            - name: DRUPAL_UIB_INFO_URI_BASE
+              valueFrom:
+                secretKeyRef:
+                  name: ${app_name}-info-secret
+                  key: uri_base
+
+            # NVA authentication
+            - name: NVA_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: ${app_name}-nva-secret
+                  key: secret
+
+            - name: NVA_URI_BASE
+              valueFrom:
+                secretKeyRef:
+                  name: ${app_name}-nva-secret
+                  key: uri_base
+
+            # ORGREG authentication
+            - name: DRUPAL_UIB_ORGREG_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: ${app_name}-orgreg-secret
+                  key: secret
+
+            - name: DRUPAL_UIB_ORGREG_URI_BASE
+              valueFrom:
+                secretKeyRef:
+                  name: ${app_name}-orgreg-secret
+                  key: uri_base
+
+            # Profile API authentication
+            - name: DRUPAL_UIB_PROFILE_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: ${app_name}-profile-api-secret
+                  key: secret
+
+            - name: DRUPAL_UIB_PROFILE_URI
+              valueFrom:
+                secretKeyRef:
+                  name: ${app_name}-profile-api-secret
+                  key: uri_base
+
+            - name: DRUPAL_UIB_PROFILE_URI_USER_LOGIN
+              valueFrom:
+                secretKeyRef:
+                  name: ${app_name}-profile-api-secret
+                  key: login_uri
+
+            # RabbitMQ authentication
+            - name: DRUPAL_UIB_RABBITMQ_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: ${app_name}-rabbitmq-secret
+                  key: host
+            - name: DRUPAL_UIB_RABBITMQ_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: ${app_name}-rabbitmq-secret
+                  key: port
+            - name: MQ_VHOST
+              valueFrom:
+                secretKeyRef:
+                  name: ${app_name}-rabbitmq-secret
+                  key: vhost
+            - name: MQ_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: ${app_name}-rabbitmq-secret
+                  key: username
+            - name: MQ_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: ${app_name}-rabbitmq-secret
+                  key: password
+
+            # SCIM authentication
+            - name: DRUPAL_UIB_SCIM_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: ${app_name}-scim-secret
+                  key: secret
+
+            - name: DRUPAL_UIB_SCIM_URI_BASE
+              valueFrom:
+                secretKeyRef:
+                  name: ${app_name}-scim-secret
+                  key: uri_base
+
+            # Varnish ban token
+            - name: VARNISH_BAN_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: ${app_name}-varnish-ban-token
+                  key: varnish_ban_token
+
+            # Valkey authentication
+            - name: DRUPAL_REDIS_HOST
+              value: ${app_name}-valkey
+            - name: DRUPAL_REDIS_PORT
+              value: "6379"
+            - name: DRUPAL_REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: ${app_name}-valkey-secret
+                  key: password

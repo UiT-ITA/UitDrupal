@@ -1,0 +1,66 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: ${app_name}-drupal-run-cron
+spec:
+  schedule: "*/15 * * * *"
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 1
+  concurrencyPolicy: Replace
+  jobTemplate:
+    spec:
+      backoffLimit: 0
+      template:
+        spec:
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 33
+            runAsGroup: 33
+            fsGroup: 33
+            fsGroupChangePolicy: "OnRootMismatch"
+          imagePullSecrets:
+          - name: ${image_pull_secret_name}
+          containers:
+            - name: drush-cron
+              image: PATCH_ME
+              command:
+                - /bin/sh
+                - -c
+                - 'cd /var/www/html && [ "$(drush vget maintenance_mode --exact --format=string)" = "0" ] && drush core:cron'
+              ports:
+                - name: fastcgi
+                  containerPort: 9000
+              volumeMounts:
+                - name: phpfpm-config
+                  mountPath: /usr/local/etc/php-fpm.d/zz-docker.conf
+                  subPath: zz-docker.conf
+                - name: php-config
+                  mountPath: /usr/local/etc/php/conf.d/99-php-fpm.ini
+                  subPath: 99-php-fpm.ini
+              resources:
+                requests:
+                  memory: '128M'
+                  cpu: '50m'
+                limits:
+                  memory: '128M'
+              # Prevent escalation attacks
+              securityContext:
+                allowPrivilegeEscalation: false
+                capabilities:
+                  drop:
+                    - ALL
+                seccompProfile:
+                  type: RuntimeDefault
+                runAsNonRoot: true
+                runAsUser: 33
+                runAsGroup: 33
+                fsGroup: 33
+                fsGroupChangePolicy: "OnRootMismatch"
+          volumes:
+            - name: phpfpm-config
+              configMap:
+                name: phpfpm-config
+            - name: php-config
+              configMap:
+                name: php-config
+          restartPolicy: Never

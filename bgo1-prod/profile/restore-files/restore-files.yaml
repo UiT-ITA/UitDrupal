@@ -1,0 +1,100 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: ${app_name}-drupal-files-restore
+spec:
+  backoffLimit: 0
+  template:
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 33
+        runAsGroup: 33
+        fsGroup: 33
+      imagePullSecrets:
+        - name: gitapp-adm-it-pub-systembruker
+      initContainers:
+        - name: download-today-s3-script
+          image: git.app.uib.no:4567/itpublic/dockerimages/awscli/amazon/aws-cli:2.33.7
+          command:
+            - /bin/sh
+            - -c
+            - "/download-today-s3/script.sh $S3_PATH $OUTPUT_PATH"
+          volumeMounts:
+            - mountPath: /dump
+              name: dump
+            - mountPath: /download-today-s3
+              name: download-today-s3
+              readOnly: true
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+          resources:
+            requests:
+              memory: "2G"
+              cpu: "500m"
+            limits:
+              memory: "2G"
+          env:
+            - name: OUTPUT_PATH
+              value: /dump/files.tar.gz
+            - name: S3_PATH
+              value: bgo1-prod/profile/backup/files/12.tar.gz
+            - name: S3_BUCKET
+              value: profile.uib.no
+            - name: AWS_REGION
+              value: None
+            - name: AWS_REQUEST_CHECKSUM_CALCULATION
+              value: when_required
+            - name: AWS_RESPONSE_CHECKSUM_VALIDATION
+              value: when_required
+            - name: SKIP_DATE_VALIDATION
+              value: "true"
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: ${app_name}-prod-s3-secret
+                  key: access
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: ${app_name}-prod-s3-secret
+                  key: secret
+            - name: AWS_ENDPOINT_URL
+              value: https://object.api.bgo.nrec.no
+      containers:
+        - name: restore-files
+          image: PATCH_PHP_FPM_IMAGE
+          command:
+            - /bin/sh
+            - -c
+            - "rm -rf /var/www/html/web/sites/default/files/* && tar -xzf /dump/files.tar.gz -C /var/www/html/web/sites/default/files --strip-components=7"
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+          resources:
+            requests:
+              memory: "2G"
+              cpu: "250m"
+            limits:
+              memory: "2G"
+          volumeMounts:
+            - name: files
+              mountPath: /var/www/html/web/sites/default/files
+            - name: dump
+              mountPath: /dump
+      restartPolicy: Never
+      volumes:
+        - name: files
+          persistentVolumeClaim:
+            claimName: ${app_name}-files
+        - name: dump
+          emptyDir: {}
+        - name: download-today-s3
+          configMap:
+            name: download-today-s3-script
+            defaultMode: 0755

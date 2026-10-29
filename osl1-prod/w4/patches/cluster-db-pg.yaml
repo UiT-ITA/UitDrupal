@@ -1,0 +1,43 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: ${app_name}-db
+spec:
+  instances: 3
+  imageName: ghcr.io/cloudnative-pg/postgresql:17-minimal-trixie
+  bootstrap:
+    initdb:
+    recovery:
+      source: ${primary_cluster}
+      database: ${app_name}
+      owner: ${app_name}
+      secret:
+        name: ${app_name}-db-secret
+  #     # Time base target for the recovery
+  #     # Leave this commented if recovering to the most recently available time
+  #     # Make sure to update the targetTime!
+  #     recoveryTarget:
+  #       targetTime: "2026-05-04 09:00:00.00000+02"
+  replica:
+    self: ${self_cluster}
+    primary: ${primary_cluster}
+    source: ${source_cluster}
+    promotionToken: ${promotion_token:=""}
+  plugins:
+    - name: barman-cloud.cloudnative-pg.io
+      isWALArchiver: true
+      parameters:
+        barmanObjectName: w4-osl1-prod-db-store
+  externalClusters:
+    - name: w4-bgo1-prod
+      plugin:
+        name: barman-cloud.cloudnative-pg.io
+        parameters:
+          barmanObjectName: w4-bgo1-prod-db-store
+          serverName: ${app_name}-db
+    - name: w4-osl1-prod
+      plugin:
+        name: barman-cloud.cloudnative-pg.io
+        parameters:
+          barmanObjectName: w4-osl1-prod-db-store
+          serverName: ${app_name}-db

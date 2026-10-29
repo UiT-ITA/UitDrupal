@@ -1,0 +1,8 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: ${app_name}-drupal-run-cron
+spec:
+  # Do not run between 2-3 to avoid interference with migration cronjob, which runs at 2:00
+  schedule: "*/15 0-1,3-23 * * *"
+  timezone: UTC

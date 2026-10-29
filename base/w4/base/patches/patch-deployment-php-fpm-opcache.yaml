@@ -1,0 +1,18 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ${app_name}-php-fpm
+spec:
+  template:
+    spec:
+      containers:
+        - name: ${app_name}-php-fpm
+          volumeMounts:
+            - name: opcache-config
+              mountPath: /usr/local/etc/php/conf.d/zzz-php-opcache.ini
+              subPath: zzz-php-opcache.ini
+              readOnly: true
+      volumes:
+        - name: opcache-config
+          configMap:
+            name: opcache-config

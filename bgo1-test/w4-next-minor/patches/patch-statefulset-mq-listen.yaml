@@ -1,0 +1,11 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: ${app_name}-mq-listen
+spec:
+  serviceName: "${app_name}-mq-listen"
+  replicas: 0
+  suspend: true
+  selector:
+    matchLabels:
+      app: ${app_name}-mq-listen

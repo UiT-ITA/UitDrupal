@@ -1,0 +1,68 @@
+apiVersion: hnc.x-k8s.io/v1alpha2
+kind: SubnamespaceAnchor
+metadata:
+  name: adm-it-pub-profile-sandbox
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: adm-it-pub-profile-sandbox
+spec:
+  sourceRef:
+    kind: GitRepository
+    name: adm-it-pub
+  path: ${rail_cluster}/profile-sandbox
+  targetNamespace: adm-it-pub-profile-sandbox
+  prune: true
+  wait: true
+  interval: 30m0s
+  retryInterval: 2m0s
+  timeout: 3m0s
+  decryption:
+    provider: sops
+    secretRef:
+      name: sops-gpg
+  postBuild:
+    substitute:
+      app_name: profile-sandbox
+      image_pull_secret_name: gitapp-adm-it-pub-systembruker
+      rail_cluster: bgo1-test
+      rail_env: test
+      rail_region: bgo1
+      drupal_trusted_host_patterns: '^profile-sandbox\.test\.uib\.no$'
+      drupal_env: test
+      drupal_w4_uri: https://w4-sandbox.test.uib.no
+---
+# post deploy
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: adm-it-pub-profile-sandbox-post-deploy
+spec:
+  dependsOn:
+    - name: adm-it-pub-profile-sandbox
+  sourceRef:
+    kind: GitRepository
+    name: adm-it-pub
+  path: ${rail_cluster}/profile-sandbox/post-deploy
+  targetNamespace: adm-it-pub-profile-sandbox
+  prune: true
+  wait: true
+  force: true
+  interval: 30m0s
+  retryInterval: 2m0s
+  timeout: 3m0s
+  decryption:
+    provider: sops
+    secretRef:
+      name: sops-gpg
+  postBuild:
+    substitute:
+      app_name: profile-sandbox
+      image_pull_secret_name: gitapp-adm-it-pub-systembruker
+      rail_cluster: bgo1-test
+      rail_env: test
+      rail_region: bgo1
+      drupal_trusted_host_patterns: '^profile-sandbox\.test\.uib\.no$'
+      drupal_env: test
+      drupal_w4_uri: https://w4-sandbox.test.uib.no

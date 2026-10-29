@@ -1,0 +1,84 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: ${app_name}-cronjob
+spec:
+  schedule: '@hourly'
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 12021
+            runAsGroup: 1
+            fsGroup: 1
+            fsGroupChangePolicy: "OnRootMismatch"
+          restartPolicy: Never
+          imagePullSecrets:
+            - name: ${image_pull_secret_name}
+          imagePullPolicy: ifNotPresent
+          containers:
+            - name: ${app_name}
+              image: PATCH_RENOVATE_IMAGE
+              workingDir: /usr/src/app
+              volumeMounts:
+                - name: config-volume
+                  readOnly: true
+                  mountPath: /usr/src/app/config.json
+                  subPath: config.json
+                - name: temp-volume
+                  mountPath: '/tmp'
+                - name: work-volume
+                  mountPath: '/tmp/renovate'
+              env:
+                - name: RENOVATE_GITHUB_COM_TOKEN
+                  valueFrom:
+                    secretKeyRef:
+                      name: renovate-env
+                      key: RENOVATE_GITHUB_COM_TOKEN
+                - name: RENOVATE_AUTODISCOVER
+                  value: 'false'
+                - name: RENOVATE_CONFIG_FILE
+                  value: /usr/src/app/config.json
+                - name: RENOVATE_ENDPOINT
+                  value: 'https://git.app.uib.no/api/v4/'
+                - name: RENOVATE_GIT_AUTHOR
+                  value: 'Renovate Bot <renovate-bot-publisering@uib.no>'
+                - name: RENOVATE_PERSIST_REPO_DATA
+                  value: 'true'
+                - name: RENOVATE_PLATFORM
+                  value: 'gitlab'
+                - name: RENOVATE_TOKEN
+                  valueFrom:
+                    secretKeyRef:
+                      name: renovate-env
+                      key: RENOVATE_TOKEN
+                - name: LOG_LEVEL
+                  value: 'info'
+              envFrom:
+                - secretRef:
+                    name: renovate-env
+              # Prevent escalation attacks
+              securityContext:
+                allowPrivilegeEscalation: false
+                capabilities:
+                  drop:
+                    - ALL
+                seccompProfile:
+                  type: RuntimeDefault
+                runAsNonRoot: true
+                runAsUser: 12021
+                runAsGroup: 1
+                fsGroup: 1
+                fsGroupChangePolicy: "OnRootMismatch"
+          volumes:
+            - name: config-volume
+              configMap:
+                name: renovate-config
+            - name: temp-volume
+              emptyDir: {}
+            - name: work-volume
+              persistentVolumeClaim:
+                claimName: ${app_name}-workdir

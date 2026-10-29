@@ -1,0 +1,9 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: ${app_name}-drupal-deploy-job
+spec:
+  template:
+    spec:
+      securityContext:
+        fsGroupChangePolicy: "OnRootMismatch"

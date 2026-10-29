@@ -1,0 +1,11 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: OCIRepository
+metadata:
+  name: varnish-cache
+  namespace: flux-system
+spec:
+  interval: 24h0m0s
+  url: oci://registry-1.docker.io/varnish/varnish-cache
+  ref:
+    tag: "0.1.2"

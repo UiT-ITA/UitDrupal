@@ -1,0 +1,76 @@
+apiVersion: hnc.x-k8s.io/v1alpha2
+kind: SubnamespaceAnchor
+metadata:
+  name: adm-it-pub-kringom
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: adm-it-pub-kringom
+spec:
+  sourceRef:
+    kind: GitRepository
+    name: adm-it-pub
+  path: ${rail_cluster}/kringom
+  targetNamespace: adm-it-pub-kringom
+  prune: true
+  wait: true
+  interval: 30m0s
+  retryInterval: 2m0s
+  timeout: 3m0s
+  decryption:
+    provider: sops
+    secretRef:
+      name: sops-gpg
+  postBuild:
+    substitute:
+      app_name: kringom
+      image_pull_secret_name: gitapp-adm-it-pub-systembruker
+      rail_cluster: bgo1-prod
+      rail_env: prod
+      rail_region: bgo1
+      drupal_trusted_host_patterns: '^(www\.)?kringom(\.${rail_region}\.${rail_env}\.rail\.uib)?\.no$'
+      drupal_env: prod
+      varnish_server_replicas: "3"
+      kringom_nginx_service: kringom-nginx
+      solr_auth_secret_name: solr-auth-secret
+      solr_replicas: "2"
+      # Varnish-cluster resources
+      VARNISH_SERVER_MEMORY_REQUEST: "2340Mi"
+      VARNISH_SERVER_MEMORY_LIMIT: "2340Mi"
+      VARNISH_SIZE: "1536m"
+      VARNISH_TRANSIENT_SIZE: "256m"
+      VARNISH_MALLOC_CONF: "background_thread:true,narenas:2,dirty_decay_ms:1000,muzzy_decay_ms:1000,metadata_thp:disabled"
+---
+# post deploy
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: adm-it-pub-kringom-post-deploy
+spec:
+  dependsOn:
+    - name: adm-it-pub-kringom
+  sourceRef:
+    kind: GitRepository
+    name: adm-it-pub
+  path: ${rail_cluster}/kringom/post-deploy
+  targetNamespace: adm-it-pub-kringom
+  prune: true
+  wait: true
+  force: true
+  interval: 30m0s
+  retryInterval: 2m0s
+  timeout: 3m0s
+  decryption:
+    provider: sops
+    secretRef:
+      name: sops-gpg
+  postBuild:
+    substitute:
+      app_name: kringom
+      image_pull_secret_name: gitapp-adm-it-pub-systembruker
+      rail_cluster: bgo1-prod
+      rail_env: prod
+      rail_region: bgo1
+      drupal_trusted_host_patterns: '^(www\.)?kringom\.no$'
+      drupal_env: prod

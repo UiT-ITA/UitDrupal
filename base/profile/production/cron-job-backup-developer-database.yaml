@@ -1,0 +1,160 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: ${app_name}-backup-developer-database
+spec:
+  schedule: "0 1 * * *"
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 1
+  concurrencyPolicy: Replace
+  jobTemplate:
+    spec:
+      backoffLimit: 0
+      template:
+        metadata:
+          labels:
+            app: ${app_name}-backup-developer-database
+        spec:
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 33
+            runAsGroup: 33
+            fsGroup: 33
+          imagePullSecrets:
+            - name: ${image_pull_secret_name}
+          initContainers:
+            - name: archive-files
+              image: PATCH_PHP_FPM_IMAGE
+              command:
+                - /bin/bash
+                - -c
+                - pg_dump -O -x -w -Fc -h "$DRUPAL_DATABASE_HOST" -U "$DRUPAL_DATABASE_USERNAME" --exclude-table-data="cache,cache_*,public.cache*,semaphore,sessions,search_index,watchdog" $DRUPAL_DATABASE_NAME > /dump/developer-database.dump
+              securityContext:
+                allowPrivilegeEscalation: false
+                capabilities:
+                  drop:
+                    - ALL
+              resources:
+                requests:
+                  memory: "4Gi"
+                  cpu: "1"
+                limits:
+                  memory: "4Gi"
+              volumeMounts:
+                - name: phpfpm-config
+                  mountPath: /usr/local/etc/php-fpm.d/zz-docker.conf
+                  subPath: zz-docker.conf
+                - name: php-config
+                  mountPath: /usr/local/etc/php/conf.d/99-php-fpm.ini
+                  subPath: 99-php-fpm.ini
+                - name: backup-files-php-config
+                  mountPath: /usr/local/etc/php/conf.d/999-backup-files-php.ini
+                  subPath: 999-backup-files-php.ini
+                - mountPath: /var/www/html/web/sites/default/files
+                  name: files
+                  readOnly: false
+                - name: assets
+                  mountPath: /var/www/html/web/sites/default/assets
+                  readOnly: false
+                - name: tmp
+                  mountPath: /tmp
+                  readOnly: false
+                - mountPath: /dump
+                  name: dump
+              env:
+                - name: DRUPAL_DATABASE_HOST
+                  value: ${app_name}-db-rw
+                - name: DRUPAL_DATABASE_PREFIX
+                  value: ""
+                - name: DRUPAL_DATABASE_NAME
+                  value: ${app_name}
+                - name: DRUPAL_UIB_FILE_ASSETS_PATH
+                  value: sites/default/assets
+                - name: DRUPAL_DATABASE_USERNAME
+                  valueFrom:
+                    secretKeyRef:
+                      name: ${app_name}-db-secret
+                      key: username
+                - name: DRUPAL_DATABASE_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: ${app_name}-db-secret
+                      key: password
+                - name: PGPASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: ${app_name}-db-secret
+                      key: password
+                - name: DRUPAL_UIB_ENV
+                  value: prod
+          containers:
+            - name: upload-files-to-s3
+              image: git.app.uib.no:4567/itpublic/dockerimages/awscli/amazon/aws-cli:2.33.7
+              command:
+                - /bin/sh
+                - -c
+                - "/upload-s3-script/script.sh ${rail_cluster}/${app_name}/developer-database/developer-database-{DAY_OF_WEEK}.dump /dump/developer-database.dump"
+              volumeMounts:
+                - mountPath: /dump
+                  name: dump
+                - mountPath: /upload-s3-script
+                  name: upload-s3-script
+                  readOnly: true
+              securityContext:
+                allowPrivilegeEscalation: false
+                capabilities:
+                  drop:
+                    - ALL
+              resources:
+                requests:
+                  memory: "512Mi"
+                  cpu: "500m"
+                limits:
+                  memory: "512Mi"
+              env:
+                - name: SCRIPT
+                  value: upload-s3
+                - name: S3_BUCKET
+                  value: profile.uib.no-test
+                - name: AWS_REGION
+                  value: None
+                - name: AWS_REQUEST_CHECKSUM_CALCULATION
+                  value: when_required
+                - name: AWS_RESPONSE_CHECKSUM_VALIDATION
+                  value: when_required
+                - name: AWS_ACCESS_KEY_ID
+                  valueFrom:
+                    secretKeyRef:
+                      name: ${app_name}-test-s3
+                      key: access
+                - name: AWS_SECRET_ACCESS_KEY
+                  valueFrom:
+                    secretKeyRef:
+                      name: ${app_name}-test-s3
+                      key: secret
+                - name: AWS_ENDPOINT_URL
+                  value: https://object.api.bgo.nrec.no
+          volumes:
+            - name: phpfpm-config
+              configMap:
+                name: phpfpm-config
+            - name: php-config
+              configMap:
+                name: php-config
+            - name: backup-files-php-config
+              configMap:
+                name: backup-files-php-config
+            - name: files
+              persistentVolumeClaim:
+                claimName: ${app_name}-files
+            - name: assets
+              emptyDir: {}
+            - name: tmp
+              emptyDir: {}
+            - name: dump
+              emptyDir: {}
+            - name: upload-s3-script
+              configMap:
+                name: upload-s3-script
+                defaultMode: 0755
+          restartPolicy: Never

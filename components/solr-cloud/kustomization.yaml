@@ -1,0 +1,18 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - configmap-solr-env.yaml
+  - service-solr.yaml
+  - service-solr-headless.yaml
+  - service-zookeeper-headless.yaml
+  - service-zookeeper.yaml
+  - servicemonitor-solr-exporter.yaml
+  #- servicemonitor-zookeeper.yaml
+  - statefulset-solr.yaml
+  - statefulset-zookeeper.yaml
+configMapGenerator:
+  - name: solr-log4j2
+    files:
+      - log4j2.xml=solr-log4j2.xml
+    options:
+      disableNameSuffixHash: true

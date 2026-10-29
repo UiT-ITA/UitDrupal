@@ -1,0 +1,17 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: ${app_name}-sync-courses
+spec:
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: ${app_name}-sync-courses
+              resources:
+                requests:
+                  memory: "256Mi"
+                  cpu: "500m"
+                limits:
+                  memory: "256Mi"

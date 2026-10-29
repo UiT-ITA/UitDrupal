@@ -1,0 +1,11 @@
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImagePolicy
+metadata:
+  name: theunissen-policy
+  namespace: default
+spec:
+  imageRepositoryRef:
+    name: theunissen
+  policy:
+    numerical:
+      order: asc  # Ensures Flux picks the highest available tag (e.g., 2 > 1)

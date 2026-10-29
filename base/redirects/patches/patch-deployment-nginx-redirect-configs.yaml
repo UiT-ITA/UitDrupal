@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ${app_name}-nginx
+spec:
+  template:
+    spec:
+      containers:
+        - name: ${app_name}-nginx
+          volumeMounts:
+            # Drop the base component's whole-directory mount (merge key is mountPath)
+            - mountPath: /etc/nginx/conf.d
+              $patch: delete
+            # Replace the image's php-fpm default vhost
+            - name: nginx-default-conf
+              mountPath: /etc/nginx/conf.d/default.conf
+              subPath: default.conf
+            # Add individual config maps for each redirect site
+            - name: universitetsmuseet-no
+              mountPath: /etc/nginx/conf.d/universitetsmuseet.no.conf
+              subPath: universitetsmuseet.no.conf
+            - name: w4-bgo1-prod-rail-uib-no
+              mountPath: /etc/nginx/conf.d/w4.bgo1.prod.rail.uib.no.conf
+              subPath: w4.bgo1.prod.rail.uib.no.conf
+            - name: www-kringom-no
+              mountPath: /etc/nginx/conf.d/www.kringom.no.conf
+              subPath: www.kringom.no.conf
+      volumes:
+        # Remove the base component's whole-directory config map volume (merge key is name)
+        - name: nginx-config
+          $patch: delete
+        - name: nginx-default-conf
+          configMap:
+            name: nginx-default-conf
+        # Add individual config map volumes for each redirect site
+        - name: universitetsmuseet-no
+          configMap:
+            name: universitetsmuseet.no
+        - name: w4-bgo1-prod-rail-uib-no
+          configMap:
+            name: w4.bgo1.prod.rail.uib.no
+        - name: www-kringom-no
+          configMap:
+            name: www.kringom.no

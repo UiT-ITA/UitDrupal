@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ${app_name}-solr-env
+data:
+  SOLR_OPTS: >-
+    -XX:+UseG1GC -XX:+PerfDisableSharedMem -XX:+ParallelRefProcEnabled
+    -XX:MaxGCPauseMillis=250 -XX:+UseLargePages -XX:+AlwaysPreTouch
+    -XX:+ExplicitGCInvokesConcurrent -Xlog:gc*:stderr:time,uptime
+    -Dsolr.jetty.inetaccess.includes= -Dsolr.jetty.inetaccess.excludes=
+    -Dsolr.log.dir=/var/solr/logs -Djetty.port=8983 -Djetty.host=0.0.0.0
+    -Dsolr.jetty.host=0.0.0.0 -Duser.timezone=UTC
+    -XX:-OmitStackTraceInFastThrow -Dsolr.solr.home=/var/solr/data
+    -Dsolr.data.home=
+    -Dlog4j.configurationFile=/var/solr/log4j2.xml -Xss256k -Dsolr.log.muteconsole
+    -DzkClientTimeout=60000

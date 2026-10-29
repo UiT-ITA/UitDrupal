@@ -1,0 +1,112 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: ${app_name}-zookeeper
+spec:
+  serviceName: zookeeper-hs
+  replicas: 3
+  selector:
+    matchLabels:
+      app: ${app_name}-zookeeper
+      app.kubernetes.io/name: ${app_name}-zookeeper
+      app.kubernetes.io/instance: ${app_name}-zookeeper
+  template:
+    metadata:
+      labels:
+        app: ${app_name}-zookeeper
+        app.kubernetes.io/name: ${app_name}-zookeeper
+        app.kubernetes.io/instance: ${app_name}-zookeeper
+    spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - ${app_name}-zookeeper
+            topologyKey: "kubernetes.io/hostname"
+      securityContext:
+        fsGroup: 1000
+        runAsNonRoot: true
+        runAsGroup: 1000
+        runAsUser: 1000
+      imagePullSecrets:
+        - name: ${image_pull_secret_name}
+      containers:
+        - name: zookeeper
+          image: PATCH_ZOOKEEPER_IMAGE
+          imagePullPolicy: IfNotPresent
+          # myid must be a number, so it is derived from the StatefulSet pod ordinal at startup
+          command:
+            - sh
+            - -c
+            - |
+              export ZOO_MY_ID=$$(( $${HOSTNAME##*-} + 1 ))
+              exec /docker-entrypoint.sh zkServer.sh start-foreground
+          env:
+            # ZOO_SERVERS tells each node how to find the other peers over the headless service
+            - name: ZOO_SERVERS
+              value: "server.1=${app_name}-zookeeper-0.zookeeper-hs:2888:3888;2181 server.2=${app_name}-zookeeper-1.zookeeper-hs:2888:3888;2181 server.3=${app_name}-zookeeper-2.zookeeper-hs:2888:3888;2181"
+            # Disables standalone mode so a quorum configuration is enforced
+            - name: ZOO_STANDALONE_ENABLED
+              value: "false"
+            - name: ALLOW_ANONYMOUS_LOGIN
+              value: "no"
+            - name: ZOO_ENABLE_AUTH
+              value: "yes"
+            - name: ZOO_SERVER_USERS
+              value: solr
+            - name: ZOO_SERVER_PASSWORDS
+              valueFrom:
+                secretKeyRef:
+                  name: ${solr_auth_secret_name}
+                  key: password
+            - name: ZOO_CLIENT_USER
+              value: solr
+            - name: ZOO_CLIENT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: ${solr_auth_secret_name}
+                  key: password
+            - name: ZOO_4LW_COMMANDS_WHITELIST
+              value: mntr,conf,ruok,srvr
+          ports:
+            - name: client
+              containerPort: 2181
+            - name: peer
+              containerPort: 2888
+            - name: election
+              containerPort: 3888
+          resources:
+            requests:
+              cpu: 100m
+              memory: 512Mi
+            limits:
+              cpu: 500m
+              memory: 1Gi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            seccompProfile:
+              type: RuntimeDefault
+          volumeMounts:
+            - name: zookeeper-data
+              mountPath: /data
+              subPath: data
+            - name: zookeeper-data
+              mountPath: /datalog
+              subPath: datalog
+  volumeClaimTemplates:
+    - metadata:
+        name: zookeeper-data
+      spec:
+        storageClassName: rook-ceph-block
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 1Gi

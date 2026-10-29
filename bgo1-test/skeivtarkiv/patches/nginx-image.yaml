@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ${app_name}-nginx
+spec:
+  template:
+    metadata:
+      labels:
+        app: ${app_name}-nginx
+    spec:
+      volumes:
+        - name: files
+          persistentVolumeClaim:
+            claimName: ${app_name}-files
+        - name: drupal-files
+          emptyDir: {}
+      initContainers:
+      - name: static-file-extractor
+        image: PATCH_PHP_FPM_IMAGE
+        command: ['sh', '-c', 'cp -r /var/www/html/* /shared/']
+        volumeMounts:
+        - name: drupal-files
+          mountPath: /shared
+      containers:
+        - name: ${app_name}-nginx
+          volumeMounts:
+            - mountPath: /var/www/html/sites/default/files
+              name: files
+              readOnly: true
+            - name: drupal-files
+              mountPath: /var/www/html

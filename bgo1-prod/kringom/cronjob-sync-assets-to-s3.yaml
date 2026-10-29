@@ -1,0 +1,84 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: ${app_name}-sync-assets-to-s3
+spec:
+  schedule: "2-59/15 * * * *"
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 1
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      backoffLimit: 0
+      template:
+        metadata:
+          labels:
+            app: ${app_name}-sync-assets
+        spec:
+          restartPolicy: Never
+          securityContext:
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            runAsUser: 33
+            runAsGroup: 33
+            fsGroup: 33
+            fsGroupChangePolicy: "OnRootMismatch"
+          imagePullSecrets:
+            - name: gitapp-adm-it-pub-systembruker
+          containers:
+            - name: ${app_name}-sync-assets
+              image: git.app.uib.no:4567/itpublic/dockerimages/awscli/amazon/aws-cli:2.33.7
+              command:
+                - /bin/sh
+                - -c
+                - "/sync-s3-script/script.sh /assets $SELF_S3"
+              securityContext:
+                readOnlyRootFilesystem: true
+                allowPrivilegeEscalation: false
+                capabilities:
+                  drop:
+                    - ALL
+                seccompProfile:
+                  type: RuntimeDefault
+              resources:
+                requests:
+                  memory: "2Gi"
+                  cpu: "1"
+                limits:
+                  cpu: "1"
+                  memory: "2Gi"
+              volumeMounts:
+                - name: assets
+                  mountPath: /assets
+                - name: sync-s3-script
+                  mountPath: /sync-s3-script
+                  readOnly: true
+              env:
+                - name: AWS_REGION
+                  value: None
+                - name: AWS_REQUEST_CHECKSUM_CALCULATION
+                  value: when_required
+                - name: AWS_RESPONSE_CHECKSUM_VALIDATION
+                  value: when_required
+                - name: AWS_ACCESS_KEY_ID
+                  valueFrom:
+                    secretKeyRef:
+                      name: ${app_name}-s3
+                      key: access
+                - name: AWS_SECRET_ACCESS_KEY
+                  valueFrom:
+                    secretKeyRef:
+                      name: ${app_name}-s3
+                      key: secret
+                - name: SELF_S3
+                  value: s3://kringom.no/bgo1-prod/kringom/assets
+                - name: AWS_ENDPOINT_URL
+                  value: https://object.api.bgo.nrec.no
+          volumes:
+            - name: assets
+              persistentVolumeClaim:
+                claimName: ${app_name}-assets
+            - name: sync-s3-script
+              configMap:
+                name: sync-s3-script
+                defaultMode: 0755

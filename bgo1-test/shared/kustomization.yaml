@@ -1,0 +1,11 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ../../base/shared
+  - ../../base/git-pull-secrets
+  - imagepolicy.yaml
+  - imagerepo.yaml
+  - imageupdater.yaml
+images:
+  - name: git.app.uib.no:4567/it/site/shared.app.uib.no/shared
+    newTag: master-2026-02-12T0948-8bfaacfb # {"$imagepolicy": "adm-it-pub-shared:shared:tag"}

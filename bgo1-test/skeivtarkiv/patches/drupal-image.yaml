@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ${app_name}-php-fpm
+spec:
+  template:
+    metadata:
+      labels:
+        app: ${app_name}-php-fpm
+    spec:
+      volumes:
+        - name: files
+          persistentVolumeClaim:
+            claimName: ${app_name}-files
+        - name: tmp
+          emptyDir: {}
+      containers:
+        - name: ${app_name}-php-fpm
+          image: PATCH_PHP_FPM_IMAGE
+          env:
+            - name: DRUPAL_DATABASE_HOST
+              value: ${app_name}-mariadb
+            - name: DRUPAL_DATABASE_PREFIX
+              value: ""
+            - name: DRUPAL_DATABASE_NAME
+              value: ${app_name}
+            - name: AWS_HOSTNAME
+              value: https://object.api.bgo.nrec.no
+            - name: AWS_ENDPOINT_URL
+              value: https://object.api.bgo.nrec.no
+              # TODO: Probably shouldn't be app_name
+            - name: S3_DOMAIN
+              value: ${app_name}.${rail_region}.${rail_env}.rail.uib.no/object
+            - name: S3_BUCKET_NAME
+              value: ${app_name}
+            - name: AWS_DEFAULT_REGION
+              value: None
+            - name: DRUPAL_DATABASE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: ${app_name}-db-secret
+                  key: username
+            - name: DRUPAL_DATABASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: ${app_name}-db-secret
+                  key: password
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: ${app_name}-drupal-s3-secret
+                  key: access
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: ${app_name}-drupal-s3-secret
+                  key: secret
+          volumeMounts:
+            - mountPath: /var/www/html/sites/default/files
+              name: files
+              readOnly: false
+            - name: tmp
+              mountPath: /tmp
+              readOnly: false
+          securityContext:
+            readOnlyRootFilesystem: false

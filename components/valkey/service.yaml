@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: ${app_name}-valkey
+spec:
+  clusterIP: None
+  selector:
+    app: ${app_name}-valkey
+  ports:
+    - name: client
+      protocol: TCP
+      port: 6379
+      targetPort: 6379

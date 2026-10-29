@@ -1,0 +1,148 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: turspor
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: nginx
+      app.kubernetes.io/instance: turspor
+  template:
+    metadata:
+      labels:
+        app: turspor
+        app.kubernetes.io/name: nginx
+        app.kubernetes.io/instance: turspor
+    spec:
+      imagePullSecrets:
+      - name: gitapp-adm-it-pub-systembruker
+
+      # Init container for WordPress updates
+      initContainers:
+      - name: wp-updater
+        image: git.app.uib.no:4567/it/site/turspor.h.uib.no/turspor:prod
+        command: ["/usr/local/bin/oppdater-wp.sh"]
+        imagePullPolicy: Always
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: false  # Changed to false for WP-CLI operations
+          runAsNonRoot: true
+          capabilities:
+            drop:
+            - ALL
+          seccompProfile:
+            type:
+              RuntimeDefault
+        volumeMounts:
+          - name: turspor-uploads-volume2
+            mountPath: /var/www/html/wp-content/uploads
+          - name: tmp
+            mountPath: /tmp
+        env:
+          - name: DB_USER
+            valueFrom:
+              secretKeyRef:
+                name: turspor-mariadb-secret
+                key: db_user
+          - name: DB_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: turspor-mariadb-secret
+                key: db_password
+          - name: DB_HOST
+            valueFrom:
+              secretKeyRef:
+                name: turspor-mariadb-secret
+                key: db_host
+          - name: DB_NAME
+            valueFrom:
+              secretKeyRef:
+                name: turspor-mariadb-secret
+                key: db_name
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 500m
+            memory: 256Mi
+
+      # Main WordPress container
+      containers:
+      - name: turspor
+        image: git.app.uib.no:4567/it/site/turspor.h.uib.no/turspor:prod
+        command: ["apache2-foreground"]
+        securityContext:
+          allowPrivilegeEscalation: false
+          runAsNonRoot: true
+          capabilities:
+            drop:
+            - ALL
+          seccompProfile:
+            type:
+              RuntimeDefault
+        volumeMounts:
+          - name: turspor-uploads-volume2
+            mountPath: /var/www/html/wp-content/uploads
+          - name: tmp
+            mountPath: /tmp
+        env:
+          - name: DB_USER
+            valueFrom:
+              secretKeyRef:
+                name: turspor-mariadb-secret
+                key: db_user
+          - name: DB_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: turspor-mariadb-secret
+                key: db_password
+          - name: DB_HOST
+            valueFrom:
+              secretKeyRef:
+                name: turspor-mariadb-secret
+                key: db_host
+          - name: DB_NAME
+            valueFrom:
+              secretKeyRef:
+                name: turspor-mariadb-secret
+                key: db_name
+        imagePullPolicy: Always
+        ports:
+        - name: http
+          containerPort: 8080
+          protocol: TCP
+        # RAIL requires us to specify how resource hungry each container is
+        resources:
+          requests:
+            cpu: 500m
+            memory: 512Mi
+          limits:
+            cpu: 1
+            memory: 1Gi
+
+      volumes:
+      - name: turspor-uploads-volume2
+        persistentVolumeClaim:
+          claimName: turspor-pvc
+      - name: tmp
+        emptyDir: {}
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: turspor
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: nginx
+      app.kubernetes.io/instance: turspor
+  policyTypes:
+  - Ingress
+  ingress:
+  - ports:
+    - port: http
+    from:

@@ -1,0 +1,65 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: shared
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: nginx
+      app.kubernetes.io/instance: shared
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: nginx
+        app.kubernetes.io/instance: shared
+    spec:
+      imagePullSecrets: 
+      - name: gitapp-adm-it-pub-systembruker
+      containers:
+      - name: shared
+        image: git.app.uib.no:4567/it/site/shared.app.uib.no/shared:master-2025-03-23T2103-d71ec6c2
+        imagePullPolicy: Always
+        ports:
+        - name: http
+          containerPort: 8080
+          protocol: TCP
+
+        # RAIL requires us to specify how resource hungry each container is
+        resources:
+          requests:
+            cpu: 100m
+            memory: 20Mi
+          limits:
+            cpu: 500m
+            memory: 100Mi
+
+        # This states the defaults for the securityContext and will get rid of
+        # the warning that you should set these values.  These values can not be
+        # set at the Pod-level, so they need to be specified here.
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          runAsNonRoot: true
+          seccompProfile:
+            type:
+              RuntimeDefault
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: shared
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: nginx
+      app.kubernetes.io/instance: shared
+  policyTypes:
+  - Ingress
+  ingress:
+  - ports:
+    - port: http
+    from:

@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ${app_name}-php-fpm
+spec:
+  template:
+    metadata:
+      labels:
+        app: ${app_name}-php-fpm
+    spec:
+      containers:
+        - name: ${app_name}-php-fpm
+          env:
+          # Solr connection
+          - name: DRUPAL_UIB_SOLR_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: ${solr_auth_secret_name}
+                key: password
