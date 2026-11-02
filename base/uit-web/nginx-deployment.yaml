@@ -24,7 +24,7 @@ spec:
         fsGroup: 82
       containers:
         - name: nginx
-          image: uitcontainerregistry.azurecr.io/uit/nginx-drupal:1.29-0054
+          image: uitcontainerregistry.azurecr.io/uit/www-uit-no-nginx # tag is set per instance (images in the instance kustomization)
           volumeMounts:
             - name: ${app_name}-files
               mountPath: /var/www/html/web/sites/default/files
