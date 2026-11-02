@@ -30,14 +30,14 @@ spec:
           periodSeconds: 10
           successThreshold: 1
           tcpSocket:
-            port: 514
+            port: 3514
           timeoutSeconds: 10
         name: rsyslog
         ports:
-        - containerPort: 514
+        - containerPort: 3514
           name: rsyslog-tcp
           protocol: TCP
-        - containerPort: 514
+        - containerPort: 3514
           name: rsyslog-udp
           protocol: UDP
         readinessProbe:
@@ -46,7 +46,7 @@ spec:
           periodSeconds: 10
           successThreshold: 1
           tcpSocket:
-            port: 514
+            port: 3514
           timeoutSeconds: 1
         resources:
           limits:
@@ -65,5 +65,5 @@ spec:
               RuntimeDefault
       securityContext:
         fsGroup: 10001
-        runAsGroup: 0
+        runAsGroup: 10000
         runAsUser: 10000
