@@ -870,7 +870,7 @@ $databases['default']['default'] = array (
   'namespace' => 'Drupal\\pgsql\\Driver\\Database\\pgsql',
   'autoload' => 'core/modules/pgsql/src/Driver/Database/pgsql/',
 );
-$settings['config_sync_directory'] = '/opt/uit_sync';
+$settings['config_sync_directory'] = realpath(DRUPAL_ROOT . '/../config/sync');
 
 /**
  * OpenID Connect (Feide) client secret.

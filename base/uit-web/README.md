@@ -104,6 +104,15 @@ Drupal application deployment and service.
 
 Rsyslog deployment and service for logging.
 
+### Post-deploy Job
+
+Job `drupal-post-deploy` runs `scripts/deploy/post-deploy.sh` from the
+www.uit.no image (wait for the database, `drush deploy`). It uses the same image
+as the Drupal deployment, so a new tag changes the Job spec. Jobs are immutable,
+so the annotation `kustomize.toolkit.fluxcd.io/force: enabled` makes Flux
+recreate it, and it runs once per release. Check it with
+`kubectl logs job/drupal-post-deploy`.
+
 ## Open Question
 
 - is it actually useful to manage `settings.php` from here?
