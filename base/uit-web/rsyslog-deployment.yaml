@@ -22,7 +22,7 @@ spec:
       - env:
         - name: SERVICE_NAME
           value: rsyslog
-        image: ghcr.io/ramsalt/rsyslog:v0.1.0
+        image: uitcontainerregistry.azurecr.io/uit/rsyslog-drupal:8.26-0004
         imagePullPolicy: Always
         livenessProbe:
           failureThreshold: 3
@@ -67,3 +67,5 @@ spec:
         fsGroup: 10001
         runAsGroup: 10000
         runAsUser: 10000
+      imagePullSecrets:
+        - name: ${image_pull_secret_name}
