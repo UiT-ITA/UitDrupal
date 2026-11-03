@@ -2,10 +2,10 @@
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  name: ${app_name}-php-fpm
+  name: drupal
   labels:
-    app.kubernetes.io/name: ${app_name}-php-fpm
-    app: ${app_name}-php-fpm
+    app.kubernetes.io/name: drupal
+    app: drupal
 spec:
   selector:
     matchLabels:

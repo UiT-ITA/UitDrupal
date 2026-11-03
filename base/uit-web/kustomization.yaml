@@ -13,6 +13,7 @@ resources:
   - drupal-iknowbase-graphql-studiekatalog-apikey.yaml
   - drupal-orgreg-apikey.yaml
   - drupal-service.yaml
+  - drupal-service-monitor.yaml
   - feide-client-secret.yaml
   - ingress.yaml
   - nginx-deployment.yaml
