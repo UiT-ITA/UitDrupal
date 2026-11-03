@@ -67,7 +67,7 @@ spec:
                 secretKeyRef:
                   name: feide-client-secret
                   key: password
-          image: uitcontainerregistry.azurecr.io/uit/drupal:11.3-0111
+          image: uitcontainerregistry.azurecr.io/uit/drupal:11.3-0116
           volumeMounts:
             - name: settings-php
               mountPath: /var/www/html/web/sites/default/settings.php
