@@ -9,3 +9,10 @@ configMapGenerator:
   - name: settings-php
     files:
       - settings.php=settings.php
+# Deploy artifacts built by www.uit.no (branch master, see .github/deploy-targets.yml).
+# Set both tags to the tag from the workflow summary to deploy a new build.
+images:
+  - name: uitcontainerregistry.azurecr.io/uit/www-uit-no
+    newTag: uit-web-dev-6-a5acabb
+  - name: uitcontainerregistry.azurecr.io/uit/www-uit-no-nginx
+    newTag: uit-web-dev-6-a5acabb
