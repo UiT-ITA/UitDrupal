@@ -9,5 +9,9 @@ spec:
   selector:
     app.kubernetes.io/name: drupal
   ports:
-    - port: 9000
+    - name: fastcgi
+      port: 9000
       targetPort: 9000
+    - name: metrics
+      port: 9253
+      targetPort: 9253
