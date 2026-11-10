@@ -24,4 +24,7 @@ resources:
   - post-deploy-job.yaml
   - rsyslog-deployment.yaml
   - rsyslog-service.yaml
+  - uit-drupal-push-automation.yaml
+  - uit-drupal-push-repo.yaml
+  - uit-drupal-push-secret.yaml
   - uit-web-files-pvc.yaml
