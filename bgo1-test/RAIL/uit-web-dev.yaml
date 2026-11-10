@@ -29,5 +29,4 @@ spec:
       rail_cluster: bgo1-test
       rail_env: test
       rail_region: bgo1
-      ip_whitelist: 129.242.0.0/16,158.37.63.0/24,158.37.66.0/24,158.39.75.0/24,158.39.48.0/24,158.39.200.0/24,88.151.74.100/32,2a04:141:12::/48
       image_pull_secret_name: uitcontainerregistry
