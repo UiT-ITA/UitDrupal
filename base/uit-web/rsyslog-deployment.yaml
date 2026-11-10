@@ -19,50 +19,50 @@ spec:
     spec:
       automountServiceAccountToken: false
       containers:
-      - env:
-        - name: SERVICE_NAME
-          value: rsyslog
-        image: uitcontainerregistry.azurecr.io/uit/rsyslog-drupal:8.26-0004
-        imagePullPolicy: Always
-        livenessProbe:
-          failureThreshold: 3
-          initialDelaySeconds: 60
-          periodSeconds: 10
-          successThreshold: 1
-          tcpSocket:
-            port: 3514
-          timeoutSeconds: 10
-        name: rsyslog
-        ports:
-        - containerPort: 3514
-          name: rsyslog-tcp
-          protocol: TCP
-        - containerPort: 3514
-          name: rsyslog-udp
-          protocol: UDP
-        readinessProbe:
-          failureThreshold: 3
-          initialDelaySeconds: 1
-          periodSeconds: 10
-          successThreshold: 1
-          tcpSocket:
-            port: 3514
-          timeoutSeconds: 1
-        resources:
-          limits:
-            memory: 100Mi
-          requests:
-            cpu: 10m
-            memory: 10Mi
-        securityContext:
-          allowPrivilegeEscalation: false
-          capabilities:
-            drop:
-            - ALL
-          runAsNonRoot: true
-          seccompProfile:
-            type:
-              RuntimeDefault
+        - env:
+            - name: SERVICE_NAME
+              value: rsyslog
+          image: uitcontainerregistry.azurecr.io/uit/rsyslog-drupal:8.26-0004
+          imagePullPolicy: Always
+          livenessProbe:
+            failureThreshold: 3
+            initialDelaySeconds: 60
+            periodSeconds: 10
+            successThreshold: 1
+            tcpSocket:
+              port: 3514
+            timeoutSeconds: 10
+          name: rsyslog
+          ports:
+            - containerPort: 3514
+              name: rsyslog-tcp
+              protocol: TCP
+            - containerPort: 3514
+              name: rsyslog-udp
+              protocol: UDP
+          readinessProbe:
+            failureThreshold: 3
+            initialDelaySeconds: 1
+            periodSeconds: 10
+            successThreshold: 1
+            tcpSocket:
+              port: 3514
+            timeoutSeconds: 1
+          resources:
+            limits:
+              memory: 100Mi
+            requests:
+              cpu: 10m
+              memory: 10Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            runAsNonRoot: true
+            seccompProfile:
+              type:
+                RuntimeDefault
       securityContext:
         fsGroup: 10001
         runAsGroup: 10000
