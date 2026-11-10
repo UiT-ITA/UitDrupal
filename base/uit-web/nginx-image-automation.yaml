@@ -1,0 +1,28 @@
+---
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImageRepository
+metadata:
+  name: nginx
+spec:
+  image: uitcontainerregistry.azurecr.io/uit/www-uit-no-nginx
+  interval: 1m5s
+  provider: generic
+  secretRef:
+    name: ${image_pull_secret_name}
+
+---
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImagePolicy
+metadata:
+  name: nginx
+spec:
+  imageRepositoryRef:
+    name: nginx
+  filterTags:
+    pattern: '^${app_name}-${app_env}-(?P<version>\d*)-.*$'
+    extract: '$version'
+  digestReflectionPolicy: IfNotPresent
+  policy:
+    numerical:
+      order: asc
+
