@@ -1,5 +1,5 @@
 # SUBDIRS := $(dir $(shell find -name kustomization.yaml -not -path "./bgo1-test/*test*/*"))
-SUBDIRS := ./bgo1-test/uit-web-stage ./base/uit-web
+SUBDIRS := ./bgo1-test/uit-web-dev ./base/uit-web
 
 .PHONY: help
 help:
@@ -23,7 +23,7 @@ $(SUBDIRS):
 
 .PHONY: validate
 validate: ## Run extensive validation on generated manifests
-	./tools/validate.sh -d bgo1-test/uit-web-stage
+	./tools/validate.sh -d bgo1-test/uit-web-dev
 
 # vim: syntax=make noexpandtab
 
