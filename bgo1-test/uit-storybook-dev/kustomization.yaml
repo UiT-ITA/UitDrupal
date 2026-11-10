@@ -1,0 +1,10 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ../../base/uitcontainerregistry-pull-secret
+  - ../../base/uit-storybook
+# Storybook image built by www.uit.no (deploy.yml, uit/www-uit-no-storybook).
+# Set the tag from the workflow summary to deploy a new build.
+images:
+  - name: uitcontainerregistry.azurecr.io/uit/www-uit-no-storybook
+    newTag: uit-web-dev-0000-00-00T00-00-00Z
