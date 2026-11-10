@@ -11,12 +11,14 @@ resources:
   - drupal-deployment.yaml
   - drupal-fs-utvekslingsavtaler-apikey.yaml
   - drupal-iknowbase-graphql-studiekatalog-apikey.yaml
+  - drupal-image-automation.yaml
   - drupal-orgreg-apikey.yaml
   - drupal-service.yaml
   - drupal-service-monitor.yaml
   - feide-client-secret.yaml
   - ingress.yaml
   - nginx-deployment.yaml
+  - nginx-image-automation.yaml
   - nginx-service.yaml
   - openai-apikey.yaml
   - post-deploy-job.yaml
