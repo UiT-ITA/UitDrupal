@@ -27,6 +27,7 @@ spec:
         runAsUser: 33
         runAsGroup: 33
         fsGroup: 33
+        fsGroupChangePolicy: OnRootMismatch
       containers:
         - name: post-deploy
           image: uitcontainerregistry.azurecr.io/uit/www-uit-no # tag is set per instance (images in the instance kustomization)

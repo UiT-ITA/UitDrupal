@@ -21,7 +21,10 @@ spec:
         runAsNonRoot: true
         runAsUser: 82
         runAsGroup: 82
-        fsGroup: 82
+        # The files volume is shared with drupal, which writes to it. Use the
+        # same group as drupal (www-data, 33), nginx only needs to read.
+        fsGroup: 33
+        fsGroupChangePolicy: OnRootMismatch
       containers:
         - name: nginx
           image: uitcontainerregistry.azurecr.io/uit/www-uit-no-nginx # tag is set per instance (images in the instance kustomization)
