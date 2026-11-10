@@ -7,4 +7,4 @@ resources:
 # Set the tag from the workflow summary to deploy a new build.
 images:
   - name: uitcontainerregistry.azurecr.io/uit/www-uit-no-storybook
-    newTag: uit-web-dev-0000-00-00T00-00-00Z
+    newTag: uit-web-dev-2026-11-10T15-54-59Z
