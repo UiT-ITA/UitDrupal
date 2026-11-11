@@ -14,7 +14,10 @@ spec:
       author:
         name: fluxcdbot
         email: fluxcdbot@noreply.uib.no
-      messageTemplate: '{{ .AutomationObject }}: {{range .Changed.Changes}}{{print .OldValue}} -> {{println .NewValue}}{{end}}'
+      messageTemplate: |
+        chore: update image tags for {{ .AutomationObject }}:
+
+        {{ .Changed.Summary }}
   interval: 1m0s
   sourceRef:
     kind: GitRepository
