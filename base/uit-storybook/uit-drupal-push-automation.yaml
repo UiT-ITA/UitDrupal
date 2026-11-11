@@ -1,0 +1,27 @@
+---
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImageUpdateAutomation
+metadata:
+  name: uit-drupal-push
+spec:
+  git:
+    checkout:
+      ref:
+        branch: master
+    push:
+      branch: master
+    commit:
+      author:
+        name: fluxcdbot
+        email: fluxcdbot@noreply.uib.no
+      messageTemplate: |
+        chore: update image tags for {{ .AutomationObject }}:
+
+        {{ .Changed.Summary }}
+  interval: 1m0s
+  sourceRef:
+    kind: GitRepository
+    name: uit-drupal-push
+  update:
+    strategy: Setters
+    path: ${rail_cluster}/${app_name}-${app_env}
