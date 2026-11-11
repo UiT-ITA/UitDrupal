@@ -1,0 +1,26 @@
+---
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImageRepository
+metadata:
+  name: rsyslog
+spec:
+  image: uitcontainerregistry.azurecr.io/uit/rsyslog-drupal
+  interval: 1m3s
+  provider: generic
+  secretRef:
+    name: ${image_pull_secret_name}
+
+---
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImagePolicy
+metadata:
+  name: rsyslog
+spec:
+  imageRepositoryRef:
+    name: rsyslog
+  filterTags:
+    pattern: '^\d*\.\d*-\d{4}$'
+  digestReflectionPolicy: IfNotPresent
+  policy:
+    alphabetical:
+      order: asc

@@ -23,6 +23,7 @@ resources:
   - openai-apikey.yaml
   - post-deploy-job.yaml
   - rsyslog-deployment.yaml
+  - rsyslog-image-automation.yaml
   - rsyslog-service.yaml
   - uit-drupal-push-automation.yaml
   - uit-drupal-push-repo.yaml
