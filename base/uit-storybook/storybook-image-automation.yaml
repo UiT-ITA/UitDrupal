@@ -1,0 +1,27 @@
+---
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImageRepository
+metadata:
+  name: storybook
+spec:
+  image: uitcontainerregistry.azurecr.io/uit/www-uit-no-storybook
+  interval: 1m3s
+  provider: generic
+  secretRef:
+    name: ${image_pull_secret_name}
+
+---
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImagePolicy
+metadata:
+  name: storybook
+spec:
+  imageRepositoryRef:
+    name: storybook
+  filterTags:
+    pattern: '^${app_name}-${app_env}-(?P<timestamp>.*)Z$'
+    extract: '$timestamp'
+  digestReflectionPolicy: IfNotPresent
+  policy:
+    alphabetical:
+      order: asc
