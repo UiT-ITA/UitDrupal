@@ -13,6 +13,6 @@ configMapGenerator:
 # Set both tags to the tag from the workflow summary to deploy a new build.
 images:
   - name: uitcontainerregistry.azurecr.io/uit/www-uit-no
-    newTag: uit-web-dev-7-ac4eff3 # {"$imagepolicy": "uit-it-webadm-${app_name}-${app_env}:drupal:tag"}
+    newTag: uit-web-dev-7-ac4eff3 # {"$imagepolicy": "uit-it-webadm-uit-web-dev:drupal:tag"}
   - name: uitcontainerregistry.azurecr.io/uit/www-uit-no-nginx
-    newTag: uit-web-dev-7-ac4eff3 # {"$imagepolicy": "uit-it-webadm-${app_name}-${app_env}:nginx:tag"}
+    newTag: uit-web-dev-7-ac4eff3 # {"$imagepolicy": "uit-it-webadm-uit-web-dev:nginx:tag"}
