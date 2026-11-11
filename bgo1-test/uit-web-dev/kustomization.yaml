@@ -15,4 +15,4 @@ images:
   - name: uitcontainerregistry.azurecr.io/uit/www-uit-no
     newTag: uit-web-dev-2026-11-11T13-26-22Z # {"$imagepolicy": "uit-it-webadm-uit-web-dev:drupal:tag"}
   - name: uitcontainerregistry.azurecr.io/uit/www-uit-no-nginx
-    newTag: uit-web-dev-2026-11-11T13-26-22Z # {"$imagepolicy": "uit-it-webadm-uit-web-dev:nginx:tag"}
+    newTag: uit-web-dev-2026-11-11T14-37-04Z # {"$imagepolicy": "uit-it-webadm-uit-web-dev:nginx:tag"}
