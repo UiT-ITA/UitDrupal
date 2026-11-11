@@ -704,6 +704,15 @@ $settings['update_free_access'] = FALSE;
 $settings['container_yamls'][] = $app_root . '/' . $site_path . '/services.yml';
 
 /**
+ * Stream logs to the rsyslog service with Monolog, when the image ships the
+ * services file (www.uit.no web/sites/default/monolog.rsyslog.services.yml).
+ */
+$monolog_rsyslog_services = $app_root . '/' . $site_path . '/monolog.rsyslog.services.yml';
+if (is_file($monolog_rsyslog_services)) {
+  $settings['container_yamls'][] = $monolog_rsyslog_services;
+}
+
+/**
  * Override the default service container class.
  *
  * This is useful for example to trace the service container for performance
