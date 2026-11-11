@@ -19,9 +19,9 @@ spec:
   imageRepositoryRef:
     name: drupal
   filterTags:
-    pattern: '^${app_name}-${app_env}-(?P<version>\d*)-.*$'
-    extract: '$version'
+    pattern: '^${app_name}-${app_env}-(?P<timestamp>.*)Z$'
+    extract: '$timestamp'
   digestReflectionPolicy: IfNotPresent
   policy:
-    numerical:
+    alphabetical:
       order: asc
