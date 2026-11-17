@@ -8,5 +8,9 @@ labels:
     includeTemplates: true
 resources:
   - storybook-deployment.yaml
+  - storybook-image-automation.yaml
   - storybook-service.yaml
   - ingress.yaml
+  - uit-drupal-push-automation.yaml
+  - uit-drupal-push-repo.yaml
+  - uit-drupal-push-secret.yaml
