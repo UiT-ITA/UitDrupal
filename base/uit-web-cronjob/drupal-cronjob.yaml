@@ -1,0 +1,119 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: drupal-cronjob
+  labels:
+    app.kubernetes.io/name: drupal-cronjob
+    app.kubernetes.io/component: cronjob
+    app: drupal-cronjob
+spec:
+  schedule: 59 * * * *
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 2
+  failedJobsHistoryLimit: 2
+  startingDeadlineSeconds: 240
+  suspend: false
+  jobTemplate:
+    spec:
+      backoffLimit: 3
+      activeDeadlineSeconds: 900
+      parallelism: 1
+      template:
+        metadata:
+          labels:
+            app.kubernetes.io/component: cronjob
+            app.kubernetes.io/name: drupal-cronjob
+            app: drupal-cronjob
+        spec:
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 33
+            runAsGroup: 33
+            fsGroup: 33
+            fsGroupChangePolicy: OnRootMismatch
+          containers:
+            - name: drupal
+              command: 
+                - echo
+                - not
+                - configured
+              env:
+                # Application configuration
+                - name: POSTGRES_DB
+                  value: drupal
+                - name: POSTGRES_HOST
+                  value: drupal-db-rw
+                - name: POSTGRES_PORT
+                  value: "5432"
+                - name: POSTGRES_USER
+                  valueFrom:
+                    secretKeyRef:
+                      name: db-drupal-user
+                      key: username
+                - name: POSTGRES_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: db-drupal-user
+                      key: password
+                - name: UIT_ORGREG_APIKEY
+                  valueFrom:
+                    secretKeyRef:
+                      name: drupal-orgreg-apikey
+                      key: password
+                - name: UIT_FS_UTVEKSLINGSAVTALER_APIKEY
+                  valueFrom:
+                    secretKeyRef:
+                      name: drupal-fs-utvekslingsavtaler-apikey
+                      key: password
+                - name: UIT_IKNOWBASE_GRAPHQL_STUDIEKATALOG_APIKEY
+                  valueFrom:
+                    secretKeyRef:
+                      name: drupal-iknowbase-graphql-studiekatalog-apikey
+                      key: password
+                - name: UIT_DRUPALAI_APIKEY
+                  valueFrom:
+                    secretKeyRef:
+                      name: openai-apikey
+                      key: password
+                - name: OPENID_CONNECT_FEIDE_CLIENT_SECRET
+                  valueFrom:
+                    secretKeyRef:
+                      name: feide-client-secret
+                      key: password
+              image: uitcontainerregistry.azurecr.io/uit/www-uit-no # tag is set per instance (images in the instance kustomization)
+              volumeMounts:
+                - name: settings-php
+                  mountPath: /var/www/html/web/sites/default/settings.php
+                  subPath: settings.php
+                - name: salt-txt
+                  mountPath: /var/local/salt.txt
+                  subPath: salt.txt
+                - name: ${app_name}-files
+                  mountPath: /var/www/html/web/sites/default/files
+              resources:
+                requests:
+                  memory: "128Mi"
+                  cpu: "50m"
+                limits:
+                  memory: "256Mi"
+              securityContext:
+                allowPrivilegeEscalation: false
+                capabilities:
+                  drop:
+                    - ALL
+                runAsNonRoot: true
+                seccompProfile:
+                  type:
+                    RuntimeDefault
+          volumes:
+            - name: settings-php
+              configMap:
+                name: settings-php
+            - name: salt-txt
+              secret:
+                secretName: drupal-hash-salt
+            - name: ${app_name}-files
+              persistentVolumeClaim:
+                claimName: ${app_name}-files
+          imagePullSecrets:
+            - name: ${image_pull_secret_name}
