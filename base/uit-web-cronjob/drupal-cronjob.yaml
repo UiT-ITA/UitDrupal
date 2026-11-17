@@ -15,7 +15,7 @@ spec:
   suspend: false
   jobTemplate:
     spec:
-      backoffLimit: 3
+      restartPolicy: Never
       activeDeadlineSeconds: 900
       parallelism: 1
       template:
