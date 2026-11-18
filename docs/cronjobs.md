@@ -2,8 +2,15 @@
 
 ## High frequency cronjobs
 
-High frequency (everything under 1 hour) cronjobs should be run from within the
-drupal pod itself.
+High frequency (everything under 1 hour) cronjobs should be run from within a
+deciated cron pod.
+
+[base/uit-web/drupal-cron-deployment.yaml](../base/uit-web/drupal-cron-deployment.yaml)
+creates a deployment that utilizes [supercronic](https://github.com/aptible/supercronic)
+to run cron as the www-data user.
+
+It uses a single crontab file that can be found in [base/uit-web/drupal-crontab.yaml](../base/uit-web/drupal-crontab.yaml)
+Add any high frequency jobs to this file.
 
 ## Medium- and low frequency cronjobs
 

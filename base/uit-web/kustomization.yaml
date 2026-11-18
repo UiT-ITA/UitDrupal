@@ -9,6 +9,8 @@ labels:
 resources:
   - database.yaml
   - drupal-deployment.yaml
+  - drupal-cron-deployment.yaml
+  - drupal-crontab.yaml
   - drupal-fs-utvekslingsavtaler-apikey.yaml
   - drupal-iknowbase-graphql-studiekatalog-apikey.yaml
   - drupal-image-automation.yaml

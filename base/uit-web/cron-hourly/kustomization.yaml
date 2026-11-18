@@ -12,10 +12,10 @@ patches:
   patch: |-
     - op: replace
       path: /spec/schedule
-      value: "45 * * * *"
+      value: "1 * * * *"
 
     - op: replace
       path: /spec/jobTemplate/spec/template/spec/containers/0/command
       value:
-      - drush
-      - cron
+      - echo
+      - "Hello from the hourly cronjob"
