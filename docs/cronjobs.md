@@ -12,6 +12,20 @@ to run cron as the www-data user.
 It uses a single crontab file that can be found in [base/uit-web/drupal-crontab.yaml](../base/uit-web/drupal-crontab.yaml)
 Add any high frequency jobs to this file.
 
+e.g.
+
+```yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: drupal-crontab
+  labels:
+    app.kubernetes.io/name: drupal-crontab
+data:
+  crontab: |
+    * * * * * echo "Hello from the per-minute cronjob"
+```
+
 ## Medium- and low frequency cronjobs
 
 Cronjobs that run hourly or less frequent can be configured as Kubernetes CronJobs.
