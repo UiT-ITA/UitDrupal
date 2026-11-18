@@ -1,0 +1,10 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: drupal-crontab
+  labels:
+    app.kubernetes.io/name: drupal-crontab
+data:
+  crontab: |
+    * * * * * echo "Hello from the per-minute cronjob"

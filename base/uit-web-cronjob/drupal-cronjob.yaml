@@ -33,7 +33,7 @@ spec:
             fsGroup: 33
             fsGroupChangePolicy: OnRootMismatch
           containers:
-            - name: drupal
+            - name: cronjob
               command: 
                 - echo
                 - not
