@@ -3,7 +3,7 @@ kind: CronJob
 metadata:
   name: ${app_name}-sync-files-to-s3
 spec:
-  schedule: "${files_backup_schedule:-none}"
+  schedule: "${backup_schedule_files:-none}"
   successfulJobsHistoryLimit: 1
   failedJobsHistoryLimit: 1
   concurrencyPolicy: Forbid
