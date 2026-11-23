@@ -17,3 +17,7 @@ images:
     newTag: uit-web-dev-2026-11-23T13-33-31Z # {"$imagepolicy": "uit-it-webadm-uit-web-dev:drupal:tag"}
   - name: uitcontainerregistry.azurecr.io/uit/www-uit-no-nginx
     newTag: uit-web-dev-2026-11-23T13-33-31Z # {"$imagepolicy": "uit-it-webadm-uit-web-dev:nginx:tag"}
+  - name: uitcontainerregistry.azurecr.io/uit/rsyslog-drupal
+    newTag: :8.26-0004 # {"$imagepolicy": "uit-it-webadm-uit-web-dev:rsyslog:tag"}
+  - name: uitcontainerregistry.azurecr.io/uit/aws-cli
+    newTag: :2.42-0004 # {"$imagepolicy": "uit-it-webadm-uit-web-dev:aws-cli:tag"}
