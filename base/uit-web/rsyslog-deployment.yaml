@@ -22,7 +22,7 @@ spec:
         - env:
             - name: SERVICE_NAME
               value: rsyslog
-          image: uitcontainerregistry.azurecr.io/uit/rsyslog-drupal:8.26-0004
+          image: uitcontainerregistry.azurecr.io/uit/rsyslog-drupal # tag is set per instance (images in the instance kustomization)
           imagePullPolicy: Always
           livenessProbe:
             failureThreshold: 3
