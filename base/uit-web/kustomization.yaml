@@ -7,8 +7,8 @@ labels:
     includeSelectors: true
     includeTemplates: true
 resources:
+  - backblaze-objectstore.yaml
   - database.yaml
-  - db-backup.yaml
   - drupal-deployment.yaml
   - drupal-cron-deployment.yaml
   - drupal-crontab.yaml

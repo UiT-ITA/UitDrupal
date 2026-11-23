@@ -19,4 +19,4 @@ images:
     newTag: uit-web-dev-2026-11-23T13-33-31Z # {"$imagepolicy": "uit-it-webadm-uit-web-dev:nginx:tag"}
 
 patches:
-  - path: db-backup.yaml
+  - path: database-backup.yaml

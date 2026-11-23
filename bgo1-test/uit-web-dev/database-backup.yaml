@@ -11,6 +11,6 @@ spec:
 apiVersion: postgresql.cnpg.io/v1
 kind: ScheduledBackup
 metadata:
-  name: database-backup
+  name: drupal-db
 spec:
   schedule: '0 0 18 * * *' # Every 6th day at 18:00
