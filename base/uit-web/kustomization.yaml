@@ -7,7 +7,6 @@ labels:
     includeSelectors: true
     includeTemplates: true
 resources:
-  - aws-cli-image-automation.yaml
   - backblaze-objectstore.yaml
   - database.yaml
   - drupal-deployment.yaml
