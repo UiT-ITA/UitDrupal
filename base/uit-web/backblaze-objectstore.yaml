@@ -9,8 +9,8 @@ spec:
   # This will ensure that barman retains at least one backup older than 30 days
   retentionPolicy: "30d"
   configuration:
-    destinationPath: s3://UiT-NREC-webportal-backup-test-00/postgres-backups/
-    endpointURL: https://s3.eu-central-003.backblazeb2.com
+    destinationPath: s3://${s3_bucket}/postgres-backups/
+    endpointURL: https://${s3_endpoint}
     s3Credentials:
       accessKeyId:
         name: backup-credentials

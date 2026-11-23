@@ -8,7 +8,7 @@ spec:
   interval: 1m3s
   provider: generic
   secretRef:
-    name: ${image_pull_secret_name}
+    name: ${image_pull_secret_name:-none}
 
 ---
 apiVersion: image.toolkit.fluxcd.io/v1

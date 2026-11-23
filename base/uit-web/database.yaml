@@ -46,7 +46,7 @@ spec:
   immediate: true # Also trigger a backup when creating this resource
   cluster:
     name: drupal-db
-  schedule: '0 0 21 * * *' # Every 6th day at 18:00
+  schedule: "${backup_schedule_db}"
   backupOwnerReference: self
   method: plugin
   pluginConfiguration:

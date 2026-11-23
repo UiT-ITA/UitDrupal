@@ -32,4 +32,9 @@ resources:
   - uit-drupal-push-repo.yaml
   - uit-drupal-push-secret.yaml
   - uit-web-files-pvc.yaml
+  - uit-web-files-sync.yaml
   - ./cron-hourly
+configMapGenerator:
+  - name: sync-s3-script
+    files:
+      - script.sh=scripts/sync-s3.sh
