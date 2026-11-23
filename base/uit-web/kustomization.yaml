@@ -8,6 +8,7 @@ labels:
     includeTemplates: true
 resources:
   - database.yaml
+  - db-backup.yaml
   - drupal-deployment.yaml
   - drupal-cron-deployment.yaml
   - drupal-crontab.yaml
