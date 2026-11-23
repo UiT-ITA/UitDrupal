@@ -32,3 +32,5 @@ spec:
       image_pull_secret_name: uitcontainerregistry
       # Drupal that renders the stories: the nginx of uit-web-dev.
       storybook_drupal_backend: nginx.uit-it-webadm-uit-web-dev.svc.cluster.local:8080
+      # Storybook is built in the same job as uit-web-dev and has its tags.
+      storybook_image_tag_prefix: uit-web-dev

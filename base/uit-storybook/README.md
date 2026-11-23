@@ -26,6 +26,10 @@ Like `base/uit-web` (`app_name`, `app_env`, `rail_*`, `ip_whitelist`,
   `nginx.uit-it-webadm-uit-web-dev.svc.cluster.local:8080`. It has to resolve
   when the storybook container starts, and the namespace has to allow traffic
   from the storybook namespace.
+- `storybook_image_tag_prefix`: tag prefix the `storybook` ImagePolicy
+  follows. The Storybook image is built in the same job as the Drupal images
+  of the backend instance and has the same tags, so this is the backend's
+  `<app_name>-<app_env>`, e.g. `uit-web-dev`.
 
 The Drupal instance needs the storybook module enabled and the permission
 `render storybook stories` for anonymous users (both in www.uit.no

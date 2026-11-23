@@ -19,7 +19,7 @@ spec:
   imageRepositoryRef:
     name: storybook
   filterTags:
-    pattern: '^${app_name}-${app_env}-(?P<timestamp>.*)Z$'
+    pattern: '^${storybook_image_tag_prefix}-(?P<timestamp>.*)Z$'
     extract: '$timestamp'
   digestReflectionPolicy: IfNotPresent
   policy:

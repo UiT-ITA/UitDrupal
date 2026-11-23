@@ -3,8 +3,8 @@ kind: Kustomization
 resources:
   - ../../base/uitcontainerregistry-pull-secret
   - ../../base/uit-storybook
-# Storybook image built by www.uit.no (deploy.yml, uit/www-uit-no-storybook).
-# Set the tag from the workflow summary to deploy a new build.
+# Storybook image built by www.uit.no in the same job as uit-web-dev, so it has
+# the same tag. Flux image automation updates it (policy storybook).
 images:
   - name: uitcontainerregistry.azurecr.io/uit/www-uit-no-storybook
-    newTag: uit-web-dev-2026-11-10T15-54-59Z
+    newTag: uit-web-dev-2026-11-23T13-06-02Z # {"$imagepolicy": "uit-it-webadm-uit-storybook-dev:storybook:tag"}

@@ -17,7 +17,9 @@ spec:
       messageTemplate: |
         chore: update image tags for {{ .AutomationObject }}:
 
-        {{ .Changed.Summary }}
+        {{- range .Changed.Changes}}
+        {{print .OldValue}} -> {{print .NewValue}}
+        {{- end}}
   interval: 1m0s
   sourceRef:
     kind: GitRepository
