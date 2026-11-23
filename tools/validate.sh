@@ -188,6 +188,7 @@ validate_kustomize_overlays() {
     fi
     echo "INFO - Validating kustomize overlay ${file/%$kustomize_config}"
     kustomize build "${file/%$kustomize_config}" "${kustomize_flags[@]}" | \
+      flux envsubst | \
       kubeconform "${kubeconform_flags[@]}" "${kubeconform_config[@]}"
     if [[ ${PIPESTATUS[0]} != 0 || ${PIPESTATUS[1]} != 0 ]]; then
       exit 1
