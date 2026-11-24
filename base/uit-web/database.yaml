@@ -13,9 +13,11 @@ spec:
     recovery:
       database: drupal
       owner: drupal
+      secret:
+        name: db-drupal-user
       source: source
-      recoveryTarget:
-        targetTime: ${db_source_timestamp}
+      recoveryTarget: ${db_recovery_target}
+
   storage:
     size: 16Gi
 
