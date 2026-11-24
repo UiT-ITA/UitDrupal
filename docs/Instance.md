@@ -76,7 +76,10 @@ spec:
       db_generation: 1                                      # increase whenever you want to re-initialize the database
       db_source_bucket: UiT-NREC-webportal-backup-test-00   # define where to look for the source
       db_source_instance: drupal-db                         # define the name of the instance to use as source
-      db_source_timestamp: "2026-11-24 12:03:06.0000+01"    # define the timestamp to restore to (normally close to "now")
+      db_recovery_target: '{}'                              # define empty target for "latest" or timestamp for point-in-time
+      # db_recovery_target: '{"targetTime": "2026-11-24 06:02:40.058972+00"  }'
+
+
 
       # define how files are backed up
       # (adjust at least the schedule to prevent all backups from running at the same time)
@@ -135,9 +138,7 @@ To initialize an instance with data from another follow these steps:
 
 * Increase `db_generation` (or set it to 1 for a new instance): this will destroy the all database and start the initialization process.
 * Use `db_source_bucket` and `db_source_instance` to define which instance to use as the source
-* Set the `db_source_timestamp` to the point in time you want to reset to: if recovering from a mistake (e.g. accidental deletion of data) you will want to set this as close as possible to a time BEFORE the accident. If you just want to initialize with current data, set it to a value equal to "now".
-
-> On Unix you can use the command `date "+%Y-%m-%d %H:%M:%S.00000%:::z"` to create a current timestamp in the correct format
+* Set the `db_recovery_target` to `'{}'` (an empty json object in a string) to recover to the newest possible state. See [Recovery](Recovery.md) for more options.
 
 ## Further Kustomizing the instance
 
