@@ -3,8 +3,6 @@ kind: Kustomization
 resources:
   - ../../base/uitcontainerregistry-pull-secret
   - ../../base/uit-web
-  - backup-credentials.yaml
-  - db-drupal-user.yaml
   - drupal-hash-salt.yaml
 configMapGenerator:
   - name: settings-php
@@ -20,4 +18,4 @@ images:
   - name: uitcontainerregistry.azurecr.io/uit/rsyslog-drupal
     newTag: 8.26-0004 # {"$imagepolicy": "uit-it-webadm-uit-web-dev:rsyslog:tag"}
   - name: uitcontainerregistry.azurecr.io/uit/aws-cli
-    newTag: :2.42-0004 # {"$imagepolicy": "uit-it-webadm-uit-web-dev:aws-cli:tag"}
+    newTag: 2.42-0004 # {"$imagepolicy": "uit-it-webadm-uit-web-dev:aws-cli:tag"}

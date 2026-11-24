@@ -2,19 +2,18 @@
 apiVersion: postgresql.cnpg.io/v1
 kind: Cluster
 metadata:
-  name: drupal-db
+  name: ${app_name}-${app_env}-db${db_generation}
   labels:
-    app.kubernetes.io/name: drupal-db
+    app.kubernetes.io/name: ${app_name}-${app_env}-db${db_generation}
 spec:
   instances: 2
   monitoring:
     enablePodMonitor: true
   bootstrap:
-    initdb:
-      database: drupal
-      owner: drupal
-      secret:
-        name: db-drupal-user
+    recovery:
+      source: sourcce
+      recoveryTarget:
+        targetTime: ${db_source_timestamp}
   storage:
     size: 16Gi
 
@@ -33,20 +32,28 @@ spec:
     - name: barman-cloud.cloudnative-pg.io
       isWALArchiver: true
       parameters:
-        barmanObjectName: backblaze
+        barmanObjectName: ${db_backup_bucket}
+
+  externalClusters:
+    - name: source
+      plugin:
+        name: barman-cloud.cloudnative-pg.io
+      parameters:
+        barmanObjectName: ${db_source_bucket}
+        serverName: ${db_source_instance}
 
 ---
 apiVersion: postgresql.cnpg.io/v1
 kind: ScheduledBackup
 metadata:
-  name: drupal-db
+  name: ${app_name}-${app_env}-db${db_generation}
   labels:
-    app.kubernetes.io/name: drupal-db
+    app.kubernetes.io/name: ${app_name}-${app_env}-db${db_generation}
 spec:
   immediate: true # Also trigger a backup when creating this resource
   cluster:
-    name: drupal-db
-  schedule: "${backup_schedule_db}"
+    name: ${app_name}-${app_env}-db${db_generation}
+  schedule: "${db_backup_schedule}"
   backupOwnerReference: self
   method: plugin
   pluginConfiguration:

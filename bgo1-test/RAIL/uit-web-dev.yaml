@@ -24,15 +24,36 @@ spec:
       name: sops-gpg
   postBuild:
     substitute:
+      # define the app instance you are deploying
       app_name: uit-web
       app_env: dev
+
+      # define the cluster you are deploying into
       rail_cluster: bgo1-test
       rail_env: test
       rail_region: bgo1
-      s3_bucket: UiT-NREC-webportal-backup-test-00
+
+      # define the S3 environment available
+      # (should be the same across all instances)
       s3_endpoint: s3.eu-central-003.backblazeb2.com
       s3_region: eu-central-003
-      backup_schedule_db: '0 0 21 * * *'
-      backup_schedule_files: '5-59/15 * * * *'
-      backup_suspend_files: "true"
+      s3_bucket_test: UiT-NREC-webportal-backup-test-00
+      s3_bucket_prod: UiT-NREC-webportal-backup-prod-00
+
+      # define how the database is backed up
+      db_backup_bucket: UiT-NREC-webportal-backup-test-00
+      db_backup_schedule: '0 0 20 * * *'
+
+      # define how the database is initialized
+      db_generation: 1                                      # increase whenever you want to re-initialize the database
+      db_source_bucket: UiT-NREC-webportal-backup-test-00   # define where to look for the source
+      db_source_instance: drupal-db                         # define the name of the instance to use as source
+      db_source_timestamp: "2026-11-24 12:03:06.0000+01"    # define the timestamp to restore to (normally close to "now")
+
+      # define how files are backed up
+      files_backup_bucket: UiT-NREC-webportal-backup-test-00
+      files_backup_schedule: '5-59/15 * * * *'
+      files_suspend_backup: "true"
+
+      # define access to the container registry
       image_pull_secret_name: uitcontainerregistry

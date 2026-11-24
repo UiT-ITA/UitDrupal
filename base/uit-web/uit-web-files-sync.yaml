@@ -3,11 +3,11 @@ kind: CronJob
 metadata:
   name: ${app_name}-sync-files-to-s3
 spec:
-  schedule: "${backup_schedule_files:-none}"
+  schedule: "${files_backup_schedule:-none}"
   successfulJobsHistoryLimit: 1
   failedJobsHistoryLimit: 1
   concurrencyPolicy: Forbid
-  suspend: ${backup_suspend_files:=false}
+  suspend: ${files_suspend_backup:=false}
   jobTemplate:
     spec:
       backoffLimit: 0
@@ -66,15 +66,15 @@ spec:
                 - name: AWS_ACCESS_KEY_ID
                   valueFrom:
                     secretKeyRef:
-                      name: backup-credentials
+                      name: ${files_backup_bucket}
                       key: ACCESS_KEY_ID
                 - name: AWS_SECRET_ACCESS_KEY
                   valueFrom:
                     secretKeyRef:
-                      name: backup-credentials
+                      name: ${files_backup_bucket}
                       key: ACCESS_SECRET_KEY
                 - name: S3_BUCKET
-                  value: s3://${s3_bucket}
+                  value: s3://${files_backup_bucket}/file-backups
                 - name: AWS_ENDPOINT_URL
                   value: https://${s3_endpoint}
           volumes:

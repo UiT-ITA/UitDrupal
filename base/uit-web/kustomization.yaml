@@ -7,8 +7,10 @@ labels:
     includeSelectors: true
     includeTemplates: true
 resources:
-  - backblaze-objectstore.yaml
+  - bucket-credentials-prod.yaml
+  - bucket-credentials-test.yaml
   - database.yaml
+  - db-drupal-user.yaml
   - drupal-deployment.yaml
   - drupal-cron-deployment.yaml
   - drupal-crontab.yaml
@@ -28,6 +30,8 @@ resources:
   - rsyslog-deployment.yaml
   - rsyslog-image-automation.yaml
   - rsyslog-service.yaml
+  - s3-bucket-prod.yaml
+  - s3-bucket-test.yaml
   - uit-drupal-push-automation.yaml
   - uit-drupal-push-repo.yaml
   - uit-drupal-push-secret.yaml

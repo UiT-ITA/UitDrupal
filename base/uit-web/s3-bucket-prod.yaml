@@ -1,0 +1,30 @@
+---
+apiVersion: barmancloud.cnpg.io/v1
+kind: ObjectStore
+metadata:
+  name: ${s3_bucket_prod}
+  labels:
+    app.kubernetes.io/name: ${s3_bucket_prod}
+spec:
+  # This will ensure that barman retains at least one backup older than 30 days
+  retentionPolicy: "30d"
+  configuration:
+    destinationPath: s3://${s3_bucket_prod}/postgres-backups/
+    endpointURL: https://${s3_endpoint}
+    s3Credentials:
+      accessKeyId:
+        name: ${s3_bucket_prod}
+        key: ACCESS_KEY_ID
+      secretAccessKey:
+        name: ${s3_bucket_prod}
+        key: ACCESS_SECRET_KEY
+    wal:
+      compression: zstd
+    data:
+      compression: bzip2
+  instanceSidecarConfiguration:
+    env:
+      - name: AWS_REQUEST_CHECKSUM_CALCULATION
+        value: when_required
+      - name: AWS_RESPONSE_CHECKSUM_VALIDATION
+        value: when_required
