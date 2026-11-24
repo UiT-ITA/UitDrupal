@@ -30,7 +30,7 @@ spec:
             - name: POSTGRES_DB
               value: drupal
             - name: POSTGRES_HOST
-              value: drupal-db-rw
+              value: ${app_name}-${app_env}-db${db_generation}-rw
             - name: POSTGRES_PORT
               value: "5432"
             - name: POSTGRES_USER

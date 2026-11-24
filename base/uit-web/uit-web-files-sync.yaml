@@ -74,7 +74,10 @@ spec:
                       name: ${files_backup_bucket}
                       key: ACCESS_SECRET_KEY
                 - name: S3_BUCKET
-                  value: s3://${files_backup_bucket}/file-backups
+                  valueFrom:
+                    configMapKeyRef:
+                      name: ${files_backup_bucket}
+                      key: S3_BUCKET
                 - name: AWS_ENDPOINT_URL
                   value: https://${s3_endpoint}
           volumes:

@@ -41,17 +41,17 @@ spec:
       s3_bucket_prod: UiT-NREC-webportal-backup-prod-00
 
       # define how the database is backed up
-      db_backup_bucket: UiT-NREC-webportal-backup-test-00
+      db_backup_bucket: s3-bucket-test
       db_backup_schedule: '0 0 20 * * *'
 
       # define how the database is initialized
-      db_generation: 1                                      # increase whenever you want to re-initialize the database
-      db_source_bucket: UiT-NREC-webportal-backup-test-00   # define where to look for the source
+      db_generation: "1"                                    # increase whenever you want to re-initialize the database
+      db_source_bucket: s3-bucket-test                      # define where to look for the source
       db_source_instance: drupal-db                         # define the name of the instance to use as source
-      db_source_timestamp: "2026-11-24 12:03:06.0000+01"    # define the timestamp to restore to (normally close to "now")
+      db_source_timestamp: "2026-11-24 06:02:40.058972+00"  # define the timestamp to restore to (normally close to "now")
 
       # define how files are backed up
-      files_backup_bucket: UiT-NREC-webportal-backup-test-00
+      files_backup_bucket: s3-bucket-test
       files_backup_schedule: '5-59/15 * * * *'
       files_suspend_backup: "true"
 

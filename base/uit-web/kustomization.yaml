@@ -9,6 +9,8 @@ labels:
 resources:
   - bucket-credentials-prod.yaml
   - bucket-credentials-test.yaml
+  - bucket-definition-prod.yaml
+  - bucket-definition-test.yaml
   - database.yaml
   - db-drupal-user.yaml
   - drupal-deployment.yaml

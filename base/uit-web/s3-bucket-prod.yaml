@@ -2,9 +2,10 @@
 apiVersion: barmancloud.cnpg.io/v1
 kind: ObjectStore
 metadata:
-  name: ${s3_bucket_prod}
+  name: s3-bucket-prod
   labels:
-    app.kubernetes.io/name: ${s3_bucket_prod}
+    app.kubernetes.io/name: s3-bucket-prod
+    uit.no/bucket-name: ${s3_bucket_prod}
 spec:
   # This will ensure that barman retains at least one backup older than 30 days
   retentionPolicy: "30d"
@@ -13,10 +14,10 @@ spec:
     endpointURL: https://${s3_endpoint}
     s3Credentials:
       accessKeyId:
-        name: ${s3_bucket_prod}
+        name: s3-bucket-prod
         key: ACCESS_KEY_ID
       secretAccessKey:
-        name: ${s3_bucket_prod}
+        name: s3-bucket-prod
         key: ACCESS_SECRET_KEY
     wal:
       compression: zstd
