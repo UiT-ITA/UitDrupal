@@ -7,4 +7,4 @@ resources:
 # the same tag. Flux image automation updates it (policy storybook).
 images:
   - name: uitcontainerregistry.azurecr.io/uit/www-uit-no-storybook
-    newTag: uit-web-dev-2026-11-25T10-11-10Z # {"$imagepolicy": "uit-it-webadm-uit-storybook-dev:storybook:tag"}
+    newTag: uit-web-dev-2026-11-26T10-36-49Z # {"$imagepolicy": "uit-it-webadm-uit-storybook-dev:storybook:tag"}
