@@ -882,9 +882,13 @@ $databases['default']['default'] = array (
 $settings['config_sync_directory'] = realpath(DRUPAL_ROOT . '/../config/sync');
 
 /**
- * OpenID Connect (Feide) client secret.
+ * OpenID Connect (Feide) client ID and secret.
  * Kept out of config/sync and injected from the environment instead.
  */
+$openid_connect_feide_id = getenv('OPENID_CONNECT_FEIDE_CLIENT_ID');
+if ($openid_connect_feide_id !== false && $openid_connect_feide_id !== '') {
+    $config['openid_connect.client.feide_test']['settings']['client_id'] = $openid_connect_feide_id;
+}
 $openid_connect_feide_secret = getenv('OPENID_CONNECT_FEIDE_CLIENT_SECRET');
 if ($openid_connect_feide_secret !== false && $openid_connect_feide_secret !== '') {
     $config['openid_connect.client.feide_test']['settings']['client_secret'] = $openid_connect_feide_secret;
