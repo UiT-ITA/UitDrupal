@@ -75,6 +75,11 @@ spec:
                 secretKeyRef:
                   name: feide-client-secret
                   key: password
+            - name: OPENID_CONNECT_FEIDE_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: feide-client-secret
+                  key: user
           volumeMounts:
             - name: settings-php
               mountPath: /var/www/html/web/sites/default/settings.php
